@@ -7,3 +7,11 @@ Three classes added:
 - Country.java: a basic class that defines the Object Country. Each Country has: 1) name, 2) X coordinates, 3) Y coordinates, 4) continent it belongs to, 5) arrayList of adjacent countries indexes. I have also added some methods that I believe may come in handy in the future, even though they have not been used yet. 
 
 Note: the code needs commenting. I will comment it tomorrow. 
+
+30/01/2021
+7 classes added:
+- Folder Hierarchy added and restructured, packages added for different groups of classes 
+- Player.java contains a Player interface implemented in PassivePlayer.java and extended in ActivePlayer.java
+- Card.java contains a Card class used as the generic type in the cards ArrayList located in Deck.java
+- Game.java is currently being used for testing but it is intended to be used for game logic and ui changes throughout the game
+- Main.java will run the finished Game class
