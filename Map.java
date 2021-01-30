@@ -28,11 +28,14 @@ class Map extends JPanel {
 			{850,429},{813,526},{771,454},{213,352},{221,426},{289,415},{233,523},{496,462},{440,393},{510,532},{499,354},{547,432},{586,545}};	
 	public static final int[] CONTINENT_IDS = {0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,5,5};
 	private static final int MAP_WIDTH = 1000;
-    private static final int MAP_HEIGHT = 600;
-    private static final int DIAMETER = 30; 
-    private static final int RADIUS = DIAMETER/2; 
-    private static final int NUM_COUNTRIES = COUNTRY_COORD.length; 
+   	private static final int MAP_HEIGHT = 600;
+    	private static final int DIAMETER = 30; 
+   	 private static final int RADIUS = DIAMETER/2; 
+   	 private static final int NUM_COUNTRIES = COUNTRY_COORD.length; 
     
+    /** 
+    * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries. 
+    */
     public Map() {
     	countries = new ArrayList<Country>();
     }
@@ -44,24 +47,29 @@ class Map extends JPanel {
     public void initialiseCountries() {
 		int j = 0; 
 		for (int i = 0; i<NUM_COUNTRIES; i++) {
-			countries.add(new Country(COUNTRY_NAMES[i], COUNTRY_COORD[i][j], COUNTRY_COORD[i][j+1]));
-			countries.get(i).setContinent(CONTINENT_IDS[i]);
+			countries.add(new Country(COUNTRY_NAMES[i], COUNTRY_COORD[i][j], COUNTRY_COORD[i][j+1])); //add Countries instance variables to the arrayList of type Country
+			countries.get(i).setContinent(CONTINENT_IDS[i]); //set the Continent id for each country
 			
-			ArrayList<Integer> adjCountries = new ArrayList<Integer>(); 
+			ArrayList<Integer> adjCountries = new ArrayList<Integer>();  //Create an array to contain the indexes of the countries adjacent to Country.get(i)
 			for (int k = 0; k < ADJACENT[i].length; k++) {
 				adjCountries.add(ADJACENT[i][k]);
 			}
-			
-			countries.get(i).setAdjCountries(adjCountries);
+			countries.get(i).setAdjCountries(adjCountries); 
 			System.out.println(countries.get(i).toString()); //for testing purposes
 		}
 	}
     
+    /**
+    * Overrides the getPreferredSize() method of JPanel. It sets the Panel dimensions to MAP_HEIGHT and MAP_WIDTH.
+    */
     @Override
     public Dimension getPreferredSize () {
         return new Dimension (MAP_WIDTH, MAP_HEIGHT);
     }
     
+    /** Overrides the paintComponent method of JPanel. The method draws a filled circle for each Country at the coordinates(x-radius, y-radius). The color of the country
+    * depends on the Continent it belongs to. Lastly, lines between adjacent Countries are drawn. 
+    */
     @Override
     protected void paintComponent(Graphics g) {
     	super.paintComponent(g);
