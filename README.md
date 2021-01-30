@@ -8,7 +8,7 @@ Three classes added:
 
 Note: the code needs commenting. I will comment it tomorrow. 
 
-30/01/2021
+30/01/2021 (Jess)
 7 classes added:
 - Folder Hierarchy added and restructured, packages added for different groups of classes 
 - Player.java contains a Player interface implemented in PassivePlayer.java and extended in ActivePlayer.java
