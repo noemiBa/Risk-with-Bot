@@ -7,10 +7,16 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import java.awt.Font; 
 
 public class Map extends JPanel {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
      * Instance variables
      */
     protected ArrayList<Country> countries;
@@ -35,7 +41,7 @@ public class Map extends JPanel {
     private static final int DIAMETER = 30;
     private static final int RADIUS = DIAMETER/2;
     private static final int NUM_COUNTRIES = COUNTRY_COORD.length;
-
+    private static final int SPACING = 5; 
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
      */
@@ -61,8 +67,12 @@ public class Map extends JPanel {
             System.out.println(countries.get(i).toString()); //for testing purposes
         }
     }
+    
+    public static String[] getCountryNames() {
+		return COUNTRY_NAMES;
+	}
 
-    /**
+	/**
      * Overrides the getPreferredSize() method of JPanel. It sets the Panel dimensions to MAP_HEIGHT and MAP_WIDTH.
      */
     @Override
@@ -76,9 +86,30 @@ public class Map extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for (Country c : countries) {
+       
+        for (Country c: countries) { //draw the sea lines first as they will be in the background.
+        	for (int i = 0; i<c.getAdjCountriesLength(); i++) {
+        		 //do NOT draw the sea line between Alaska and Kamchatka in the middle of the screen. 
+        		 if ((c.getName() != "Alaska" || countries.get(c.getAdjCountries().get(i)).getName() != "Kamchatka") && (c.getName() != "Kamchatka" || countries.get(c.getAdjCountries().get(i)).getName() != "Alaska")) {
+        			 g.setColor(Color.LIGHT_GRAY);
+        			 g.drawLine(c.getCoord_x(), c.getCoord_y(), countries.get(c.getAdjCountries().get(i)).getCoord_x(), countries.get(c.getAdjCountries().get(i)).getCoord_y());
+        		 }
+        	}
+        }
+        
+          //draw the sea lines between Alaska and Kamchatka
+           g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());	
+           g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
+      
+           for (Country c : countries) {
+        	//draw the country names
+        	g.setColor(Color.black); 
+        	g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        	g.drawString(c.getName(), c.getCoord_x()-DIAMETER, c.getCoord_y()+DIAMETER); 
+        	
+        	//draw the graph nodes to indicate the countries changing color according to the continent they belong to.
             if (c.getContinent() == 0) {
-                g.setColor(Color.red);
+                g.setColor(Color.green);
                 g.fillOval(c.getCoord_x()-RADIUS, c.getCoord_y()-RADIUS, DIAMETER, DIAMETER);
             }
             else if (c.getContinent() == 1) {
@@ -100,14 +131,13 @@ public class Map extends JPanel {
             else if (c.getContinent() == 5) {
                 g.setColor(Color.blue);
                 g.fillOval(c.getCoord_x()-RADIUS, c.getCoord_y()-RADIUS, DIAMETER, DIAMETER);
-            }
-
-            for (int i = 0; i<c.getAdjCountriesLength(); i++) {
-                //g.setColor(Color.black);
-                g.drawLine(c.getCoord_x(), c.getCoord_y(), countries.get(c.getAdjCountries().get(i)).getCoord_x(), countries.get(c.getAdjCountries().get(i)).getCoord_y());
-            }
+            }   
         }
-
-
+        
+        //Draw the number of military units on the country node.
+        for (Country c: countries) {
+        	g.setColor(Color.black);
+        	g.drawString(String.valueOf(c.getNumberOfUnits()), c.getCoord_x()-SPACING, c.getCoord_y()+SPACING);
+        }
     }
 }
