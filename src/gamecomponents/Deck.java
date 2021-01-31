@@ -29,8 +29,7 @@ public class Deck
     }
 
     /**
-     * function needs fixing so that the two indexes are always unique, but it should generate
-     * two different indexes to swap each card with another card at least once
+     * the two indexes are always unique.
      */
     public void shuffle()
     {
@@ -40,12 +39,15 @@ public class Deck
         Card cardTemp = new Card("", Card.type.INFANTRY); // used to temporarily store a Card object for swapping cards
         for(int i = 0; i < 21; i++)
         {
-//            while(cardIndexFirst == cardIndexSecond)
-//            {
-                cardIndexFirst = random.nextInt(42);
-                cardIndexSecond = random.nextInt(42);
-//            }
-            /**
+           cardIndexFirst = random.nextInt(42);
+           int cardIndexTemp = random.nextInt(42);
+           while(cardIndexFirst == cardIndexTemp)
+           {
+               cardIndexTemp = random.nextInt(42); //generate and discard a random integer
+           }
+           cardIndexSecond = cardIndexTemp; 
+           
+           /**
              * Swaps the instance variables of two cards objects
              * */
             cardTemp.setCountryName(cards.get(cardIndexFirst).getCountryName());
