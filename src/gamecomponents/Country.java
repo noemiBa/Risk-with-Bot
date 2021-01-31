@@ -12,6 +12,10 @@ public class Country {
     private int coord_x;
     private int coord_y;
     private int continent;
+    private Player controlledBy;
+    private int numberOfInfantry;
+    private int numberOfCavalry;
+    private int numberOfArtillery;
     private ArrayList<Integer> adjCountries;
     public static final String[] CONTINENT_NAMES = {"N America","Europe","Asia","Australia","S America","Africa"};
     public static final int[] CONTINENT_VALUES = {5,5,7,2,2,3};
@@ -40,6 +44,51 @@ public class Country {
 
     public int getContinent() {
         return continent;
+    }
+
+    public Player getControlledBy()
+    {
+        return controlledBy;
+    }
+
+    public void setControlledBy(Player controlledBy)
+    {
+        this.controlledBy = controlledBy;
+    }
+
+    public int getNumberOfInfantry()
+    {
+        return numberOfInfantry;
+    }
+
+    public void setNumberOfInfantry(int numberOfInfantry)
+    {
+        this.numberOfInfantry = numberOfInfantry;
+    }
+
+    public int getNumberOfCavalry()
+    {
+        return numberOfCavalry;
+    }
+
+    public void setNumberOfCavalry(int numberOfCavalry)
+    {
+        this.numberOfCavalry = numberOfCavalry;
+    }
+
+    public int getNumberOfArtillery()
+    {
+        return numberOfArtillery;
+    }
+
+    public void setNumberOfArtillery(int numberOfArtillery)
+    {
+        this.numberOfArtillery = numberOfArtillery;
+    }
+
+    public int getNumberOfUnits()
+    {
+        return numberOfInfantry + numberOfArtillery + numberOfCavalry;
     }
 
     public ArrayList<Integer> getAdjCountries() {
