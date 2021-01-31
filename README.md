@@ -14,4 +14,8 @@ Note: the code needs commenting. I will comment it tomorrow.
 - Player.java contains a Player interface implemented in PassivePlayer.java and extended in ActivePlayer.java
 - Card.java contains a Card class used as the generic type in the cards ArrayList located in Deck.java
 - Game.java is currently being used for testing but it is intended to be used for game logic and ui changes throughout the game
-- Main.java will run the finished Game class
+- Main.java will run the finished Game class.
+
+31/01/2021 (Noemi)
+- Map Panel now displays the country names and number of military units.
+- Fixed and closed some issues.
