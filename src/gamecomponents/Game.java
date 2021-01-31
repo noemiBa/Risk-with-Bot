@@ -25,18 +25,7 @@ public class Game
         };
         Deck deck = new Deck();
         deck.shuffle();
-        for(Player player: players)
-        {
-            if(player instanceof ActivePlayer)
-                player.draw(8, deck);
-            else
-                player.draw(6, deck);
-
-            /**
-             * method could be added here to allocate countries controlled using the player cards
-             * countryName variable
-             */
-        }
+        Player.assignCountries(players, deck);
         Window.main();
     }
 }
