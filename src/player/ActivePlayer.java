@@ -1,10 +1,9 @@
 package player;
 
-/** extends PassivePlayer and uses additional methods (to be implemented) also implements Player
- * interface
+/** extends player class
  * */
 
-public class ActivePlayer extends PassivePlayer
+public class ActivePlayer extends Player
 {
     public ActivePlayer(String name, color playerColor)
     {

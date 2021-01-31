@@ -15,14 +15,15 @@ public class Game
     public static void main()
     {
         Player[] players = {
-                new ActivePlayer("test1", ActivePlayer.color.GREEN),
-                new ActivePlayer("test2", ActivePlayer.color.GREEN),
-                new PassivePlayer("test3", PassivePlayer.color.GREEN),
-                new PassivePlayer("test4", PassivePlayer.color.GREEN),
-                new PassivePlayer("test5", PassivePlayer.color.GREEN),
-                new PassivePlayer("test6", PassivePlayer.color.GREEN)
+                new ActivePlayer("test1", Player.color.GREEN),
+                new ActivePlayer("test2", Player.color.GREEN),
+                new PassivePlayer("test3", Player.color.GREEN),
+                new PassivePlayer("test4", Player.color.GREEN),
+                new PassivePlayer("test5", Player.color.GREEN),
+                new PassivePlayer("test6", Player.color.GREEN)
 
         };
+
         Deck deck = new Deck();
         deck.shuffle();
         Player.assignCountries(players, deck);
