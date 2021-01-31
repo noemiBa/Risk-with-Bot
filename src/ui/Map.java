@@ -78,7 +78,7 @@ public class Map extends JPanel {
         super.paintComponent(g);
         for (Country c : countries) {
             if (c.getContinent() == 0) {
-                g.setColor(Color.green);
+                g.setColor(Color.red);
                 g.fillOval(c.getCoord_x()-RADIUS, c.getCoord_y()-RADIUS, DIAMETER, DIAMETER);
             }
             else if (c.getContinent() == 1) {
