@@ -4,6 +4,8 @@ import player.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import ui.*;
+
 import javax.swing.*;
 
 public class Country {
@@ -31,9 +33,34 @@ public class Country {
         this.coord_y = coord_y;
         this.continent = -1;
         this.adjCountries = new ArrayList<Integer>();
+        this.numberOfInfantry = 0; 
+        this.numberOfCavalry = 0; 
+        this.numberOfArtillery = 0; 
+    }
+    
+    /* Utility method that returns the index of a Country if given the name of said Country
+     * @param name: the name of the Country
+     */
+    public static int getIndex(String countryName) {
+    	int index = -1; 
+    	for (int i = 0; i < Map.getCountryNames().length; i++) {
+    		if (countryName.equals(Map.getCountryNames()[i])) {
+    			index = i; 
+    		}
+    	}
+    	return index; 
+    }
+    
+    /* Method returns the int number of units in a Country. Note: 1 infantry = 1 military units, 1 cavalry = 5 military units and 
+     * 1 artillery = 10 military units. 
+     */
+    public int getNumberOfUnits() {
+    	return 1*getNumberOfInfantry() + 5*getNumberOfCavalry() + 10*getNumberOfArtillery();
     }
 
-    //Accessor methods
+    /*
+     * ACCESSOR methods for instance variables
+     */
     public String getName() {
         return name;
     }
@@ -51,19 +78,9 @@ public class Country {
         return controlledBy;
     }
 
-    public void setControlledBy(Player controlledBy)
-    {
-        this.controlledBy = controlledBy;
-    }
-
     public int getNumberOfInfantry()
     {
         return numberOfInfantry;
-    }
-
-    public void setNumberOfInfantry(int numberOfInfantry)
-    {
-        this.numberOfInfantry = numberOfInfantry;
     }
 
     public int getNumberOfCavalry()
@@ -71,24 +88,9 @@ public class Country {
         return numberOfCavalry;
     }
 
-    public void setNumberOfCavalry(int numberOfCavalry)
-    {
-        this.numberOfCavalry = numberOfCavalry;
-    }
-
     public int getNumberOfArtillery()
     {
         return numberOfArtillery;
-    }
-
-    public void setNumberOfArtillery(int numberOfArtillery)
-    {
-        this.numberOfArtillery = numberOfArtillery;
-    }
-
-    public int getNumberOfUnits()
-    {
-        return numberOfInfantry + numberOfArtillery + numberOfCavalry;
     }
 
     public ArrayList<Integer> getAdjCountries() {
@@ -103,11 +105,28 @@ public class Country {
         return coord_y;
     }
 
-    //mutator methods
+    /*
+     * MUTATOR methods for instance variables
+     */
+    public void setNumberOfInfantry(int numberOfInfantry)
+    {
+        this.numberOfInfantry = numberOfInfantry;
+    }
+
+    public void setNumberOfCavalry(int numberOfCavalry)
+    {
+        this.numberOfCavalry = numberOfCavalry;
+    }
+
     public void setCoord_x(int coord_x) {
         this.coord_x = coord_x;
     }
-
+    
+    public void setNumberOfArtillery(int numberOfArtillery)
+    {
+        this.numberOfArtillery = numberOfArtillery;
+    }
+    
     public void setCoord_y(int coord_y) {
         this.coord_y = coord_y;
     }
@@ -117,6 +136,11 @@ public class Country {
 
     public void setContinent(int contintent) {
         this.continent = contintent;
+    }
+    
+    public void setControlledBy(Player controlledBy)
+    {
+        this.controlledBy = controlledBy;
     }
 
     /**
@@ -133,7 +157,7 @@ public class Country {
             default: return "Invalid";
         }
     }
-
+    
     /*
      * For testing purposes. Returns a String representation of the Country class.
      */
