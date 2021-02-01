@@ -60,8 +60,8 @@ public class Player
             else
                 player.draw(6, deck);
             /**
-             * method could be added here to allocate countries controlled using the player cards
-             * countryName variable
+             * method could be added here to allocate countriesControlled
+             * (an ArrayList of Country objects) to each player
              */
         }
     }
