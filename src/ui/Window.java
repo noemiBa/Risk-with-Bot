@@ -114,7 +114,6 @@ public class Window {
         c.gridy = 0;
         c.insets = new Insets(0, 0, 0, 0);
 
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         mapPanel.add(label, c);
         //calling Map class to create the map
         Map map = new Map();
