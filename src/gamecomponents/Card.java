@@ -6,7 +6,8 @@ package gamecomponents;
  * */
 public class Card
 {
-    public static enum type{INFANTRY, CAVALRY, ARTILLERY};
+
+	public static enum type{INFANTRY, CAVALRY, ARTILLERY};
     private String countryName;
     private type unitType;
 
@@ -35,4 +36,9 @@ public class Card
     {
         this.unitType = unitType;
     }
+    
+    @Override
+   	public String toString() {
+   		return "[countryName=" + countryName + ", unitType=" + unitType + "]";
+   	}
 }
