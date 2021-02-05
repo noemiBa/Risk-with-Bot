@@ -48,4 +48,11 @@ public class PassivePlayer implements Player
             deck.getCards().remove(0);
         }
     }
+
+	@Override
+	public String toString() {
+		return "[name=" + name + ", playerColor=" + playerColor + "]";
+	}
+    
+    
 }
