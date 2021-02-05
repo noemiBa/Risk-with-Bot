@@ -1,4 +1,4 @@
-	package Tests;
+package Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,8 +84,6 @@ class CountryTest {
 		c.setAdjCountries(adjCountries);
 		assertEquals(c.getAdjCountries().toString(), "[0]");
 		
-		//c.setControlledBy(new ActivePlayer("test", color.BLUE));
-		//assertEquals(c.getControlledBy().toString(), "[name=test, playerColor=BLUE]");
 	}
 	
 	@Test

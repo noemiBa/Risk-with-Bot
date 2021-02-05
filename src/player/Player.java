@@ -9,7 +9,8 @@ import java.util.ArrayList;
  * */
 public class Player
 {
-    public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
+
+	public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
     private String name;
     private PassivePlayer.color playerColor;
     private ArrayList<Card> cards;
@@ -68,4 +69,9 @@ public class Player
              */
         }
     }
+    
+    @Override
+	public String toString() {
+		return "[name=" + name + ", playerColor=" + playerColor + "]";
+	}
 }

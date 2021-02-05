@@ -1,4 +1,4 @@
-	package gamecomponents;
+package gamecomponents;
 
 import player.*;
 import ui.Window;
@@ -12,10 +12,12 @@ import java.util.ArrayList;
 
 public class Game
 {
-
-    //public Game() {}
-    private static Player[] players;
-
+	private static Player[] players;
+	
+    public Game() {
+    	players = newPlayers();
+    }
+    
     public static Player[] newPlayers()
     {
         Player[] players =
@@ -30,15 +32,13 @@ public class Game
         return players;
     }
 
-    public static Player[] getPlayers()
-    {
+    public static Player[] getPlayers() {
         return players;
     }
 
-    public static void main()
-    {
+    public static void main() {
         Game game = new Game();
-        players = newPlayers();
+       // players = newPlayers();
         Window window = new Window();
         Deck deck = new Deck();
 
