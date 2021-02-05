@@ -161,6 +161,7 @@ public class Window {
         jp.removeAll();
         labelDisplayText = new JLabel(message);
         jp.add(labelDisplayText);
+        jp.updateUI();
         System.out.println("button working");
     }
 
