@@ -5,9 +5,9 @@ import gamecomponents.Deck;
 
 import java.util.ArrayList;
 
-/** Player interface implemented by ActivePlayer and PassivePlayer
+/** Player abstract class extended by ActivePlayer and PassivePlayer
  * */
-public class Player
+public abstract class Player
 {
 
 	public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
@@ -21,25 +21,27 @@ public class Player
         this.playerColor = playerColor;
         cards = new ArrayList <Card>();
     }
-
+    
+    /*Accessor methods*/
     public String getName()
     {
         return name;
     }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
+    
     public PassivePlayer.color getPlayerColor()
     {
         return playerColor;
     }
-
+    
     public ArrayList<Card> getCards()
     {
         return cards;
+    }
+    
+    /*Mutator methods*/
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     /** Removes the number of cards specified from the top of the deck ArrayList and
@@ -60,7 +62,7 @@ public class Player
         for(Player player: players)
         {
             if(player instanceof ActivePlayer)
-                player.draw(8, deck);
+                player.draw(9, deck);
             else
                 player.draw(6, deck);
             /**
@@ -74,4 +76,5 @@ public class Player
 	public String toString() {
 		return "[name=" + name + ", playerColor=" + playerColor + "]";
 	}
+    
 }
