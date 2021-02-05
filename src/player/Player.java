@@ -2,19 +2,56 @@ package player;
 
 import gamecomponents.Card;
 import gamecomponents.Deck;
-import gamecomponents.Game;
 
 import java.util.ArrayList;
 
 /** Player interface implemented by ActivePlayer and PassivePlayer
  * */
-public interface Player
+public class Player
 {
-    public String getName();
-    public PassivePlayer.color getPlayerColor();
-    public ArrayList<Card> getCards();
-    public void draw(int numberOfCards, Deck deck);
+    public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
+    private String name;
+    private PassivePlayer.color playerColor;
+    private ArrayList<Card> cards;
 
+    public Player(String name, color playerColor)
+    {
+        this.name = name;
+        this.playerColor = playerColor;
+        cards = new ArrayList <Card>();
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public PassivePlayer.color getPlayerColor()
+    {
+        return playerColor;
+    }
+
+    public ArrayList<Card> getCards()
+    {
+        return cards;
+    }
+
+    /** Removes the number of cards specified from the top of the deck ArrayList and
+     * adds to Player cards ArrayList
+     * */
+    public void draw(int numberOfCards, Deck deck)
+    {
+        for(int i = 1; i <= numberOfCards; i++)
+        {
+            cards.add(deck.getCards().get(0));
+            deck.getCards().remove(0);
+        }
+    }
 
     public static void assignCountries(Player[] players, Deck deck)
     {
@@ -30,6 +67,5 @@ public interface Player
              * countryName variable
              */
         }
-
     }
 }
