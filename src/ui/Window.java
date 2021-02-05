@@ -68,11 +68,13 @@ public class Window {
         readText.setBackground(Color.orange);
         JTextField textArea = new JTextField(25);
         textArea.setBorder(BorderFactory.createEtchedBorder());
-
+        
+        
         //Adding button listener
         button.addActionListener(e -> {
-            String input = textArea.getText();
+        	String input = textArea.getText();
             textArea.setText("");
+            
             nextInstruction(input);
         });
 
@@ -154,9 +156,10 @@ public class Window {
 
 
     private static void nextTextDisplay(JPanel jp, String message) {
-        jp.removeAll();
+        jp.removeAll(); 
         labelDisplayText = new JLabel(message);
         jp.add(labelDisplayText);
+        jp.updateUI(); 
         System.out.println("button working");
     }
 

@@ -19,7 +19,7 @@ public class Map extends JPanel {
     /**
      * Instance variables
      */
-    protected ArrayList<Country> countries;
+    public ArrayList<Country> countries;
     public static final String[] COUNTRY_NAMES = {
             "Ontario","Quebec","NW Territory","Alberta","Greenland","E United States","W United States","Central America","Alaska",
             "Great Britain","W Europe","S Europe","Ukraine","N Europe","Iceland","Scandinavia",
@@ -63,7 +63,7 @@ public class Map extends JPanel {
                 adjCountries.add(ADJACENT[i][k]);
             }
             countries.get(i).setAdjCountries(adjCountries);
-         //   System.out.println(countries.get(i).toString()); //for testing purposes
+           System.out.println(countries.get(i).toString()); //for testing purposes
         }
     }
 

@@ -10,3 +10,4 @@ public class ActivePlayer extends PassivePlayer
         super(name, playerColor);
     }
 }
+	

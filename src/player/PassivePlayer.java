@@ -51,7 +51,7 @@ public class PassivePlayer implements Player
 
 	@Override
 	public String toString() {
-		return "[name=" + name + ", playerColor=" + playerColor + "]";
+		return "[name=" + name + ", playerColor=" + playerColor + "]";	
 	}
     
     
