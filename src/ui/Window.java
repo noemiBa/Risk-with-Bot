@@ -5,6 +5,8 @@ import gamecomponents.Game;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import player.*; 
@@ -20,6 +22,7 @@ public class Window {
     private static JPanel readText;
     private static JLabel labelDisplayText;
     private static int instruction;
+    JFrame frame;
 
     public Window(Game game) {
         instruction = 1;
@@ -101,7 +104,8 @@ public class Window {
 
         //MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP
         JPanel mapPanel = new JPanel(new GridBagLayout());
-        label = new JLabel(new ImageIcon(Window.class.getResource("/images/map.png")));
+        
+        //label = new JLabel(new ImageIcon(Window.class.getResource("/images/map.png")));
         mapPanel.setBorder(BorderFactory.createTitledBorder("MAP"));
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 70;      //make this component tall
@@ -110,11 +114,11 @@ public class Window {
         c.gridx = 0;
         c.gridy = 0;
         c.insets = new Insets(0, 0, 0, 0);
-
-        mapPanel.add(label, c);
-
-        game.getMap().initialiseCountries();
+       
+        //mapPanel.add(label, c);
         mapPanel.add(game.getMap(), c);
+        game.getMap().initialiseCountries();
+        
 
         c.ipady = 0;
         c.gridy = 1;
@@ -169,6 +173,7 @@ public class Window {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    
+    
 
 }

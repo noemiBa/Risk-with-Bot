@@ -5,9 +5,14 @@ import gamecomponents.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.JPanel;
 import java.awt.Font;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class Map extends JPanel {
 
@@ -32,17 +37,25 @@ public class Map extends JPanel {
             {427,294},{505,200},{415,247},{373,160},{443,143},{567,252},{610,340},{514,330},{770,235},{584,190},{705,110},{770,120},{678,360},{686,180},{620,130},{687,230},{665,290},
             {785,505},{755,418},{700,513},{675,440},{208,350},{225,427},{283,405},{235,485},{458,450},{400,380},{463,520},{459,357},{505,420},{528,513}};
     public static final int[] CONTINENT_IDS = {0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,5,5};
-    private static final int MAP_WIDTH = 1100;
-    private static final int MAP_HEIGHT = 700;
-    private static final int DIAMETER = 30;
+    private static final int MAP_WIDTH = 640;
+    private static final int MAP_HEIGHT = 480;
+    private static final int DIAMETER = 20;
     private static final int RADIUS = DIAMETER/2;
     private static final int NUM_COUNTRIES = COUNTRY_COORD.length;
     private static final int SPACING = 5;
+    private BufferedImage image;
+    
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
      */
     public Map() {
         countries = new ArrayList<Country>();
+        try {                
+            image = ImageIO.read(new File("src/images/1.png"));
+         } catch (IOException ex) {
+              // handle exception...
+         }
+       
     }
     
     /*Accessor methods*/
@@ -82,13 +95,16 @@ public class Map extends JPanel {
     }
     
     
-
     /** Overrides the paintComponent method of JPanel. The method draws a filled circle for each Country at the coordinates(x-radius, y-radius). The color of the country
      * depends on the Continent it belongs to. Lastly, lines between adjacent Countries are drawn.
      */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        g.drawImage(image, 0, 50, null);
+        
+        //g.drawImage(new ImageIcon("src/images/8.png").getImage(), 0, 0,300,300, null);
 
         for (Country c: countries) { //draw the sea lines first as they will be in the background.
             for (int i = 0; i<c.getAdjCountriesLength(); i++) {
@@ -101,8 +117,8 @@ public class Map extends JPanel {
         }
 
         //draw the sea lines between Alaska and Kamchatka
-        g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
-        g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
+         g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
+         g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
 
         for (Country c : countries) {
             //draw the country names
