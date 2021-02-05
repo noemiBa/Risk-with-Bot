@@ -21,12 +21,12 @@ public class Window {
     private static JLabel labelDisplayText;
     private static int instruction;
 
-    public Window() {
+    public Window(Game game) {
         instruction = 1;
-        createAndShowGUI();
+        createAndShowGUI(game);
     }
 
-    public static void addComponentsToPane(Player[] players, Container pane) {
+    public static void addComponentsToPane(Game game, Container pane) {
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
@@ -70,7 +70,7 @@ public class Window {
         button.addActionListener(e -> {
             String input = textArea.getText();
             textArea.setText("");
-            nextInstruction(players, input);
+            nextInstruction(game.getPlayers(), input);
         });
 
 
@@ -112,10 +112,9 @@ public class Window {
         c.insets = new Insets(0, 0, 0, 0);
 
         mapPanel.add(label, c);
-        //calling Map class to create the map
-        Map map = new Map();
-        map.initialiseCountries();
-        mapPanel.add(map, c);
+
+        game.getMap().initialiseCountries();
+        mapPanel.add(game.getMap(), c);
 
         c.ipady = 0;
         c.gridy = 1;
@@ -139,18 +138,8 @@ public class Window {
                 nextTextDisplay(displayText, "<html>We are now ready to start the game!<br> See you on next Assignment <3 </html>");
                 break;
             default:
-                // player turn implemented here
                 break;
         }
-//        for(Player p: players)
-//        {
-//            System.out.print(p.getName() + " has countries ");
-//            for(Card c: p.getCards())
-//            {
-//                System.out.print(c.getCountryName() + " ");
-//            }
-//            System.out.println();
-//        }
         instruction++;
     }
 
@@ -166,14 +155,14 @@ public class Window {
 
 
 
-    public static void createAndShowGUI() {
+    public static void createAndShowGUI(Game game) {
 //Create and set up the window.
         JFrame frame = new JFrame("GridBagLayoutDemo");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 //Set up the content pane.
-        addComponentsToPane(Game.getPlayers(), frame.getContentPane());
+        addComponentsToPane(game, frame.getContentPane());
 
 //Display the window.
         frame.pack();

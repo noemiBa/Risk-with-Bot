@@ -1,6 +1,7 @@
 package gamecomponents;
 
 import player.*;
+import ui.Map;
 import ui.Window;
 
 import java.util.ArrayList;
@@ -12,10 +13,15 @@ import java.util.ArrayList;
 
 public class Game
 {
-	private static Player[] players;
+	private Map map;
+    private Player[] players;
+    private Deck deck;
 	
-    public Game() {
-    	players = newPlayers();
+    public Game()
+    {
+        map = new Map();
+        players = newPlayers();
+        deck = new Deck();
     }
     
     public static Player[] newPlayers()
@@ -32,17 +38,25 @@ public class Game
         return players;
     }
 
-    public static Player[] getPlayers() {
+    public Player[] getPlayers()
+    {
         return players;
     }
 
-    public static void main() {
-        Game game = new Game();
-       // players = newPlayers();
-        Window window = new Window();
-        Deck deck = new Deck();
+    public Map getMap()
+    {
+        return map;
+    }
 
-        deck.shuffle(deck.getCards());
-        Player.assignCountries(players, deck);
+    public Deck getDeck()
+    {
+        return deck;
+    }
+
+    public static void main()
+    {
+        Game game = new Game();
+        Window window = new Window(game);
+        game.getDeck().shuffle(game.getDeck().getCards());
     }
 }

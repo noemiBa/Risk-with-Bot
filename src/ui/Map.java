@@ -54,7 +54,7 @@ public class Map extends JPanel {
      */
     public void initialiseCountries() {
         int j = 0;
-        for (int i = 0; i<NUM_COUNTRIES; i++) {
+        for (int i = 0; i < NUM_COUNTRIES; i++) {
             countries.add(new Country(COUNTRY_NAMES[i], COUNTRY_COORD[i][j], COUNTRY_COORD[i][j+1])); //add Countries instance variables to the arrayList of type Country
             countries.get(i).setContinent(CONTINENT_IDS[i]); //set the Continent id for each country
 
