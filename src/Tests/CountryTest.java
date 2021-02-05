@@ -55,21 +55,28 @@ class CountryTest {
 	@Test 
 	void testGetterMethods() {
 		map.initialiseCountries(); 
-		Country c = map.countries.get(0);
+		Country c = map.getCountries().get(0);
 		assertEquals(c.getName(), "Ontario");
+		
 		assertEquals(c.getCoord_x(), 213);
+		
 		assertEquals(c.getCoord_y(), 170);
+		
 		assertEquals(c.getContinent(), 0);
+		
 		assertEquals(c.getAdjCountries().toString(), "[4, 1, 5, 6, 3, 2]");
+		
 		assertEquals(c.getNumberOfInfantry(), 0);
+		
 		assertEquals(c.getNumberOfArtillery(), 0);
+		
 		assertEquals(c.getNumberOfCavalry(), 0);
 	}
 	
 	@Test
 	void testSetterMethods() {
 		map.initialiseCountries(); 
-		Country c = map.countries.get(0);
+		Country c = map.getCountries().get(0);
 		c.setNumberOfInfantry(4);
 		assertEquals(c.getNumberOfInfantry(), 4);
 		
@@ -113,23 +120,23 @@ class CountryTest {
 	@Test
 	void testGetContinentName() {
 		map.initialiseCountries(); 
-		Country c = map.countries.get(0);
+		Country c = map.getCountries().get(0);
 		assertEquals(c.getContinentName(), "N America");
 		
-		Country c1 = map.countries.get(22);
+		Country c1 = map.getCountries().get(22);
 		assertEquals(c1.getContinentName(), "Asia");	
 	}
 	
 	@Test
 	void testToString() {
 		map.initialiseCountries(); 
-		Country c = map.countries.get(0);
+		Country c = map.getCountries().get(0);
 		assertEquals(c.toString(), "Country [name=Ontario, coord_x=213, coord_y=170, continent=0, adjCountries=[4, 1, 5, 6, 3, 2]]");
 		
-		Country c1 = map.countries.get(6);
+		Country c1 = map.getCountries().get(6);
 		assertEquals(c1.toString(), "Country [name=W United States, coord_x=153, coord_y=225, continent=0, adjCountries=[3, 0, 5, 7]]");
 		
-		Country c2 = map.countries.get(41);
+		Country c2 = map.getCountries().get(41);
 		assertEquals(c2.toString(), "Country [name=Madagascar, coord_x=528, coord_y=513, continent=5, adjCountries=[38, 40]]");
 	}
 	

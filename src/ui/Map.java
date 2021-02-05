@@ -11,15 +11,12 @@ import java.awt.Font;
 
 public class Map extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     /**
      * Instance variables
      */
-    public ArrayList<Country> countries;
+    private ArrayList<Country> countries;
     public static final String[] COUNTRY_NAMES = {
             "Ontario","Quebec","NW Territory","Alberta","Greenland","E United States","W United States","Central America","Alaska",
             "Great Britain","W Europe","S Europe","Ukraine","N Europe","Iceland","Scandinavia",
@@ -47,8 +44,13 @@ public class Map extends JPanel {
     public Map() {
         countries = new ArrayList<Country>();
     }
+    
+    /*Accessor methods*/
+    public ArrayList<Country> getCountries() {
+		return countries;
+	}
 
-    /*
+	/*
      * This method creates a new instance of the class Country for each of the countries - assigning it its own:
      * 1) name, 2) X coordinates, 3) Y coordinates, 4) continent it belongs to, 5) arrayList of adjacent countries indexes.
      */
@@ -78,6 +80,8 @@ public class Map extends JPanel {
     public Dimension getPreferredSize () {
         return new Dimension (MAP_WIDTH, MAP_HEIGHT);
     }
+    
+    
 
     /** Overrides the paintComponent method of JPanel. The method draws a filled circle for each Country at the coordinates(x-radius, y-radius). The color of the country
      * depends on the Continent it belongs to. Lastly, lines between adjacent Countries are drawn.

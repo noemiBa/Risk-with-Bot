@@ -156,15 +156,15 @@ public class Window {
 
 
     public static void createAndShowGUI(Game game) {
-//Create and set up the window.
+    	//Create and set up the window.
         JFrame frame = new JFrame("GridBagLayoutDemo");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//Set up the content pane.
+        //Set up the content pane.
         addComponentsToPane(game, frame.getContentPane());
 
-//Display the window.
+        //Display the window.
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

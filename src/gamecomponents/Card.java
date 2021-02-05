@@ -12,7 +12,6 @@ public class Card
     private type unitType;
 
     public Card(String countryName, type unitType) {
-    	//validateCard(countryName);
         this.countryName = countryName;
         this.unitType = unitType;
     };
@@ -32,15 +31,20 @@ public class Card
     }
     
     public void setCountryName(String countryName) {
-    	//validateCard(countryName);
+    	validateCard(countryName);
         this.countryName = countryName;
     }
 
-    
-    @Override
+	@Override
    	public String toString() {
    		return "[countryName=" + countryName + ", unitType=" + unitType + "]";
    	}
+	
+	 private void validateCard(String name) {
+	    if (name.trim().isEmpty()) {
+	    	throw new IllegalArgumentException("Country name should not be empty");
+	    }
+	}
     
     
 }

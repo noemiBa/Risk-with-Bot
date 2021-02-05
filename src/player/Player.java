@@ -1,4 +1,4 @@
-	package player;
+package player;
 
 import gamecomponents.Card;
 import gamecomponents.Deck;
@@ -47,7 +47,7 @@ public abstract class Player
     /** Removes the number of cards specified from the top of the deck ArrayList and
      * adds to Player cards ArrayList
      * */
-    public void draw(int numberOfCards, Deck deck)
+    private void draw(int numberOfCards, Deck deck)
     {
         for(int i = 1; i <= numberOfCards; i++)
         {
