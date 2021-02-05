@@ -12,7 +12,7 @@ public class Card
     private type unitType;
 
     public Card(String countryName, type unitType) {
-    	validateCard(countryName);
+    	//validateCard(countryName);
         this.countryName = countryName;
         this.unitType = unitType;
     };
@@ -32,7 +32,7 @@ public class Card
     }
     
     public void setCountryName(String countryName) {
-    	validateCard(countryName);
+    	//validateCard(countryName);
         this.countryName = countryName;
     }
 
@@ -42,11 +42,5 @@ public class Card
    		return "[countryName=" + countryName + ", unitType=" + unitType + "]";
    	}
     
-    /* private methods used for exception handling.
-     */
-    private void validateCard(String name) {
-    	if (name.trim().isEmpty()) {
-    		throw new IllegalArgumentException("A country needs a name");
-    	}
-    }
+    
 }

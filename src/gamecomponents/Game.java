@@ -1,4 +1,4 @@
-package gamecomponents;
+	package gamecomponents;
 
 import player.*;
 import ui.Window;
@@ -42,7 +42,7 @@ public class Game
         Window window = new Window();
         Deck deck = new Deck();
 
-        deck.shuffle();
+        deck.shuffle(deck.getCards());
         Player.assignCountries(players, deck);
     }
 }

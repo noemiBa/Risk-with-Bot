@@ -1,4 +1,4 @@
-	package gamecomponents;
+package gamecomponents;
 
 import player.ActivePlayer;
 import ui.Map;
@@ -31,7 +31,7 @@ public class Deck
     /**
      * the two indexes are always unique.
      */
-    public void shuffle()
+    public void shuffle(ArrayList <Card> cards)
     {
         int cardIndexFirst = 0;
         int cardIndexSecond = 0;
