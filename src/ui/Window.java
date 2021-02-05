@@ -7,8 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import player.Player; 
-
+import player.*; 
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
  */
@@ -161,6 +160,7 @@ public class Window {
         labelDisplayText = new JLabel(message);
         jp.add(labelDisplayText);
 
+        jp.updateUI();
         System.out.println("button working");
     }
 
