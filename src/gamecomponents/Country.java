@@ -28,6 +28,9 @@ public class Country {
      * @param coord_y: the y coordinate of the country on the Map
      */
     public Country(String name, int coord_x, int coord_y) {
+    	validateCountry(name); 
+    	validateCountry(coord_x); 
+    	validateCountry(coord_y);
         this.name = name;
         this.coord_x = coord_x;
         this.coord_y = coord_y;
@@ -104,32 +107,26 @@ public class Country {
     public int getCoord_y() {
         return coord_y;
     }
-
+    
+    	
     /*
      * MUTATOR methods for instance variables
      */
-    public void setNumberOfInfantry(int numberOfInfantry)
-    {
+    public void setNumberOfInfantry(int numberOfInfantry)  {
+    	validateUnits(numberOfInfantry);
         this.numberOfInfantry = numberOfInfantry;
     }
 
-    public void setNumberOfCavalry(int numberOfCavalry)
-    {
+    public void setNumberOfCavalry(int numberOfCavalry) {
+    	validateUnits(numberOfCavalry);
         this.numberOfCavalry = numberOfCavalry;
     }
-
-    public void setCoord_x(int coord_x) {
-        this.coord_x = coord_x;
-    }
     
-    public void setNumberOfArtillery(int numberOfArtillery)
-    {
+    public void setNumberOfArtillery(int numberOfArtillery) {
+    	validateUnits(numberOfArtillery);
         this.numberOfArtillery = numberOfArtillery;
     }
     
-    public void setCoord_y(int coord_y) {
-        this.coord_y = coord_y;
-    }
     public void setAdjCountries(ArrayList<Integer> adjCountries) {
         this.adjCountries = adjCountries;
     }
@@ -165,6 +162,27 @@ public class Country {
     public String toString() {
         return "Country [name=" + name + ", coord_x=" + coord_x + ", coord_y=" + coord_y + ", continent=" + continent
                 + ", adjCountries=" + adjCountries + "]";
+    }
+    
+    /* private method used for exception handling when constructing a Country instance.
+     * 
+     */
+    private void validateCountry(String name) {
+    	if (name.trim().isEmpty()) {
+    		throw new IllegalArgumentException("A country needs a name");
+    	}
+    }
+    
+    private void validateCountry(int coord) {
+    	if (coord<0) {
+    		throw new IllegalArgumentException("Coordinates should not be negative.");
+    	}
+    }
+    
+    private void validateUnits(int units) {
+    	if (units < 0) {
+    		throw new IllegalArgumentException("Number of units should not be negative.");
+    	}
     }
 
 }
