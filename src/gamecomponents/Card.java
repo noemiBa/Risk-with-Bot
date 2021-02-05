@@ -1,4 +1,4 @@
-package gamecomponents;
+	package gamecomponents;
 
 /** Creates a new Card object with the card's countryName and unitType
  * The Deck class uses this card object by creating a deck as an ArrayList of 42 Card objects
@@ -11,34 +11,42 @@ public class Card
     private String countryName;
     private type unitType;
 
-    public Card(String countryName, type unitType)
-    {
+    public Card(String countryName, type unitType) {
+    	validateCard(countryName);
         this.countryName = countryName;
         this.unitType = unitType;
     };
-
-    public String getCountryName()
-    {
+    
+    /*Accessor Methods*/
+    public String getCountryName() {
         return countryName;
     }
-
-    public void setCountryName(String countryName)
-    {
+    
+    public type getUnitType() {
+        return unitType;
+    }
+    
+    /*Mutator Methods*/
+    public void setUnitType(type unitType) {
+        this.unitType = unitType;
+    }
+    
+    public void setCountryName(String countryName) {
+    	validateCard(countryName);
         this.countryName = countryName;
     }
 
-    public type getUnitType()
-    {
-        return unitType;
-    }
-
-    public void setUnitType(type unitType)
-    {
-        this.unitType = unitType;
-    }
     
     @Override
    	public String toString() {
    		return "[countryName=" + countryName + ", unitType=" + unitType + "]";
    	}
+    
+    /* private methods used for exception handling.
+     */
+    private void validateCard(String name) {
+    	if (name.trim().isEmpty()) {
+    		throw new IllegalArgumentException("A country needs a name");
+    	}
+    }
 }

@@ -1,4 +1,4 @@
-package gamecomponents;
+	package gamecomponents;
 
 import player.ActivePlayer;
 import ui.Map;

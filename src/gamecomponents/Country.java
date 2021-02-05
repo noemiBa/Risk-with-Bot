@@ -1,4 +1,4 @@
-package gamecomponents;
+	package gamecomponents;
 
 import player.*;
 import java.awt.*;
@@ -164,8 +164,7 @@ public class Country {
                 + ", adjCountries=" + adjCountries + "]";
     }
     
-    /* private method used for exception handling when constructing a Country instance.
-     * 
+    /* private methods used for exception handling.
      */
     private void validateCountry(String name) {
     	if (name.trim().isEmpty()) {

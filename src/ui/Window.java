@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import player.Player; 
 
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
@@ -19,17 +20,14 @@ public class Window {
     private static JPanel displayText;
     private static JPanel readText;
     private static JLabel labelDisplayText;
-    private static int i = 0;
-    public static Game game;
-    private static ArrayList<Integer> round;
+    private static int instruction;
 
     public Window() {
-        round = new ArrayList<Integer>();
-        game = new Game();
+        instruction = 1;
         createAndShowGUI();
     }
 
-    public static void addComponentsToPane(Container pane) {
+    public static void addComponentsToPane(Player[] players, Container pane) {
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
@@ -68,14 +66,12 @@ public class Window {
         readText.setBackground(Color.orange);
         JTextField textArea = new JTextField(25);
         textArea.setBorder(BorderFactory.createEtchedBorder());
-        
-        
+
         //Adding button listener
         button.addActionListener(e -> {
-        	String input = textArea.getText();
+            String input = textArea.getText();
             textArea.setText("");
-            
-            nextInstruction(input);
+            nextInstruction(players, input);
         });
 
 
@@ -131,27 +127,32 @@ public class Window {
     }
 
     //Method that will handle the next instruction, we maybe need to make a class for this
-    public static void nextInstruction(String input) {
-
-        i++;
-        round.add(i);
-        int x = round.get(round.size() - 1);
-
-        switch (x) {
+    public static void nextInstruction(Player[] players, String input)
+    {
+        switch(instruction)
+        {
             case 1:
-                game.setNamePlayer1(input);
+                players[0].setName(input);
                 nextTextDisplay(displayText, "<html>Thanks for that! <br>Now Enter Second Player Name </html>");
                 break;
             case 2:
-                game.setNamePlayer2(input);
-                game.startPlayers();
+                players[1].setName(input);
                 nextTextDisplay(displayText, "<html>We are now ready to start the game!<br> See you on next Assignment <3 </html>");
                 break;
             default:
-                System.out.println("Sorry hihihihi error");
+                // player turn implemented here
+                break;
         }
-
-        System.out.println("Current round: " + i);
+//        for(Player p: players)
+//        {
+//            System.out.print(p.getName() + " has countries ");
+//            for(Card c: p.getCards())
+//            {
+//                System.out.print(c.getCountryName() + " ");
+//            }
+//            System.out.println();
+//        }
+        instruction++;
     }
 
 
@@ -159,7 +160,7 @@ public class Window {
         jp.removeAll(); 
         labelDisplayText = new JLabel(message);
         jp.add(labelDisplayText);
-        jp.updateUI(); 
+
         System.out.println("button working");
     }
 
@@ -172,7 +173,7 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 //Set up the content pane.
-        addComponentsToPane(frame.getContentPane());
+        addComponentsToPane(Game.getPlayers(), frame.getContentPane());
 
 //Display the window.
         frame.pack();
