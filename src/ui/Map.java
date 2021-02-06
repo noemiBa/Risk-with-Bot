@@ -103,24 +103,50 @@ public class Map extends JPanel {
         super.paintComponent(g);
         
         g.drawImage(image, 0, 50, null);
-        
-        //g.drawImage(new ImageIcon("src/images/8.png").getImage(), 0, 0,300,300, null);
 
-        for (Country c: countries) { //draw the sea lines first as they will be in the background.
+        drawSeaLines(g);
+
+        drawCountryNodes(g);
+
+        drawMilitaryUnits(g);      
+    }
+    
+    /* Private helper method to the main paintComponent method.
+     * This method draws sea lines between adjacent countries.
+     */
+    private void drawSeaLines(Graphics g) {
+    	for (Country c: countries) { //draw the sea lines first as they will be in the background.
             for (int i = 0; i < c.getAdjCountriesLength(); i++) {
-                //do NOT draw the sea line between Alaska and Kamchatka in the middle of the screen.
+              
+            	//do NOT draw the sea line between Alaska and Kamchatka in the middle of the screen.
                 if ((c.getName() != "Alaska" || countries.get(c.getAdjCountries().get(i)).getName() != "Kamchatka") && (c.getName() != "Kamchatka" || countries.get(c.getAdjCountries().get(i)).getName() != "Alaska")) {
                     g.setColor(Color.LIGHT_GRAY);
                     g.drawLine(c.getCoord_x(), c.getCoord_y(), countries.get(c.getAdjCountries().get(i)).getCoord_x(), countries.get(c.getAdjCountries().get(i)).getCoord_y());
                 }
             }
         }
-
-        //draw the sea lines between Alaska and Kamchatka
-         g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
-         g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
-
-        for (Country c: countries)
+    	
+    	//draw the sea lines between Alaska and Kamchatka
+        g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
+        g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
+    }
+    
+    /* Private helper method to the main paintComponent method.
+     * This method draws the number of militaryUnits in the center of each Country node.
+     */
+    private void drawMilitaryUnits(Graphics g) {
+    	//Draw the number of military units on the country node.
+        for (Country c: countries) {
+            g.setColor(Color.black);
+            g.drawString(String.valueOf(c.getNumberOfUnits()), c.getCoord_x()-SPACING, c.getCoord_y()+SPACING);
+        }
+    }
+    
+    /* Private helper method to the main paintComponent method.
+     * This method draws a Country node at the specified coordinates, as well as the name of said Country.
+     */
+    private void drawCountryNodes(Graphics g) {
+    	for (Country c: countries)
         {
             //draw the country names
             g.setColor(Color.black);
@@ -152,12 +178,6 @@ public class Map extends JPanel {
                 g.setColor(Color.blue);
                 g.fillOval(c.getCoord_x()-RADIUS, c.getCoord_y()-RADIUS, DIAMETER, DIAMETER);
             }
-        }
-
-        //Draw the number of military units on the country node.
-        for (Country c: countries) {
-            g.setColor(Color.black);
-            g.drawString(String.valueOf(c.getNumberOfUnits()), c.getCoord_x()-SPACING, c.getCoord_y()+SPACING);
         }
     }
 }
