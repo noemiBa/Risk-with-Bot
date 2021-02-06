@@ -26,6 +26,10 @@ public class Window {
         createAndShowGUI(game);
     }
 
+    public Window(){
+        instruction = 1;
+    }
+
     public static void addComponentsToPane(Game game, Container pane) {
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -73,7 +77,7 @@ public class Window {
             } else if (instruction > 2){
                 nextInstruction(input);
             }
-            System.out.println("Button working, current instruction :" + instruction);
+            System.out.println("Button working, current instruction :" + getInstruction());
         });
 
         c.fill = GridBagConstraints.BOTH;
@@ -131,12 +135,11 @@ public class Window {
             case 2:
                 players[1].setName(input);
                 nextTextDisplay(displayText, "<html>We are now ready to start the game!<br> See you on next Assignment <3 </html>");
-                System.out.println(players);
                 break;
             default:
                 break;
         }
-        instruction++;
+        setInstruction(instruction++);
     }
 
     //Method that will handle the next instruction, we maybe need to make a class for this
@@ -151,7 +154,7 @@ public class Window {
             default:
                 break;
         }
-        instruction++;
+        setInstruction(instruction++);
     }
 
     private static void nextTextDisplay(JPanel jp, String message) {
@@ -163,6 +166,13 @@ public class Window {
         System.out.println("Text Display Updated");
     }
 
+    public static int getInstruction() {
+        return instruction;
+    }
+
+    public static void setInstruction(int instruction) {
+        Window.instruction = instruction;
+    }
 
     public static void createAndShowGUI(Game game) {
         //Create and set up the window.
