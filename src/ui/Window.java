@@ -78,11 +78,7 @@ public class Window {
         button.addActionListener(e -> {
             String input = textArea.getText();
             textArea.setText("");
-            if (instruction <= 2) {
-                nextInstructionBeforeStartGame(Game.getPlayers(), input);
-            } else if (instruction > 2){
-                nextInstruction(input);
-            }
+            nextInstruction(Game.getPlayers(), input);
             System.out.println("Button working, current instruction :" + getInstruction());
         });
 
@@ -135,7 +131,7 @@ public class Window {
     }
 
     //Method that will handle the next instruction, we maybe need to make a class for this
-    public static void nextInstructionBeforeStartGame(Player[] players, String input) {
+    public static void nextInstruction(Player[] players, String input) {
         switch (instruction) {
             case 1:
                 players[0].setName(input);
@@ -145,21 +141,6 @@ public class Window {
                 players[1].setName(input);
                 nextTextDisplay(displayText, "<html>We are now ready to start the game:<br> First Player your color is Cyan!<br> Second Player your color is Pink! <br> See you in two weeks! xoxo </html>");
                 mapPanel.updateUI();
-                break;
-            default:
-                break;
-        }
-        instruction++;
-    }
-
-    //Method that will handle the next instruction, we maybe need to make a class for this
-    public static void nextInstruction(String input) {
-        switch (instruction) {
-            case 3:
-                //next assignment
-                break;
-            case 4:
-                //next assignment
                 break;
             default:
                 break;
