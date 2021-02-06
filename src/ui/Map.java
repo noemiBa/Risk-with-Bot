@@ -44,7 +44,6 @@ public class Map extends JPanel {
     private static final int NUM_COUNTRIES = COUNTRY_COORD.length;
     private static final int SPACING = 5;
     private BufferedImage image;
-    private static int i = 0;
 
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
@@ -110,12 +109,7 @@ public class Map extends JPanel {
 
         drawCountryNodes(g);
 
-        if (i == 0) {
-            drawMilitaryUnitsStart(g);
-            i++;
-        } else {
-            drawMilitaryUnits(g);
-        }
+        drawMilitaryUnits(g);
 
     }
 
@@ -142,19 +136,11 @@ public class Map extends JPanel {
     /* Private helper method to the main paintComponent method.
      * This method draws the number of militaryUnits in the center of each Country node.
      */
-    private void drawMilitaryUnitsStart(Graphics g) {
-        //Draw the number of military units on the country node.
-        for (Country c : countries) {
-            g.setColor(Color.black);
-            g.drawString(String.valueOf(0), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
-        }
-    }
-
     private void drawMilitaryUnits(Graphics g) {
         //Draw the number of military units on the country node.
         for (Country c : countries) {
             g.setColor(Color.black);
-            g.drawString(String.valueOf(0), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
+            g.drawString(String.valueOf(c.getNumberOfInfantry()), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
         }
     }
 
@@ -189,9 +175,5 @@ public class Map extends JPanel {
                 g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
             }
         }
-    }
-
-    public static void incrementI(){
-        i++;
     }
 }
