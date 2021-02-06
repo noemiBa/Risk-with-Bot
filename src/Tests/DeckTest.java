@@ -27,7 +27,7 @@ class DeckTest {
 		Deck deck1 = new Deck();
 		ArrayList<Card> cards = (ArrayList<Card>) deck.getCards().clone(); 
 		ArrayList<Card> cards2 = (ArrayList<Card>) deck1.getCards().clone();
-		deck.shuffle(cards); 
+		deck.shuffle();
 		assertFalse(cards.get(0).getCountryName().equals(cards2.get(0).getCountryName()));
 	}
 	

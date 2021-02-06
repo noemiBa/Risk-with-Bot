@@ -76,18 +76,18 @@ class PlayerTest {
 	void testAssignCountries() {
 		ActivePlayer activePlayer = new ActivePlayer("player", color.GREEN);
 		PassivePlayer passivePlayer = new PassivePlayer("", color.BLUE);
-	
+
 		Player[] players= {(Player) activePlayer, (Player) passivePlayer};
 		Deck deck = new Deck();
-		
-		Player.assignCountries(players, deck); 
-		
+
+//		Player.assignCountries(players, deck);
+
 		//Check that the method assignCountries assigned the correct amount of cards i.e. 9 to the Active Player and 6 to the Passive Player
 		assertEquals(activePlayer.getCards().size(), 9);
 		assertEquals(passivePlayer.getCards().size(), 6);
-		
-		//Check that none of the cards are repeated 
-		int i = 0; 
+
+		//Check that none of the cards are repeated
+		int i = 0;
 		for (Card c : activePlayer.getCards()) {
 			if (passivePlayer.getCards().get(i).equals(c)) {
 				fail("No cards should be repeated");

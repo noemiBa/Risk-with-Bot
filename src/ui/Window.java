@@ -30,7 +30,8 @@ public class Window {
     }
 
     public static void addComponentsToPane(Game game, Container pane) {
-        if (RIGHT_TO_LEFT) {
+        if (RIGHT_TO_LEFT)
+        {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
 
@@ -41,7 +42,8 @@ public class Window {
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        if (shouldFill) {
+        if (shouldFill)
+        {
             //natural height, maximum width
             c.fill = GridBagConstraints.HORIZONTAL;
         }
@@ -52,7 +54,8 @@ public class Window {
         displayText.setBackground(Color.yellow);
         nextTextDisplay(displayText, "<html>WELCOME TO RISK WITH BOT HARMON!<br>Enter First Player Name </html>" );
         //Setting the display constraints
-        if (shouldWeightX) {
+        if (shouldWeightX)
+        {
             c.weightx = 0.6;
         }
         c.fill = GridBagConstraints.BOTH;
@@ -89,7 +92,8 @@ public class Window {
 
         //DECK BUTTON
         Image card = null;
-        try {
+        try
+        {
             card = ImageIO.read(Window.class.getResource("/images/card.jpeg"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,8 +120,8 @@ public class Window {
         c.insets = new Insets(0, 0, 0, 0);
        
         //mapPanel.add(label, c);
+
         mapPanel.add(game.getMap(), c);
-        game.getMap().initialiseCountries();
         
 
         c.ipady = 0;
@@ -148,7 +152,8 @@ public class Window {
     }
 
 
-    private static void nextTextDisplay(JPanel jp, String message) {
+    private static void nextTextDisplay(JPanel jp, String message)
+    {
         jp.removeAll(); 
         labelDisplayText = new JLabel(message);
         jp.add(labelDisplayText);
@@ -159,7 +164,8 @@ public class Window {
 
 
 
-    public static void createAndShowGUI(Game game) {
+    public static void createAndShowGUI(Game game)
+    {
     	//Create and set up the window.
         JFrame frame = new JFrame("GridBagLayoutDemo");
         frame.setResizable(false);
@@ -173,7 +179,4 @@ public class Window {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    
-    
-
 }

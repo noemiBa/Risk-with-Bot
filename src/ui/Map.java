@@ -78,7 +78,7 @@ public class Map extends JPanel {
                 adjCountries.add(ADJACENT[i][k]);
             }
             countries.get(i).setAdjCountries(adjCountries);
-           System.out.println(countries.get(i).toString()); //for testing purposes
+           //System.out.println(countries.get(i).toString()); //for testing purposes
         }
     }
 
@@ -107,7 +107,7 @@ public class Map extends JPanel {
         //g.drawImage(new ImageIcon("src/images/8.png").getImage(), 0, 0,300,300, null);
 
         for (Country c: countries) { //draw the sea lines first as they will be in the background.
-            for (int i = 0; i<c.getAdjCountriesLength(); i++) {
+            for (int i = 0; i < c.getAdjCountriesLength(); i++) {
                 //do NOT draw the sea line between Alaska and Kamchatka in the middle of the screen.
                 if ((c.getName() != "Alaska" || countries.get(c.getAdjCountries().get(i)).getName() != "Kamchatka") && (c.getName() != "Kamchatka" || countries.get(c.getAdjCountries().get(i)).getName() != "Alaska")) {
                     g.setColor(Color.LIGHT_GRAY);
@@ -120,7 +120,8 @@ public class Map extends JPanel {
          g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
          g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
 
-        for (Country c : countries) {
+        for (Country c: countries)
+        {
             //draw the country names
             g.setColor(Color.black);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 16));

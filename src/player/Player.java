@@ -1,9 +1,12 @@
 package player;
 
 import gamecomponents.Card;
+import gamecomponents.Country;
 import gamecomponents.Deck;
+import ui.Map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /** Player abstract class extended by ActivePlayer and PassivePlayer
  * */
@@ -13,13 +16,15 @@ public abstract class Player
 	public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
     private String name;
     private PassivePlayer.color playerColor;
-    private ArrayList<Card> cards;
+    private ArrayList <Card> cards;
+    private ArrayList <Country> countriesControlled;
 
     public Player(String name, color playerColor)
     {
         this.name = name;
         this.playerColor = playerColor;
         cards = new ArrayList <Card>();
+        countriesControlled = new ArrayList<Country>();
     }
     
     /*Accessor methods*/
@@ -44,6 +49,11 @@ public abstract class Player
         this.name = name;
     }
 
+    public ArrayList <Country> getCountriesControlled()
+    {
+        return countriesControlled;
+    }
+
     /** Removes the number of cards specified from the top of the deck ArrayList and
      * adds to Player cards ArrayList
      * */
@@ -56,24 +66,43 @@ public abstract class Player
         }
     }
 
-    public static void assignCountries(Player[] players, Deck deck)
+    public static void assignCountriesControlled(Player[] players, Map map)
     {
-
-        for(Player player: players)
+        ArrayList<Integer> randomIndexes = new ArrayList<Integer>();
+        for(int i = 0; i < 42; i++)
         {
-            if(player instanceof ActivePlayer)
-                player.draw(9, deck);
+            randomIndexes.add(i);
+        }
+
+        // randomizes order of 42 integers labelled 0 - 41
+        Collections.shuffle(randomIndexes);
+
+        // assigns random countries to each player using randomIndexes to reference the country ArrayList
+        int j = 0;
+        for(Player p: players)
+        {
+            if(p instanceof ActivePlayer)
+            {
+                for(int i = 0; i < 9; i++, j++)
+                {
+                    p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
+                    p.getCountriesControlled().get(i).setNumberOfInfantry(1); // adds one Infantry in each Country
+                }
+            }
             else
-                player.draw(6, deck);
-            /**
-             * method could be added here to allocate countries controlled using the player cards
-             * countryName variable
-             */
+            {
+                for(int i = 0; i < 6; i++, j++)
+                {
+                    p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
+                    p.getCountriesControlled().get(i).setNumberOfInfantry(1);
+                }
+            }
         }
     }
     
     @Override
-	public String toString() {
+	public String toString()
+	{
 		return "[name=" + name + ", playerColor=" + playerColor + "]";
 	}
     

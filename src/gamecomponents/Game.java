@@ -4,8 +4,6 @@ import player.*;
 import ui.Map;
 import ui.Window;
 
-import java.util.ArrayList;
-
 /**
  * Game class created to run different the main class methods in each of the packages
  * Currently used to test creating an Array of player objects and .draw() method
@@ -20,7 +18,9 @@ public class Game
     public Game()
     {
         map = new Map();
+        map.initialiseCountries();
         players = newPlayers();
+        Player.assignCountriesControlled(players, map);
         deck = new Deck();
     }
     
@@ -57,6 +57,6 @@ public class Game
     {
         Game game = new Game();
         Window window = new Window(game);
-        game.getDeck().shuffle(game.getDeck().getCards());
+        game.getDeck().shuffle();
     }
 }
