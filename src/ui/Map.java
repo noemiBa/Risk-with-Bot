@@ -1,6 +1,7 @@
 package ui;
 
 import gamecomponents.*;
+import player.Player;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,6 +45,7 @@ public class Map extends JPanel {
     private static final int NUM_COUNTRIES = COUNTRY_COORD.length;
     private static final int SPACING = 5;
     private BufferedImage image;
+    private static int i;
 
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
@@ -55,7 +57,9 @@ public class Map extends JPanel {
         } catch (IOException ex) {
             // handle exception...
         }
-
+        Window window = new Window();
+        int i = window.getInstruction();
+        System.out.println("INSTRUCTION IN THE CONSTRUCTOR " + i);
     }
 
     /*Accessor methods*/
@@ -107,10 +111,17 @@ public class Map extends JPanel {
 
         drawSeaLines(g);
 
-        drawCountryNodes(g);
+        if (i < 3) {
+            drawCountryNodesStart(g);
+            drawMilitaryUnitsStart(g);
+            System.out.println("INSTRUCTION IN THE METHOD " + i);
 
-        drawMilitaryUnits(g);
-
+        } else {
+            Player[] players = Game.getPlayers();
+            drawCountryNodes(g, players);
+            drawMilitaryUnits(g);
+            System.out.println(i);
+        }
     }
 
     /* Private helper method to the main paintComponent method.
@@ -136,23 +147,29 @@ public class Map extends JPanel {
     /* Private helper method to the main paintComponent method.
      * This method draws the number of militaryUnits in the center of each Country node.
      */
+    private void drawMilitaryUnitsStart(Graphics g) {
+        //Draw the number of military units on the country node.
+        for (Country c : countries) {
+            g.setColor(Color.black);
+            g.drawString(String.valueOf(0), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
+        }
+    }
+
     private void drawMilitaryUnits(Graphics g) {
         //Draw the number of military units on the country node.
         for (Country c : countries) {
             g.setColor(Color.black);
-            g.drawString(String.valueOf(c.getNumberOfInfantry()), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
+            g.drawString(String.valueOf(c.getNumberOfUnits()), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
         }
     }
 
     /* Private helper method to the main paintComponent method.
      * This method draws a Country node at the specified coordinates, as well as the name of said Country.
      */
-    private void drawCountryNodes(Graphics g) {
+    private void drawCountryNodesStart(Graphics g) {
         for (Country c : countries) {
             //draw the country names
-            g.setColor(Color.black);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
-            g.drawString(c.getName(), c.getCoord_x() - DIAMETER, c.getCoord_y() + DIAMETER);
+            drawCountriesNames(g);
 
             //draw the graph nodes to indicate the countries changing color according to the continent they belong to.
             if (c.getContinent() == 0) {
@@ -174,6 +191,28 @@ public class Map extends JPanel {
                 g.setColor(Color.blue);
                 g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
             }
+        }
+    }
+
+    private void drawCountryNodes(Graphics g, Player[] players) {
+        for (Player p : players) {
+            for (Country c : countries) {
+                //draw the country names
+                drawCountriesNames(g);
+                //draw the graph nodes to indicate the countries changing color according to the continent they belong to.
+                if (p.getCountriesControlled().contains(c.getName())) {
+                    g.setColor(p.getPlayerColor());
+                    g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
+                }
+            }
+        }
+    }
+
+    public void drawCountriesNames(Graphics g) {
+        for (Country c : countries) {
+            g.setColor(Color.black);
+            g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+            g.drawString(c.getName(), c.getCoord_x() - DIAMETER, c.getCoord_y() + DIAMETER);
         }
     }
 }
