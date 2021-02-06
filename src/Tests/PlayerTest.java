@@ -10,8 +10,9 @@ import gamecomponents.Deck;
 import player.ActivePlayer;
 import player.PassivePlayer;
 import player.Player;
-import player.Player.color;
 import ui.Map;
+
+import java.awt.*;
 
 class PlayerTest {
 
@@ -21,11 +22,11 @@ class PlayerTest {
 
 	@Test
 	void testConstructorActivePlayer() {
-		ActivePlayer player = new ActivePlayer("player", color.GREEN);
+		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
 		assertEquals(player.toString(), "[name=player, playerColor=GREEN]");
 
 		//Note: the player class can be initialised by having an empty String as the name
-		ActivePlayer player1 = new ActivePlayer("", color.GREEN);
+		ActivePlayer player1 = new ActivePlayer("", Color.GREEN);
 		assertEquals(player1.toString(), "[name=, playerColor=GREEN]");
 
 		//Ensure that the cards arrayList is not null upon construction
@@ -40,11 +41,11 @@ class PlayerTest {
 
 	@Test
 	void testConstructorPassivePlayer() {
-		PassivePlayer player = new PassivePlayer("player", color.GREEN);
+		PassivePlayer player = new PassivePlayer("player", Color.GREEN);
 		assertEquals(player.toString(), "[name=player, playerColor=GREEN]");
 
 		//Note: the player class can be initialised by having an empty String as the name
-		PassivePlayer player1 = new PassivePlayer("", color.GREEN);
+		PassivePlayer player1 = new PassivePlayer("", Color.GREEN);
 		assertEquals(player1.toString(), "[name=, playerColor=GREEN]");
 
 		//Ensure that the cards arrayList is not null upon construction
@@ -59,14 +60,14 @@ class PlayerTest {
 
 	@Test
 	void testGetterMethods() {
-		ActivePlayer player = new ActivePlayer("player", color.GREEN);
-		PassivePlayer player1 = new PassivePlayer("", color.BLUE);
+		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
+		PassivePlayer player1 = new PassivePlayer("", Color.BLUE);
 
 		assertEquals(player.getName(), "player");
 		assertEquals(player1.getName(), "");
 
-		assertEquals(player.getPlayerColor(), color.GREEN);
-		assertEquals(player1.getPlayerColor(), color.BLUE);
+		assertEquals(player.getPlayerColor(), Color.GREEN);
+		assertEquals(player1.getPlayerColor(), Color.BLUE);
 		
 		player.getCards().add(new Card("Italy", type.INFANTRY));
 		player.getCards().add(new Card("Brazil", type.INFANTRY));
@@ -75,8 +76,8 @@ class PlayerTest {
 		
 	@Test
 	void testAssignCountriesControlled() {
-		ActivePlayer activePlayer = new ActivePlayer("player", color.GREEN);
-		PassivePlayer passivePlayer = new PassivePlayer("", color.BLUE);
+		ActivePlayer activePlayer = new ActivePlayer("player", Color.GREEN);
+		PassivePlayer passivePlayer = new PassivePlayer("", Color.BLUE);
 
 		Player[] players= {(Player) activePlayer, (Player) passivePlayer};
 		Map map = new Map(); 
@@ -99,8 +100,8 @@ class PlayerTest {
 	
 	@Test
 	void testToString() {
-		ActivePlayer player = new ActivePlayer("player", color.GREEN);
-		PassivePlayer passivePlayer = new PassivePlayer("player2", color.BLUE);
+		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
+		PassivePlayer passivePlayer = new PassivePlayer("player2", Color.BLUE);
 		assertEquals(player.toString(), "[name=player, playerColor=GREEN]");
 		assertEquals(passivePlayer.toString(), "[name=player2, playerColor=BLUE]");
 	}

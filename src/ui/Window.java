@@ -7,6 +7,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import javax.swing.JColorChooser;
+import javax.swing.border.TitledBorder;
+
 
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
@@ -19,7 +22,8 @@ public class Window {
     private static JPanel displayText;
     private static JPanel readText;
     private static JLabel labelDisplayText;
-    private static int instruction;
+    private static JPanel mapPanel;
+    public static int instruction;
 
     public Window(Game game) {
         instruction = 1;
@@ -48,7 +52,7 @@ public class Window {
         //DISPLAY TEXT PANEL
         displayText = new JPanel();
         displayText.setBorder(BorderFactory.createTitledBorder("Display Text"));
-        displayText.setBackground(Color.yellow);
+        displayText.setBackground(Color.white);
         nextTextDisplay(displayText, "<html>WELCOME TO RISK WITH BOT HARMON!<br>Enter First Player Name </html>");
         //Setting the display constraints
         if (shouldWeightX) {
@@ -63,8 +67,10 @@ public class Window {
         //READ TEXT PANEL
         readText = new JPanel();
         button = new JButton("Enter");
-        readText.setBorder(BorderFactory.createTitledBorder("Read Text Panel 2"));
-        readText.setBackground(Color.orange);
+        TitledBorder titledBorderText = BorderFactory.createTitledBorder("Read Text");
+        readText.setBorder(titledBorderText);
+        titledBorderText.setTitleColor(Color.WHITE);
+        readText.setBackground(Color.black);
         JTextField textArea = new JTextField(25);
         textArea.setBorder(BorderFactory.createEtchedBorder());
 
@@ -73,7 +79,7 @@ public class Window {
             String input = textArea.getText();
             textArea.setText("");
             if (instruction <= 2) {
-                nextInstructionBeforeStartGame(game.getPlayers(), input);
+                nextInstructionBeforeStartGame(Game.getPlayers(), input);
             } else if (instruction > 2){
                 nextInstruction(input);
             }
@@ -105,8 +111,11 @@ public class Window {
         pane.add(button, c);
 
         //MAP PANEL
-        JPanel mapPanel = new JPanel(new GridBagLayout());
-        mapPanel.setBorder(BorderFactory.createTitledBorder("MAP"));
+        mapPanel = new JPanel(new GridBagLayout());
+        TitledBorder titledBorderMap = BorderFactory.createTitledBorder("MAP");
+        mapPanel.setBorder(titledBorderMap);
+        titledBorderMap.setTitleColor(Color.WHITE);
+        mapPanel.setBackground(Color.black);
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 70;      //make this component tall
         c.ipadx = 200;
@@ -115,7 +124,6 @@ public class Window {
         c.gridx = 0;
         c.gridy = 0;
 
-        //mapPanel.add(label, c);
         mapPanel.add(game.getMap(), c);
 
         c.ipady = 0;
@@ -123,6 +131,7 @@ public class Window {
         pane.add(mapPanel, c);
         pane.validate();
         pane.repaint();
+
     }
 
     //Method that will handle the next instruction, we maybe need to make a class for this
@@ -134,12 +143,13 @@ public class Window {
                 break;
             case 2:
                 players[1].setName(input);
-                nextTextDisplay(displayText, "<html>We are now ready to start the game!<br> See you on next Assignment <3 </html>");
+                nextTextDisplay(displayText, "<html>We are now ready to start the game:<br> First Player your color is Cyan!<br> Second Player your color is Pink! <br> See you in two weeks! xoxo </html>");
+                mapPanel.updateUI();
                 break;
             default:
                 break;
         }
-        setInstruction(instruction++);
+        instruction++;
     }
 
     //Method that will handle the next instruction, we maybe need to make a class for this
@@ -154,7 +164,7 @@ public class Window {
             default:
                 break;
         }
-        setInstruction(instruction++);
+        instruction++;
     }
 
     private static void nextTextDisplay(JPanel jp, String message) {

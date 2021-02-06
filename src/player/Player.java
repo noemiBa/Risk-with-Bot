@@ -5,6 +5,7 @@ import gamecomponents.Country;
 import gamecomponents.Deck;
 import ui.Map;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,19 +13,21 @@ import java.util.Collections;
  * */
 public abstract class Player
 {
-
-	public enum color {BROWN, GREEN, GREY, BLUE, YELLOW, ORANGE};
     private String name;
-    private PassivePlayer.color playerColor;
+    private Color playerColor;
     private ArrayList <Card> cards;
     private ArrayList <Country> countriesControlled;
 
-    public Player(String name, color playerColor)
+    public Player(String name, Color playerColor)
     {
         this.name = name;
         this.playerColor = playerColor;
         cards = new ArrayList <Card>();
         countriesControlled = new ArrayList<Country>();
+    }
+
+    public Player(){
+
     }
     
     /*Accessor methods*/
@@ -33,7 +36,7 @@ public abstract class Player
         return name;
     }
     
-    public PassivePlayer.color getPlayerColor()
+    public Color getPlayerColor()
     {
         return playerColor;
     }

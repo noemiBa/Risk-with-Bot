@@ -4,6 +4,8 @@ import player.*;
 import ui.Map;
 import ui.Window;
 
+import java.awt.*;
+
 /**
  * Game class created to run different the main class methods in each of the packages
  * Currently used to test creating an Array of player objects and .draw() method
@@ -11,8 +13,8 @@ import ui.Window;
 
 public class Game
 {
-	private Map map;
-    private Player[] players;
+    private static Player[] players;
+    private Map map;
     private Deck deck;
 	
     public Game()
@@ -28,17 +30,17 @@ public class Game
     {
         Player[] players =
         {
-            new ActivePlayer("", ActivePlayer.color.BLUE),
-            new ActivePlayer("", ActivePlayer.color.GREEN),
-            new PassivePlayer("Benny", PassivePlayer.color.BROWN),
-            new PassivePlayer("Harry", PassivePlayer.color.GREY),
-            new PassivePlayer("Jolene", PassivePlayer.color.ORANGE),
-            new PassivePlayer("Borgov", PassivePlayer.color.YELLOW)
+            new ActivePlayer("", Color.cyan),
+            new ActivePlayer("", Color.magenta),
+            new PassivePlayer("Benny", Color.green),
+            new PassivePlayer("Harry", Color.white),
+            new PassivePlayer("Jolene", Color.ORANGE),
+            new PassivePlayer("Borgov", Color.yellow)
         };
         return players;
     }
 
-    public Player[] getPlayers()
+    public static Player[] getPlayers()
     {
         return players;
     }

@@ -53,13 +53,20 @@ public class Map extends JPanel {
     public Map() {
         countries = new ArrayList<Country>();
         try {
+            image = ImageIO.read(new File("src/images/map.png"));
+        } catch (IOException ex) {
+            ex.getMessage();
+        }
+    }
+
+    public Map(Window window) {
+        countries = new ArrayList<Country>();
+        try {
             image = ImageIO.read(new File("src/images/11.png"));
         } catch (IOException ex) {
             // handle exception...
         }
-        Window window = new Window();
-        int i = window.getInstruction();
-        System.out.println("INSTRUCTION IN THE CONSTRUCTOR " + i);
+
     }
 
     /*Accessor methods*/
@@ -82,7 +89,6 @@ public class Map extends JPanel {
                 adjCountries.add(ADJACENT[i][k]);
             }
             countries.get(i).setAdjCountries(adjCountries);
-            //System.out.println(countries.get(i).toString()); //for testing purposes
         }
     }
 
@@ -111,16 +117,14 @@ public class Map extends JPanel {
 
         drawSeaLines(g);
 
-        if (i < 3) {
+        if (Window.instruction <= 2) {
             drawCountryNodesStart(g);
             drawMilitaryUnitsStart(g);
-            System.out.println("INSTRUCTION IN THE METHOD " + i);
-
         } else {
             Player[] players = Game.getPlayers();
+            drawCountriesNames(g);
             drawCountryNodes(g, players);
             drawMilitaryUnits(g);
-            System.out.println(i);
         }
     }
 
@@ -151,7 +155,7 @@ public class Map extends JPanel {
         //Draw the number of military units on the country node.
         for (Country c : countries) {
             g.setColor(Color.black);
-            g.drawString(String.valueOf(0), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
+            g.drawString(String.valueOf("0"), c.getCoord_x() - SPACING, c.getCoord_y() + SPACING);
         }
     }
 
@@ -192,18 +196,19 @@ public class Map extends JPanel {
                 g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
             }
         }
+        this.setBackground(Color.black);
     }
 
     private void drawCountryNodes(Graphics g, Player[] players) {
         for (Player p : players) {
-            for (Country c : countries) {
-                //draw the country names
-                drawCountriesNames(g);
+
+            for (Country c : p.getCountriesControlled()) {
+
                 //draw the graph nodes to indicate the countries changing color according to the continent they belong to.
-                if (p.getCountriesControlled().contains(c.getName())) {
-                    g.setColor(p.getPlayerColor());
-                    g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
-                }
+                // if (p.getCountriesControlled().contains(c.getName())) {
+                g.setColor(p.getPlayerColor());
+                g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
+                //  }
             }
         }
     }
