@@ -11,6 +11,7 @@ import player.ActivePlayer;
 import player.PassivePlayer;
 import player.Player;
 import player.Player.color;
+import ui.Map;
 
 class PlayerTest {
 
@@ -73,18 +74,18 @@ class PlayerTest {
 	}
 		
 	@Test
-	void testAssignCountries() {
+	void testAssignCountriesControlled() {
 		ActivePlayer activePlayer = new ActivePlayer("player", color.GREEN);
 		PassivePlayer passivePlayer = new PassivePlayer("", color.BLUE);
 
 		Player[] players= {(Player) activePlayer, (Player) passivePlayer};
-		Deck deck = new Deck();
-
-//		Player.assignCountries(players, deck);
+		Map map = new Map(); 
+		map.initialiseCountries();
+     	Player.assignCountriesControlled(players, map);
 
 		//Check that the method assignCountries assigned the correct amount of cards i.e. 9 to the Active Player and 6 to the Passive Player
-		assertEquals(activePlayer.getCards().size(), 9);
-		assertEquals(passivePlayer.getCards().size(), 6);
+		assertEquals(activePlayer.getCountriesControlled().size(), 9);
+		assertEquals(passivePlayer.getCountriesControlled().size(), 6);
 
 		//Check that none of the cards are repeated
 		int i = 0;

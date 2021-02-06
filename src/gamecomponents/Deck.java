@@ -1,10 +1,9 @@
 package gamecomponents;
 
-import player.ActivePlayer;
 import ui.Map;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.util.List;
 
 /** Creates a new Deck object that stores an arrayList of Card objects
  * */
@@ -25,14 +24,16 @@ public class Deck
         cards = new ArrayList<Card>();
         for(int i = 0; i < 42; i++)
             cards.add(new Card(Map.COUNTRY_NAMES[i], Card.type.INFANTRY));
+        
     }
 
     // collections method reorders the list randomly
     public void shuffle()
     {
-        Collections.shuffle(cards);
+        Collections.shuffle((List<Card>)cards);
     }
-
+    
+    //Accessor method for the instance variable cards
     public ArrayList <Card> getCards()
     {
         return cards;

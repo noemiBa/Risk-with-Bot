@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
+import java.util.Random; 
 
 import gamecomponents.Card;
 import gamecomponents.Deck;
@@ -27,8 +28,11 @@ class DeckTest {
 		Deck deck1 = new Deck();
 		ArrayList<Card> cards = (ArrayList<Card>) deck.getCards().clone(); 
 		ArrayList<Card> cards2 = (ArrayList<Card>) deck1.getCards().clone();
+		 
 		deck.shuffle();
 		assertFalse(cards.get(0).getCountryName().equals(cards2.get(0).getCountryName()));
+		assertFalse(cards.get(20).getCountryName().equals(cards2.get(20).getCountryName()));
+		assertFalse(cards.get(41).getCountryName().equals(cards2.get(41).getCountryName()));
 	}
 	
 	@Test 

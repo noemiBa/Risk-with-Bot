@@ -19,21 +19,6 @@ class CardTest {
 	}
 	
 	@Test
-	void testConstructorErroneousInput() {
-		try {
-			Card c = new Card("", Card.type.INFANTRY);
-			fail("Should throw an exception");
-		}
-		catch (IllegalArgumentException ex) {}
-		
-		try {
-			Card c = new Card("    ", Card.type.INFANTRY);
-			fail("Should throw an exception");
-		}
-		catch (IllegalArgumentException ex) {}
-	}
-	
-	@Test
 	void testGetterMethods() {
 		Card c = new Card("Italy", Card.type.INFANTRY);
 		assertEquals(c.getCountryName(), "Italy");
