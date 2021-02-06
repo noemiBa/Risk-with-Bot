@@ -53,7 +53,7 @@ public class Map extends JPanel {
     public Map() {
         countries = new ArrayList<Country>();
         try {
-            image = ImageIO.read(new File("src/images/map.png"));
+            image = ImageIO.read(new File("src/images/map2.png"));
         } catch (IOException ex) {
             ex.getMessage();
         }
