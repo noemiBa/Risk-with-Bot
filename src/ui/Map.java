@@ -151,7 +151,7 @@ public class Map extends JPanel {
 
         //draw the sea lines between Alaska and Kamchatka
         g.drawLine(countries.get(Country.getIndex("Alaska")).getCoord_x(), countries.get(Country.getIndex("Alaska")).getCoord_y(), 0, countries.get(Country.getIndex("Alaska")).getCoord_y());
-        g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), MAP_WIDTH, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
+        g.drawLine(countries.get(Country.getIndex("Kamchatka")).getCoord_x(), countries.get(Country.getIndex("Kamchatka")).getCoord_y(), countries.get(Country.getIndex("Kamchatka")).getCoord_x()+50, countries.get(Country.getIndex("Kamchatka")).getCoord_y());
     }
 
     /* Private helper method to the main paintComponent method.
