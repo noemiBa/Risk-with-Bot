@@ -55,7 +55,7 @@ public class Map extends JPanel {
     public Map() {
         countries = new ArrayList<Country>();
         try {
-            image = ImageIO.read(new File("src/images/map_color.png"));
+            image = ImageIO.read(getClass().getResource("/images/map_color.png"));
         } catch (IOException ex) {
             ex.getMessage();
         }
