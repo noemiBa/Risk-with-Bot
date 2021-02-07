@@ -7,8 +7,7 @@ import ui.Window;
 import java.awt.*;
 
 /**
- * Game class created to run different the main class methods in each of the packages
- * Currently used to test creating an Array of player objects and .draw() method
+ * Game class - creates the main components of the game i.e. the game's components, the ui, shuffling the deck
  */
 
 public class Game
