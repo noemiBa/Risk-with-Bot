@@ -110,6 +110,7 @@ public class Window {
         mapPanel = new JPanel(new GridBagLayout());
         TitledBorder titledBorderMap = BorderFactory.createTitledBorder("MAP");
         mapPanel.setBorder(titledBorderMap);
+        
         titledBorderMap.setTitleColor(Color.WHITE);
         mapPanel.setBackground(Color.black);
         c.fill = GridBagConstraints.BOTH;
@@ -124,6 +125,7 @@ public class Window {
 
         c.ipady = 0;
         c.gridy = 1;
+        //mapPanel.setSize(new Dimension(860, 570));
         pane.add(mapPanel, c);
         pane.validate();
         pane.repaint();
@@ -139,7 +141,7 @@ public class Window {
                 break;
             case 2:
                 players[1].setName(input);
-                nextTextDisplay(displayText, "<html>We are now ready to start the game:<br> First Player your color is Cyan!<br> Second Player your color is Pink! <br> See you in two weeks! xoxo </html>");
+                nextTextDisplay(displayText, "<html>We are now ready to start the game:<br>" + Game.getPlayers()[0].getName() + " your color is Cyan!<br>" + Game.getPlayers()[1].getName() + " your color is Pink! <br> See you in two weeks! xoxo </html>");
                 mapPanel.updateUI();
                 break;
             default:
