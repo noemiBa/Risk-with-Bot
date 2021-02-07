@@ -8,6 +8,10 @@ Please note, <i>this project is still in process</i>.
 This risk implementation allows for a two player risk game with four passive neutrals and/or 
 a one player risk game against an AI with four passive neutrals. 
 
+To build in intelj, left click and run the file in src/com.company/Main.java
+
+The .jar file can be found in out/artifacts/BotHarmon_jar/BotHarmon.jar
+
 Game.java - creates the main components for the game including the Map, Player, Deck and Window (ui) objects. 
 Additional components may be added later. Can be modified to add more or less neutral and active 
 players as needed using the newPlayers() method.
