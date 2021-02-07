@@ -9,6 +9,7 @@ This risk implementation allows for a two player risk game with four passive neu
 a one player risk game against an AI with four passive neutrals. 
 
 To build in intelj, left click and run the file in src/com.company/Main.java
+To build in Eclipse, right click the file in src/com.company/Main.java -> run as -> Java Application
 
 The .jar file can be found in out/artifacts/BotHarmon_jar/BotHarmon.jar
 
@@ -31,5 +32,5 @@ objects are created in Game.java which are instances of the abstract Player.java
 Map.java - used as a constructor for the Map object. Stores an ArrayList of countries, as well as key data used to 
 Graphic components in the UI.
 
-Window.java - used as a constructor for Window objects. creates the various panel, image, textbox and button objects used
+Window.java - used as a constructor for Window objects. creates the various panels, image, textbox and button objects used
 for the game's UI.
