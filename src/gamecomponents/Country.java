@@ -19,8 +19,6 @@ public class Country {
     private int numberOfCavalry;
     private int numberOfArtillery;
     private ArrayList<Integer> adjCountries;
-    public static final String[] CONTINENT_NAMES = {"N America","Europe","Asia","Australia","S America","Africa"};
-    public static final int[] CONTINENT_VALUES = {5,5,7,2,2,3};
 
     /** Constructor: constructs the object Country. Here the continent index is set to -1 to start, and the arrayList of adjacent countries initialised.
      * @param name: the name of the country
@@ -46,8 +44,8 @@ public class Country {
      */
     public static int getIndex(String countryName) {
     	int index = -1; 
-    	for (int i = 0; i < Map.getCountryNames().length; i++) {
-    		if (countryName.equals(Map.getCountryNames()[i])) {
+    	for (int i = 0; i < GameData.COUNTRY_NAMES.length; i++) {
+    		if (countryName.equals(GameData.COUNTRY_NAMES[i])) {
     			index = i; 
     		}
     	}
@@ -145,12 +143,12 @@ public class Country {
      */
     public String getContinentName() {
         switch (getContinent()) {
-            case 0: return CONTINENT_NAMES[0];
-            case 1: return CONTINENT_NAMES[1];
-            case 2: return CONTINENT_NAMES[2];
-            case 3: return CONTINENT_NAMES[3];
-            case 4: return CONTINENT_NAMES[4];
-            case 5: return CONTINENT_NAMES[5];
+            case 0: return GameData.CONTINENT_NAMES[0];
+            case 1: return GameData.CONTINENT_NAMES[1];
+            case 2: return GameData.CONTINENT_NAMES[2];
+            case 3: return GameData.CONTINENT_NAMES[3];
+            case 4: return GameData.CONTINENT_NAMES[4];
+            case 5: return GameData.CONTINENT_NAMES[5];
             default: return "Invalid";
         }
     }

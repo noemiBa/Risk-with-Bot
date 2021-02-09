@@ -15,9 +15,9 @@ public class Game
     private static Player[] players;
     private Map map;
     private Deck deck;
+    private int[] numUnits = new int [GameData.NUM_COUNTRIES];
 	
-    public Game()
-    {
+    public Game() {
         map = new Map();
         map.initialiseCountries();
         players = newPlayers();

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 import gamecomponents.Country;
+import gamecomponents.Game;
 import player.ActivePlayer;
 import player.Player;
 import ui.Map;

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import gamecomponents.Card;
 import gamecomponents.Card.type;
 import gamecomponents.Deck;
+import gamecomponents.Game;
 import player.ActivePlayer;
 import player.PassivePlayer;
 import player.Player;

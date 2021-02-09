@@ -3,6 +3,7 @@ package player;
 import gamecomponents.Card;
 import gamecomponents.Country;
 import gamecomponents.Deck;
+import gamecomponents.GameData;
 import ui.Map;
 
 import java.awt.*;
@@ -86,7 +87,7 @@ public abstract class Player
         {
             if(p instanceof ActivePlayer)
             {
-                for(int i = 0; i < 9; i++, j++)
+                for(int i = 0; i < GameData.INIT_COUNTRIES_PLAYER; i++, j++)
                 {
                     p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
                     p.getCountriesControlled().get(i).setNumberOfInfantry(1); // adds one Infantry in each Country
@@ -94,7 +95,7 @@ public abstract class Player
             }
             else
             {
-                for(int i = 0; i < 6; i++, j++)
+                for(int i = 0; i < GameData.INIT_COUNTRIES_NEUTRAL; i++, j++)
                 {
                     p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
                     p.getCountriesControlled().get(i).setNumberOfInfantry(1);

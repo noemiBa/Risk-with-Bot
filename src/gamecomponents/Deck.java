@@ -23,7 +23,7 @@ public class Deck
          */
         cards = new ArrayList<Card>();
         for(int i = 0; i < 42; i++)
-            cards.add(new Card(Map.COUNTRY_NAMES[i], Card.type.INFANTRY));
+            cards.add(new Card(GameData.COUNTRY_NAMES[i], Card.type.INFANTRY));
         
     }
 
