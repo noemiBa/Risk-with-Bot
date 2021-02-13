@@ -20,7 +20,7 @@ public class Map extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Instance variables
+     * Game Instance variables
      */
     private ArrayList<Country> countries;
     private Player[] players;
@@ -29,6 +29,9 @@ public class Map extends JPanel {
             {785, 465}, {755, 378}, {700, 473}, {675, 400}, {208, 310}, {225, 387}, {283, 365}, {235, 445}, {458, 410}, {400, 340}, {463, 480}, {459, 317}, {505, 380}, {528, 473}};
    
     
+    /* 
+     * JPanel instance variables
+     */
     private static final int MAP_WIDTH = 640;
     private static final int MAP_HEIGHT = 565;
     private static final int DIAMETER = 20;
