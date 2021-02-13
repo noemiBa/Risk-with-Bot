@@ -8,6 +8,7 @@ import ui.Map;
 
 import java.awt.*;
 import java.util.ArrayList;
+import lib.CustomArrayList;
 import java.util.Collections;
 
 /** Player abstract class extended by ActivePlayer and PassivePlayer
@@ -17,21 +18,24 @@ public abstract class Player
     private String name;
     private Color playerColor;
     private ArrayList <Card> cards;
-    private ArrayList <Country> countriesControlled;
+    private CustomArrayList<Country> countriesControlled;
 
     public Player(String name, Color playerColor)
     {
         this.name = name;
         this.playerColor = playerColor;
         cards = new ArrayList <Card>();
-        countriesControlled = new ArrayList<Country>();
+        countriesControlled = new CustomArrayList<Country>();
     }
 
-    public Player(){
-
-    }
+    public Player(){}
     
     /*Accessor methods*/
+    public CustomArrayList <Country> getCountriesControlled()
+    {
+        return countriesControlled;
+    }
+
     public String getName()
     {
         return name;
@@ -51,11 +55,6 @@ public abstract class Player
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    public ArrayList <Country> getCountriesControlled()
-    {
-        return countriesControlled;
     }
 
     /** Removes the number of cards specified from the top of the deck ArrayList and
@@ -89,7 +88,8 @@ public abstract class Player
             {
                 for(int i = 0; i < GameData.INIT_COUNTRIES_PLAYER; i++, j++)
                 {
-                    p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
+                    int currentJ = randomIndexes.get(j);
+                    p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
                     p.getCountriesControlled().get(i).setNumberOfInfantry(1); // adds one Infantry in each Country
                 }
             }
@@ -97,7 +97,8 @@ public abstract class Player
             {
                 for(int i = 0; i < GameData.INIT_COUNTRIES_NEUTRAL; i++, j++)
                 {
-                    p.getCountriesControlled().add(map.getCountries().get(randomIndexes.get(j)));
+                    int currentJ = randomIndexes.get(j);
+                    p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
                     p.getCountriesControlled().get(i).setNumberOfInfantry(1);
                 }
             }
