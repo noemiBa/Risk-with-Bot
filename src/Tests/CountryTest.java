@@ -52,72 +52,7 @@ class CountryTest {
 		assertEquals(Country.getIndex("Quebec"), 1);
 		assertEquals(Country.getIndex("Madagascar"), 41);
 	}
-	
-	@Test 
-	void testGetterMethods() {
-		map.initialiseCountries(); 
-		Country c = map.getCountries().get(0);
-		assertEquals(c.getName(), "Ontario");
-		
-		assertEquals(c.getCoord_x(), 213);
-		
-		assertEquals(c.getCoord_y(), 170);
-		
-		assertEquals(c.getContinent(), 0);
-		
-		assertEquals(c.getAdjCountries().toString(), "[4, 1, 5, 6, 3, 2]");
-		
-		assertEquals(c.getNumberOfInfantry(), 0);
-		
-		assertEquals(c.getNumberOfArtillery(), 0);
-		
-		assertEquals(c.getNumberOfCavalry(), 0);
-	}
-	
-	@Test
-	void testSetterMethods() {
-		map.initialiseCountries(); 
-		Country c = map.getCountries().get(0);
-		c.setNumberOfInfantry(4);
-		assertEquals(c.getNumberOfInfantry(), 4);
-		
-		c.setNumberOfArtillery(5);
-		assertEquals(c.getNumberOfArtillery(), 5);
-		
-		c.setNumberOfCavalry(1);
-		assertEquals(c.getNumberOfCavalry(), 1);
-		
-		ArrayList<Integer> adjCountries = new ArrayList<Integer>();
-		adjCountries.add(0);
-		c.setAdjCountries(adjCountries);
-		assertEquals(c.getAdjCountries().toString(), "[0]");
-		
-	}
-	
-	@Test
-	void testSetterMethodsErroneousInput() {
-		try {
-			Country country = new Country("Country", 20, 23);
-			country.setNumberOfInfantry(-2);
-			fail("Should throw an exception");
-		}
-		catch (IllegalArgumentException ex) {}
-		
-		try {
-			Country country = new Country("Country", 20, 23);
-			country.setNumberOfCavalry(-1);
-			fail("Should throw an exception");
-		}
-		catch (IllegalArgumentException ex) {}
-		
-		try {
-			Country country = new Country("Country", 20, 23);
-			country.setNumberOfArtillery(-20);
-			fail("Should throw an exception");
-		}
-		catch (IllegalArgumentException ex) {}
-	}
-	
+
 	@Test
 	void testGetContinentName() {
 		map.initialiseCountries(); 
