@@ -14,21 +14,21 @@ import javax.swing.border.TitledBorder;
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
  */
-public class Window {
-
+public class Window
+{
     final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
-   
-    private static DisplayText displayText = new DisplayText();
-    static Map mapPanel = new Map();
-    private static CommandPanel commandPanel = new CommandPanel(displayText); 
 
     public Window(Game game) {
         createAndShowGUI(game);
     }
 
-    public static void addComponentsToPane(Game game, Container pane) {
+    public static void addComponentsToPane(Game game, Container pane)
+    {
+        DisplayText displayText = new DisplayText();
+        CommandPanel commandPanel = new CommandPanel(game, displayText);
+
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
@@ -73,9 +73,9 @@ public class Window {
         pane.add(button, c);
 
         TitledBorder titledBorderMap = BorderFactory.createTitledBorder("MAP");
-        mapPanel.setBorder(titledBorderMap);
+        game.getMap().setBorder(titledBorderMap);
         titledBorderMap.setTitleColor(Color.WHITE);
-        mapPanel.setBackground(Color.black);
+        game.getMap().setBackground(Color.black);
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 70;      //make this component tall
         c.ipadx = 200;
@@ -84,18 +84,16 @@ public class Window {
         c.gridx = 0;
         c.gridy = 0;
 
-        mapPanel.initialiseCountries(); 
         c.ipady = 0;
         c.gridy = 1;
         
-        pane.add(mapPanel, c);
+        pane.add(game.getMap(), c);
         pane.validate();
         pane.repaint();
-
     }
 
-
-    public static void createAndShowGUI(Game game) {
+    public static void createAndShowGUI(Game game)
+    {
         //Create and set up the window.
         JFrame frame = new JFrame("Risk");
         frame.setResizable(false);

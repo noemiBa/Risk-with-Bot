@@ -6,10 +6,11 @@ import ui.*;
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
  */
-public class Main {
-
+public class Main
+{
     public static void main(String[] args)
     {
-        Game.main();
+        Game risk = new Game();
+        Window window = new Window(risk);
     }
 }

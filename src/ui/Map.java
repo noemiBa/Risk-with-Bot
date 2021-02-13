@@ -1,19 +1,16 @@
 package ui;
 
 import gamecomponents.*;
+import lib.CustomArrayList;
 import player.Player;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.Font;
-import java.awt.FontMetrics;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,6 +23,7 @@ public class Map extends JPanel {
      * Instance variables
      */
     private ArrayList<Country> countries;
+    private Player[] players;
     private static final int[][] COUNTRY_COORD = {{213, 130}, {265, 145}, {146, 82}, {146, 130}, {310, 60}, {210, 220}, {153, 185}, {155, 248}, {75, 90}, {352, 175}, {365, 265},
             {427, 254}, {505, 160}, {415, 207}, {373, 120}, {443, 103}, {567, 212}, {610, 300}, {514, 290}, {770, 195}, {584, 150}, {705, 70}, {770, 80}, {678, 320}, {686, 140}, {620, 90}, {687, 190}, {665, 250},
             {785, 465}, {755, 378}, {700, 473}, {675, 400}, {208, 310}, {225, 387}, {283, 365}, {235, 445}, {458, 410}, {400, 340}, {463, 480}, {459, 317}, {505, 380}, {528, 473}};
@@ -41,22 +39,11 @@ public class Map extends JPanel {
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
      */
-    public Map() {
+    public Map()
+    {
         countries = new ArrayList<Country>();
         try {
             image = ImageIO.read(getClass().getResource("/images/map_color.png"));
-        } catch (IOException ex) {
-            ex.getMessage();
-        }
-    }
-    
-    /**
-     * Constructor for the Map class. The Constructor takes an instance of Window as an argument and simply initialises the array list of Countries.
-     */
-    public Map(Window window) {
-        countries = new ArrayList<Country>();
-        try {
-            image = ImageIO.read(new File("src/images/map_color.png"));
         } catch (IOException ex) {
             ex.getMessage();
         }
@@ -85,6 +72,15 @@ public class Map extends JPanel {
         }
     }
 
+    public void addPlayers(Player[] players)
+    {
+        this.players = players;
+    }
+
+    public Player[] getPlayers()
+    {
+        return players;
+    }
 
     /**
      * Overrides the getPreferredSize() method of JPanel. It sets the Panel dimensions to MAP_HEIGHT and MAP_WIDTH.
@@ -113,7 +109,7 @@ public class Map extends JPanel {
             drawCountryNodesStart(g);
             drawMilitaryUnitsStart(g);
         } else {
-            Player[] players = Game.getPlayers();
+            Player[] players = getPlayers();
             drawCountriesNames(g);
             drawCountryNodes(g, players);
             drawMilitaryUnits(g);

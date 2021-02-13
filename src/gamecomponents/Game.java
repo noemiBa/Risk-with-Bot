@@ -12,19 +12,19 @@ import java.awt.*;
 
 public class Game
 {
-    private static Player[] players;
     private Map map;
+    private Player[] players;
     private Deck deck;
-    private int[] numUnits = new int [GameData.NUM_COUNTRIES];
-	
-    public Game() {
+
+    public Game()
+    {
         map = new Map();
         map.initialiseCountries();
         players = newPlayers();
         Player.assignCountriesControlled(players, map);
         deck = new Deck();
     }
-    
+
     public static Player[] newPlayers()
     {
         Player[] players =
@@ -39,25 +39,18 @@ public class Game
         return players;
     }
 
-    public static Player[] getPlayers()
-    {
-        return players;
-    }
-
     public Map getMap()
     {
         return map;
     }
 
+    public Player[] getPlayers()
+    {
+        return players;
+    }
+
     public Deck getDeck()
     {
         return deck;
-    }
-
-    public static void main()
-    {
-        Game game = new Game();
-        Window window = new Window(game);
-        game.getDeck().shuffle();
     }
 }

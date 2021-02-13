@@ -90,7 +90,6 @@ public abstract class Player
                 {
                     int currentJ = randomIndexes.get(j);
                     p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
-                    p.getCountriesControlled().get(i).setNumberOfInfantry(1); // adds one Infantry in each Country
                 }
             }
             else
@@ -99,8 +98,18 @@ public abstract class Player
                 {
                     int currentJ = randomIndexes.get(j);
                     p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
-                    p.getCountriesControlled().get(i).setNumberOfInfantry(1);
                 }
+            }
+        }
+    }
+
+    public static void initialiseUnits(Player[] players)
+    {
+        for(Player p: players)
+        {
+            for (Country c: p.getCountriesControlled())
+            {
+                c.setNumberOfInfantry(1);
             }
         }
     }
@@ -110,5 +119,4 @@ public abstract class Player
 	{
 		return "[name=" + name + ", playerColor=" + playerColor + "]";
 	}
-    
 }

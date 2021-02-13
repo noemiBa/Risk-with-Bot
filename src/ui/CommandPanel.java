@@ -12,21 +12,21 @@ import javax.swing.border.TitledBorder;
 
 import gamecomponents.Game;
 
-public class CommandPanel extends JPanel{
+public class CommandPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private LinkedList<String> commandBuffer = new LinkedList<String>();
 
 	JButton button = new JButton("Enter");
 	TitledBorder titledBorderText = BorderFactory.createTitledBorder("Read Text");
 
-	CommandPanel(DisplayText dt) {
+	CommandPanel(Game game, DisplayText dt) {
 		JTextField textArea = new JTextField(25);
 		
 		//Adding button listener
         button.addActionListener(e -> {
             String input = textArea.getText();
             textArea.setText("");
-            dt.nextInstruction(Game.getPlayers(), input);
+            dt.nextInstruction(game, input);
             System.out.println("Button working, current instruction :" + DisplayText.getInstruction());
         });
 		
