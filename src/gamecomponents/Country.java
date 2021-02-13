@@ -16,8 +16,6 @@ public class Country {
     private int continent;
     private Player controlledBy;
     private int numberOfInfantry;
-    private int numberOfCavalry;
-    private int numberOfArtillery;
     private ArrayList<Integer> adjCountries;
 
     /** Constructor: constructs the object Country. Here the continent index is set to -1 to start, and the arrayList of adjacent countries initialised.
@@ -34,9 +32,7 @@ public class Country {
         this.coord_y = coord_y;
         this.continent = -1;
         this.adjCountries = new ArrayList<Integer>();
-        this.numberOfInfantry = 0; 
-        this.numberOfCavalry = 0; 
-        this.numberOfArtillery = 0; 
+        this.numberOfInfantry = 0;
     }
     
     /* Utility method that returns the index of a Country if given the name of said Country
@@ -51,12 +47,9 @@ public class Country {
     	}
     	return index; 
     }
-    
-    /* Method returns the int number of units in a Country. Note: 1 infantry = 1 military units, 1 cavalry = 5 military units and 
-     * 1 artillery = 10 military units. 
-     */
+
     public int getNumberOfUnits() {
-    	return 1*getNumberOfInfantry() + 5*getNumberOfCavalry() + 10*getNumberOfArtillery();
+    	return getNumberOfInfantry();
     }
 
     /*
@@ -84,16 +77,6 @@ public class Country {
         return numberOfInfantry;
     }
 
-    public int getNumberOfCavalry()
-    {
-        return numberOfCavalry;
-    }
-
-    public int getNumberOfArtillery()
-    {
-        return numberOfArtillery;
-    }
-
     public ArrayList<Integer> getAdjCountries() {
         return adjCountries;
     }
@@ -115,16 +98,7 @@ public class Country {
         this.numberOfInfantry = numberOfInfantry;
     }
 
-    public void setNumberOfCavalry(int numberOfCavalry) {
-    	validateUnits(numberOfCavalry);
-        this.numberOfCavalry = numberOfCavalry;
-    }
-    
-    public void setNumberOfArtillery(int numberOfArtillery) {
-    	validateUnits(numberOfArtillery);
-        this.numberOfArtillery = numberOfArtillery;
-    }
-    
+
     public void setAdjCountries(ArrayList<Integer> adjCountries) {
         this.adjCountries = adjCountries;
     }
