@@ -28,16 +28,16 @@ public class Window
         createAndShowGUI(risk);
     }
 
-    // takes the current instruction for each player
-    public String getCommand()
-    {
-        return commandPanel.getCommand();
-    }
-
     // used to print the current message for each player's turn
     public void getTextDisplay(String message)
     {
         displayText.getTextDisplay(message);
+    }
+
+    // takes the current instruction for each player
+    public String getCommand()
+    {
+        return commandPanel.getCommand();
     }
 
     public static void createAndShowGUI(Game risk)
@@ -94,6 +94,7 @@ public class Window
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         // change to image icon
         JButton button = new JButton(new ImageIcon(card));
         c.fill = GridBagConstraints.BOTH;

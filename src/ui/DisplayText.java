@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import com.botharmon.Game;
 import gamecomponents.Country;
+import gamecomponents.Turns;
 
 public class DisplayText extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -19,8 +20,6 @@ public class DisplayText extends JPanel {
 		setBorder(BorderFactory.createTitledBorder("Display Text"));
         setBackground(Color.white);
 	}
-	
-	
 
     public void getTextDisplay(String message)
     {

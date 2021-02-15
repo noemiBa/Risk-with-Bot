@@ -12,6 +12,7 @@ import java.awt.Font;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 
 public class Map extends JPanel {
 
@@ -20,12 +21,9 @@ public class Map extends JPanel {
     /**
      * Game Instance variables
      */
-    private ArrayList<Country> countries;
     private static final int[][] COUNTRY_COORD = {{213, 130}, {265, 145}, {146, 82}, {146, 130}, {310, 60}, {210, 220}, {153, 185}, {155, 248}, {75, 90}, {352, 175}, {365, 265},
             {427, 254}, {505, 160}, {415, 207}, {373, 120}, {443, 103}, {567, 212}, {610, 300}, {514, 290}, {770, 195}, {584, 150}, {705, 70}, {770, 80}, {678, 320}, {686, 140}, {620, 90}, {687, 190}, {665, 250},
             {785, 465}, {755, 378}, {700, 473}, {675, 400}, {208, 310}, {225, 387}, {283, 365}, {235, 445}, {458, 410}, {400, 340}, {463, 480}, {459, 317}, {505, 380}, {528, 473}};
-   
-    
     /* 
      * JPanel instance variables
      */
@@ -34,6 +32,9 @@ public class Map extends JPanel {
     private static final int DIAMETER = 20;
     private static final int RADIUS = DIAMETER / 2;
     private static final int SPACING = 5;
+
+    private ArrayList<Country> countries;
+    private Turns.stage gameStage;
     private BufferedImage image;
 
     /**
@@ -43,6 +44,7 @@ public class Map extends JPanel {
      */
     public Map()
     {
+        gameStage = Turns.stage.ENTER_NAMES;
         countries = new ArrayList<Country>();
         try {
             image = ImageIO.read(getClass().getResource("/images/map_color.png"));
@@ -68,6 +70,17 @@ public class Map extends JPanel {
         return countries;
     }
 
+    public Turns.stage getGameStage()
+    {
+        return gameStage;
+    }
+
+    public void updateUI(Turns.stage gameStage)
+    {
+        this.gameStage = gameStage;
+        super.updateUI();
+    }
+
     /**
      * Overrides the getPreferredSize() method of JPanel. It sets the Panel dimensions to MAP_HEIGHT and MAP_WIDTH.
      */
@@ -83,13 +96,14 @@ public class Map extends JPanel {
      */
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
 
         g.drawImage(image, 0, 0, null);
 
         drawSeaLines(g);
 
-        if (Turns.getGameStage() == Turns.stage.ENTER_NAMES)
+        if(getGameStage() == Turns.stage.ENTER_NAMES)
         {
         	//draw the country names
             drawCountriesNames(g);

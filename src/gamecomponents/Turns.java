@@ -15,9 +15,9 @@ public class Turns
         END
     };
 
-    private static stage gameStage = stage.ENTER_NAMES;
+    private stage gameStage = stage.ENTER_NAMES;
 
-    public static stage getGameStage()
+    public stage getGameStage()
     {
         return gameStage;
     }
@@ -41,6 +41,7 @@ public class Turns
             case ENTER_NAMES:
                 enterPlayerNames(risk);
                 gameStage = stage.ROLL_TO_PLACE_TERRITORIES;
+                risk.getMap().updateUI(gameStage);
                 break;
             case ROLL_TO_PLACE_TERRITORIES:
                 /*
@@ -73,7 +74,6 @@ public class Turns
         risk.getDeck().shuffle();
         risk.getWindow().getTextDisplay("<html>We are now ready to start the game: "
         + risk.getActivePlayers()[0].getName() + " and " + risk.getActivePlayers()[1].getName() + "</html>");
-        risk.getMap().updateUI();
     }
 
     public int whoStarts(ActivePlayer[] activePlayers, Window window)
