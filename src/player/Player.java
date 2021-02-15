@@ -7,6 +7,7 @@ import gamecomponents.GameData;
 import ui.Map;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import lib.CustomArrayList;
 import java.util.Collections;
@@ -60,56 +61,38 @@ public abstract class Player
     /** Removes the number of cards specified from the top of the deck ArrayList and
      * adds to Player cards ArrayList
      * */
-    private void draw(int numberOfCards, Deck deck)
-    {
-        for(int i = 1; i <= numberOfCards; i++)
-        {
-            cards.add(deck.getCards().get(0));
-            deck.getCards().remove(0);
-        }
-    }
 
-    public static void assignCountriesControlled(Player[] players, Map map)
+    public static void assignCountriesControlled(ActivePlayer[] activePlayers, PassivePlayer[] passivePlayers, Map map)
     {
-        ArrayList<Integer> randomIndexes = new ArrayList<Integer>();
+        ArrayList<Integer> countryIndexes = new ArrayList<Integer>();
         for(int i = 0; i < 42; i++)
         {
-            randomIndexes.add(i);
+            countryIndexes.add(i);
         }
 
         // randomizes order of 42 integers labelled 0 - 41
-        Collections.shuffle(randomIndexes);
+        Collections.shuffle(countryIndexes);
 
         // assigns random countries to each player using randomIndexes to reference the country ArrayList
+
         int j = 0;
-        for(Player p: players)
+        for(ActivePlayer a: activePlayers)
         {
-            if(p instanceof ActivePlayer)
+            for(int i = 0; i < GameData.INIT_COUNTRIES_PLAYER; i++, j++)
             {
-                for(int i = 0; i < GameData.INIT_COUNTRIES_PLAYER; i++, j++)
-                {
-                    int currentJ = randomIndexes.get(j);
-                    p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
-                }
-            }
-            else
-            {
-                for(int i = 0; i < GameData.INIT_COUNTRIES_NEUTRAL; i++, j++)
-                {
-                    int currentJ = randomIndexes.get(j);
-                    p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
-                }
+                int currentJ = countryIndexes.get(j);
+                a.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
+                a.getCountriesControlled().get(i).setControlledBy(a);
             }
         }
-    }
 
-    public static void initialiseUnits(Player[] players)
-    {
-        for(Player p: players)
+        for(PassivePlayer p: passivePlayers)
         {
-            for (Country c: p.getCountriesControlled())
+            for(int i = 0; i < GameData.INIT_COUNTRIES_NEUTRAL; i++, j++)
             {
-                c.setNumberOfInfantry(1);
+                int currentJ = countryIndexes.get(j);
+                p.getCountriesControlled().add(map.getCountries().get(currentJ).getName(), map.getCountries().get(currentJ));
+                p.getCountriesControlled().get(i).setControlledBy(p);
             }
         }
     }

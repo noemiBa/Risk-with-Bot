@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import gamecomponents.Country;
-import gamecomponents.Game;
 import ui.Map;
 
 class MapTest {
@@ -22,11 +21,10 @@ class MapTest {
 	
 	@Test 
 	void testInitialiseCountries() {
-		Map map = new Map();
-		
+
 		//Check that the countries arrayList has been initialised and given the correct 1) name, 2) X coordinates, 3) Y coordinates, 4) continent it belongs to, 5) arrayList of adjacent countries indexes
-		map.initialiseCountries(); 
-		
+		Map map = new Map();
+
 		Country c = map.getCountries().get(14);
 		assertEquals(c.toString(), "Country [name=Iceland, coord_x=373, coord_y=160, continent=1, adjCountries=[15, 9, 4]]");
 		

@@ -8,8 +8,8 @@ Please note, <i>this project is still in process</i>.
 This risk implementation allows for a two player risk game with four passive neutrals and/or 
 a one player risk game against an AI with four passive neutrals. 
 
-To build in intelj, left click and run the file in src/com.company/Main.java
-To build in Eclipse, right click the file in src/com.company/Main.java -> run as -> Java Application
+To build in intelj, left click and run the file in src/com.botharmon/Main.java
+To build in Eclipse, right click the file in src/com.botharmon/Main.java -> run as -> Java Application
 
 The .jar file can be found in out/artifacts/BotHarmon_jar/BotHarmon.jar
 

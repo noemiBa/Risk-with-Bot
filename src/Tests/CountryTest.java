@@ -2,14 +2,9 @@ package Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 
 import gamecomponents.Country;
-import gamecomponents.Game;
-import player.ActivePlayer;
-import player.Player;
 import ui.Map;
 
 class CountryTest {
@@ -55,7 +50,6 @@ class CountryTest {
 
 	@Test
 	void testGetContinentName() {
-		map.initialiseCountries(); 
 		Country c = map.getCountries().get(0);
 		assertEquals(c.getContinentName(), "N America");
 		
@@ -65,7 +59,6 @@ class CountryTest {
 	
 	@Test
 	void testToString() {
-		map.initialiseCountries(); 
 		Country c = map.getCountries().get(0);
 		assertEquals(c.toString(), "Country [name=Ontario, coord_x=213, coord_y=170, continent=0, adjCountries=[4, 1, 5, 6, 3, 2]]");
 		

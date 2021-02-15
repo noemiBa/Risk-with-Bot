@@ -7,33 +7,12 @@ import player.Player;
 
 import java.util.Random;
 
-public class Dice {
-
-    private static int throwDice() {
-        Random r = new Random();
-        return r.nextInt((6 - 1) + 1) + 1;
-    }
-
+public class Dice
+{
     //To check who start allocating and attacking
-    public static Player whoStart(Player firstPlayer, Player secondPlayer) {
-        int diceFirstPlayer = throwDice();
-        int diceSecondPlayer = throwDice();
 
-        if (diceFirstPlayer == diceSecondPlayer) {
-            do {
-                diceFirstPlayer = throwDice();
-                diceSecondPlayer = throwDice();
-            } while (diceFirstPlayer != diceSecondPlayer);
-        }
 
-        if (diceFirstPlayer > diceSecondPlayer) {
-            return firstPlayer;
-        } else {
-            return secondPlayer;
-        }
-    }
-
-    public static void attack(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attack(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
 
         int armiesAttack = attackCountry.getNumberOfUnits();
         int armiesDefend = defendCountry.getNumberOfUnits();
@@ -70,155 +49,155 @@ public class Dice {
         }
     }
 
-    public static void attackTwoDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attackTwoDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[1];
         int[] defenseDices = new int[1];
 
-        attackDices[0] = throwDice();
-        defenseDices[0] = throwDice();
+//        attackDices[0] = roll();
+//        defenseDices[0] = roll();
 
         if (attackDices[0] > defenseDices[0]) {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
             conquerCountry(attackPlayer, defendCountry);
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
         }
     }
 
-    public static void attackTwoDefendTwo(Country attackCountry, Country defendCountry) {
+    public void attackTwoDefendTwo(Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[1];
         int[] defenseDices = new int[2];
 
-        attackDices[0] = throwDice();
-
-        defenseDices[0] = throwDice();
-        defenseDices[1] = throwDice();
+//        attackDices[0] = roll();
+//
+//        defenseDices[0] = roll();
+//        defenseDices[1] = roll();
         Arrays.sort(defenseDices);
 
         if (attackDices[0] > defenseDices[1]) {
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 1);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 1);
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
         }
     }
 
-    public static void attackThreeDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attackThreeDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[2];
         int[] defenseDices = new int[1];
 
-        attackDices[0] = throwDice();
-        attackDices[1] = throwDice();
+//        attackDices[0] = roll();
+//        attackDices[1] = roll();
         Arrays.sort(attackDices);
 
-        defenseDices[0] = throwDice();
+//        defenseDices[0] = roll();
 
         if (attackDices[1] > defenseDices[0]) {
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 1);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 1);
             if (isCountryEmpty(defendCountry)) {
-                attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+                attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
                 conquerCountry(attackPlayer, defendCountry);
             }
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
         }
     }
 
-    public static void attackThreeDefendTwo(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attackThreeDefendTwo(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[2];
         int[] defenseDices = new int[2];
 
-        attackDices[0] = throwDice();
-        attackDices[1] = throwDice();
+//        attackDices[0] = roll();
+//        attackDices[1] = roll();
 
         Arrays.sort(attackDices);
 
-        defenseDices[0] = throwDice();
-        defenseDices[1] = throwDice();
+//        defenseDices[0] = roll();
+//        defenseDices[1] = roll();
 
         Arrays.sort(defenseDices);
 
         if (attackDices[1] > defenseDices[1] && attackDices[0] > defenseDices[0]) {
 
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 2);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 2);
 
             if (isCountryEmpty(defendCountry)) {
-                attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+                attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
                 conquerCountry(attackPlayer, defendCountry);
             }
 
         } else if (attackDices[1] <= defenseDices[1] && attackDices[0] > defenseDices[0]
                 || attackDices[0] <= defenseDices[0] && attackDices[1] > defenseDices[1]) {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 1);
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 2);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 2);
         }
     }
 
-    public static void attackMoreThanThreeDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attackMoreThanThreeDefendOne(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[3];
         int[] defenseDices = new int[1];
 
-        attackDices[0] = throwDice();
-        attackDices[1] = throwDice();
-        attackDices[2] = throwDice();
+//        attackDices[0] = roll();
+//        attackDices[1] = roll();
+//        attackDices[2] = roll();
 
         Arrays.sort(attackDices);
 
-        defenseDices[0] = throwDice();
+//        defenseDices[0] = roll();
 
         if (attackDices[2] > defenseDices[0]) {
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 1);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 1);
             if (isCountryEmpty(defendCountry)) {
-                attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+                attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
                 conquerCountry(attackPlayer, defendCountry);
             }
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
         }
     }
 
-    public static void attackMoreThanThreeDefendTwo(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
+    public void attackMoreThanThreeDefendTwo(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
         int[] attackDices = new int[3];
         int[] defenseDices = new int[2];
 
-        attackDices[0] = throwDice();
-        attackDices[1] = throwDice();
-        attackDices[2] = throwDice();
+//        attackDices[0] = roll();
+//        attackDices[1] = roll();
+//        attackDices[2] = roll();
 
         Arrays.sort(attackDices);
 
-        defenseDices[0] = throwDice();
-        defenseDices[1] = throwDice();
+//        defenseDices[0] = roll();
+//        defenseDices[1] = roll();
 
         Arrays.sort(defenseDices);
 
         if (attackDices[2] > defenseDices[1] && attackDices[1] > attackDices[0]) {
 
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 2);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 2);
 
             if (isCountryEmpty(defendCountry)) {
-                attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
+                attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
                 conquerCountry(attackPlayer, defendCountry);
             }
 
         } else if (attackDices[2] > defenseDices[1] && attackDices[1] <= defenseDices[0] ||
                 attackDices[2] <= defenseDices[1] && attackDices[1] > defenseDices[0]) {
 
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 1);
-            defendCountry.setNumberOfInfantry(defendCountry.getNumberOfInfantry() - 1);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 1);
+            defendCountry.setNumberOfUnits(defendCountry.getNumberOfInfantry() - 1);
 
         } else {
-            attackCountry.setNumberOfInfantry(attackCountry.getNumberOfInfantry() - 2);
+            attackCountry.setNumberOfUnits(attackCountry.getNumberOfInfantry() - 2);
         }
     }
 
-    public static boolean isCountryEmpty(Country country) {
+    public boolean isCountryEmpty(Country country) {
         return country.getNumberOfUnits() == 0;
     }
 
-    public static void conquerCountry(ActivePlayer attackPlayer, Country defendCountry) {
+    public void conquerCountry(ActivePlayer attackPlayer, Country defendCountry) {
         defendCountry.setControlledBy(attackPlayer);
-        defendCountry.setNumberOfInfantry(1);
+        defendCountry.setNumberOfUnits(1);
     }
 }

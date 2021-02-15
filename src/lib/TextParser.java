@@ -15,10 +15,10 @@ public class TextParser {
 	public static PatternName [] patterns = {
 			new PatternName(Pattern.compile("ON.{0,5}", Pattern.CASE_INSENSITIVE), "Ontario"),
 			new PatternName(Pattern.compile("(QUE.{0,3})|(Q.{0,4}C)", Pattern.CASE_INSENSITIVE), "Quebec"),
-			new PatternName(Pattern.compile("(NW.{0,10})|(NWT)|(North\sWest.{1,10})|(North\sW.{0,13})", Pattern.CASE_INSENSITIVE), "NW Territory"),
+			new PatternName(Pattern.compile("(NW.{0,10})|(NWT)|(North\\sWest.{1,10})|(North\\sW.{0,13})", Pattern.CASE_INSENSITIVE), "NW Territory"),
 			new PatternName(Pattern.compile("(ALTA)|(AB)|(AL.{0,5})", Pattern.CASE_INSENSITIVE), "Alberta"),
 			new PatternName(Pattern.compile("(G.{0,4}L.{0,3})|Green", Pattern.CASE_INSENSITIVE), "Greenland"),
-			new PatternName(Pattern.compile("(E\sUS.{0,10})|(E\sUn.{0,10}|(East\sUS.{0,10})|(East\sUn.{0,10}))", Pattern.CASE_INSENSITIVE), "E United States"),
+			new PatternName(Pattern.compile("(E\\sUS.{0,10})|(E\\sUn.{0,10}|(East\\sUS.{0,10})|(East\\sUn.{0,10}))", Pattern.CASE_INSENSITIVE), "E United States"),
 			new PatternName(Pattern.compile("(W\\sUS.{0,10})|(W\\sUn.{0,10})|(West\\sUS.{0,10})|(West\\sUn.{0,10})", Pattern.CASE_INSENSITIVE), "W United States"),
 			new PatternName(Pattern.compile("C.{0,7}A.{0,6}", Pattern.CASE_INSENSITIVE), "Central America"),
 			new PatternName(Pattern.compile("(A.{0,3}K.{0,1})|ALAS.{0,2}", Pattern.CASE_INSENSITIVE), "Alaska"),

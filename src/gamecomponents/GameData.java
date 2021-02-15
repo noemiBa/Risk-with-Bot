@@ -32,14 +32,4 @@ public class GameData {
 	 public static final int NUM_CONTINENTS = 6;
 	 public static final String[] CONTINENT_NAMES = {"N America","Europe","Asia","Australia","S America","Africa"};
 	 public static final int[] CONTINENT_VALUES = {5,5,7,2,2,3};
-	 
-	 public static Player[] players =
-	        {
-	            new ActivePlayer("", new Color(47, 206, 237)), //cyan
-	            new ActivePlayer("", new Color(199, 60, 194)), //pink
-	            new PassivePlayer("Benny", new Color(177, 212, 174)), //pale green
-	            new PassivePlayer("Harry", new Color(235, 232, 234)), //light grey
-	            new PassivePlayer("Jolene", new Color(248, 250, 162)), //pale yellow
-	            new PassivePlayer("Borgov", new Color(237, 181, 126)) //peach
-	        };
 }

@@ -1,8 +1,6 @@
 package ui;
 
 import gamecomponents.*;
-import lib.CustomArrayList;
-import player.Player;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,7 +21,6 @@ public class Map extends JPanel {
      * Game Instance variables
      */
     private ArrayList<Country> countries;
-    private Player[] players;
     private static final int[][] COUNTRY_COORD = {{213, 130}, {265, 145}, {146, 82}, {146, 130}, {310, 60}, {210, 220}, {153, 185}, {155, 248}, {75, 90}, {352, 175}, {365, 265},
             {427, 254}, {505, 160}, {415, 207}, {373, 120}, {443, 103}, {567, 212}, {610, 300}, {514, 290}, {770, 195}, {584, 150}, {705, 70}, {770, 80}, {678, 320}, {686, 140}, {620, 90}, {687, 190}, {665, 250},
             {785, 465}, {755, 378}, {700, 473}, {675, 400}, {208, 310}, {225, 387}, {283, 365}, {235, 445}, {458, 410}, {400, 340}, {463, 480}, {459, 317}, {505, 380}, {528, 473}};
@@ -41,6 +38,8 @@ public class Map extends JPanel {
 
     /**
      * Constructor for the Map class. The Constructor takes no argument and simply initialises the array list of Countries.
+     * This method also creates a new instance of the class Country for each of the countries - assigning it its own:
+     * 1) name, 2) X coordinates, 3) Y coordinates, 4) continent it belongs to, 5) arrayList of adjacent countries indexes.
      */
     public Map()
     {
@@ -50,18 +49,7 @@ public class Map extends JPanel {
         } catch (IOException ex) {
             ex.getMessage();
         }
-    }
 
-    /*Accessor methods*/
-    public ArrayList<Country> getCountries() {
-        return countries;
-    }
-
-    /*
-     * This method creates a new instance of the class Country for each of the countries - assigning it its own:
-     * 1) name, 2) X coordinates, 3) Y coordinates, 4) continent it belongs to, 5) arrayList of adjacent countries indexes.
-     */
-    public void initialiseCountries() {
         int j = 0;
         for (int i = 0; i < GameData.NUM_COUNTRIES; i++) {
             countries.add(new Country(GameData.COUNTRY_NAMES[i], COUNTRY_COORD[i][j], COUNTRY_COORD[i][j + 1])); //add Countries instance variables to the arrayList of type Country
@@ -75,14 +63,9 @@ public class Map extends JPanel {
         }
     }
 
-    public void addPlayers(Player[] players)
-    {
-        this.players = players;
-    }
-
-    public Player[] getPlayers()
-    {
-        return players;
+    /*Accessor methods*/
+    public ArrayList<Country> getCountries() {
+        return countries;
     }
 
     /**
@@ -112,9 +95,8 @@ public class Map extends JPanel {
             drawCountryNodesStart(g);
             drawMilitaryUnitsStart(g);
         } else {
-            Player[] players = getPlayers();
             drawCountriesNames(g);
-            drawCountryNodes(g, players);
+            drawCountryNodes(g);
             drawMilitaryUnits(g);
         }
     }
@@ -187,13 +169,12 @@ public class Map extends JPanel {
         this.setBackground(Color.black);
     }
 
-    private void drawCountryNodes(Graphics g, Player[] players) {
-        for (Player p : players) {
-
-            for (Country c : p.getCountriesControlled()) {
-                g.setColor(p.getPlayerColor());
-                g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
-            }
+    private void drawCountryNodes(Graphics g)
+    {
+        for (Country c: getCountries())
+        {
+            g.setColor(c.getControlledBy().getPlayerColor());
+            g.fillOval(c.getCoord_x() - RADIUS, c.getCoord_y() - RADIUS, DIAMETER, DIAMETER);
         }
     }
 

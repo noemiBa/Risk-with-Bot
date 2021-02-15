@@ -15,7 +15,7 @@ public class Country {
     private int coord_y;
     private int continent;
     private Player controlledBy;
-    private int numberOfInfantry;
+    private int numberOfUnits;
     private ArrayList<Integer> adjCountries;
 
     /** Constructor: constructs the object Country. Here the continent index is set to -1 to start, and the arrayList of adjacent countries initialised.
@@ -32,7 +32,7 @@ public class Country {
         this.coord_y = coord_y;
         this.continent = -1;
         this.adjCountries = new ArrayList<Integer>();
-        this.numberOfInfantry = 0;
+        this.numberOfUnits = 0;
     }
     
     /* Utility method that returns the index of a Country if given the name of said Country
@@ -49,12 +49,13 @@ public class Country {
     }
 
     public int getNumberOfUnits() {
-    	return getNumberOfInfantry();
+    	return numberOfUnits;
     }
 
     /*
      * ACCESSOR methods for instance variables
      */
+
     public String getName() {
         return name;
     }
@@ -74,7 +75,7 @@ public class Country {
 
     public int getNumberOfInfantry()
     {
-        return numberOfInfantry;
+        return numberOfUnits;
     }
 
     public ArrayList<Integer> getAdjCountries() {
@@ -93,11 +94,10 @@ public class Country {
     /*
      * MUTATOR methods for instance variables
      */
-    public void setNumberOfInfantry(int numberOfInfantry)  {
-    	validateUnits(numberOfInfantry);
-        this.numberOfInfantry = numberOfInfantry;
+    public void setNumberOfUnits(int numberOfUnits)  {
+    	validateUnits(numberOfUnits);
+        this.numberOfUnits = numberOfUnits;
     }
-
 
     public void setAdjCountries(ArrayList<Integer> adjCountries) {
         this.adjCountries = adjCountries;
@@ -110,6 +110,14 @@ public class Country {
     public void setControlledBy(Player controlledBy)
     {
         this.controlledBy = controlledBy;
+    }
+
+    public static void initialiseUnits(ArrayList<Country> countries)
+    {
+        for (Country c: countries)
+        {
+            c.setNumberOfUnits(1);
+        }
     }
 
     /**

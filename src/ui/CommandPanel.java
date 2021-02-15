@@ -1,45 +1,40 @@
 package ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
 
-import gamecomponents.Game;
+import player.ActivePlayer;
 
-public class CommandPanel extends JPanel {
+public class CommandPanel extends JPanel  {
+
 	private static final long serialVersionUID = 1L;
+	private static final int FONT_SIZE = 14;
+
+	private JTextField commandField = new JTextField();
 	private LinkedList<String> commandBuffer = new LinkedList<String>();
 
-	JButton button = new JButton("Enter");
-	TitledBorder titledBorderText = BorderFactory.createTitledBorder("Read Text");
-
-	CommandPanel(Game game, DisplayText dt) {
-		JTextField textArea = new JTextField(25);
-		
-		//Adding button listener
-        button.addActionListener(e -> {
-            String input = textArea.getText();
-            textArea.setText("");
-            dt.nextInstruction(game, input);
-            System.out.println("Button working, current instruction :" + DisplayText.getInstruction());
-        });
-		
-		setBorder(titledBorderText);
-		titledBorderText.setTitleColor(Color.WHITE);
-		setBackground(Color.black);
-		
-		textArea.setBorder(BorderFactory.createEtchedBorder());
-
-        add(button, BorderLayout.PAGE_END);
-        add(textArea);
+	public CommandPanel (ActivePlayer[] activePlayer) {
+		class AddActionListener implements ActionListener {
+			public void actionPerformed(ActionEvent event)	{
+				synchronized (commandBuffer) {
+					commandBuffer.add(commandField.getText());
+					commandField.setText("");
+					commandBuffer.notify();
+				}
+			}
+		}
+		ActionListener listener = new AddActionListener();
+		commandField.addActionListener(listener);
+		commandField.setFont(new Font("Times New Roman", Font.PLAIN, FONT_SIZE));
+		setLayout(new BorderLayout());
+		add(commandField, BorderLayout.CENTER);
 	}
-	
+
 	public String getCommand() {
 		String command;
 		synchronized (commandBuffer) {

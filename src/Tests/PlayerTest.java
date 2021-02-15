@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import gamecomponents.Card;
 import gamecomponents.Card.type;
-import gamecomponents.Deck;
-import gamecomponents.Game;
 import player.ActivePlayer;
 import player.PassivePlayer;
 import player.Player;
@@ -23,11 +21,11 @@ class PlayerTest {
 
 	@Test
 	void testConstructorActivePlayer() {
-		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
+		ActivePlayer player = new ActivePlayer(1,"player", Color.GREEN);
 		assertEquals(player.toString(), "[name=player, playerColor=GREEN]");
 
 		//Note: the player class can be initialised by having an empty String as the name
-		ActivePlayer player1 = new ActivePlayer("", Color.GREEN);
+		ActivePlayer player1 = new ActivePlayer(1,"", Color.GREEN);
 		assertEquals(player1.toString(), "[name=, playerColor=GREEN]");
 
 		//Ensure that the cards arrayList is not null upon construction
@@ -61,7 +59,7 @@ class PlayerTest {
 
 	@Test
 	void testGetterMethods() {
-		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
+		ActivePlayer player = new ActivePlayer(1,"player", Color.GREEN);
 		PassivePlayer player1 = new PassivePlayer("", Color.BLUE);
 
 		assertEquals(player.getName(), "player");
@@ -77,13 +75,12 @@ class PlayerTest {
 		
 	@Test
 	void testAssignCountriesControlled() {
-		ActivePlayer activePlayer = new ActivePlayer("player", Color.GREEN);
+		ActivePlayer activePlayer = new ActivePlayer(1,"player", Color.GREEN);
 		PassivePlayer passivePlayer = new PassivePlayer("", Color.BLUE);
 
 		Player[] players= {(Player) activePlayer, (Player) passivePlayer};
-		Map map = new Map(); 
-		map.initialiseCountries();
-     	Player.assignCountriesControlled(players, map);
+		Map map = new Map();
+//     	Player.assignCountriesControlled(players, map);
 
 		//Check that the method assignCountries assigned the correct amount of cards i.e. 9 to the Active Player and 6 to the Passive Player
 		assertEquals(activePlayer.getCountriesControlled().size(), 9);
@@ -101,7 +98,7 @@ class PlayerTest {
 	
 	@Test
 	void testToString() {
-		ActivePlayer player = new ActivePlayer("player", Color.GREEN);
+		ActivePlayer player = new ActivePlayer(1,"player", Color.GREEN);
 		PassivePlayer passivePlayer = new PassivePlayer("player2", Color.BLUE);
 		assertEquals(player.toString(), "[name=player, playerColor=GREEN]");
 		assertEquals(passivePlayer.toString(), "[name=player2, playerColor=BLUE]");
