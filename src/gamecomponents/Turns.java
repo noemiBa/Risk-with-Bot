@@ -48,7 +48,7 @@ public class Turns
                 * could also switch player positions in the array to ensure the right player goes first
                 */
                 int playerWhoStarts = whoStarts(risk.getActivePlayers(), risk.getWindow());
-                // Rest of allocating territories implemented here
+                // Allocating reinforcements implemented here
                 gameStage = stage.MAIN_TURN;
                 break;
             case MAIN_TURN:
