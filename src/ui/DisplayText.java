@@ -19,6 +19,8 @@ public class DisplayText extends JPanel {
 		setBorder(BorderFactory.createTitledBorder("Display Text"));
         setBackground(Color.white);
 	}
+	
+	
 
     public void getTextDisplay(String message)
     {
