@@ -89,12 +89,15 @@ public class Map extends JPanel {
 
         drawSeaLines(g);
 
-        if (DisplayText.instruction <= 2) {
+        if (Turns.getGameStage() == Turns.stage.ENTER_NAMES)
+        {
         	//draw the country names
             drawCountriesNames(g);
             drawCountryNodesStart(g);
             drawMilitaryUnitsStart(g);
-        } else {
+        }
+        else
+        {
             drawCountriesNames(g);
             drawCountryNodes(g);
             drawMilitaryUnits(g);

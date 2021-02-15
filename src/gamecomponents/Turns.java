@@ -15,7 +15,12 @@ public class Turns
         END
     };
 
-    private stage gameStage = stage.ENTER_NAMES;
+    private static stage gameStage = stage.ENTER_NAMES;
+
+    public static stage getGameStage()
+    {
+        return gameStage;
+    }
 
     // Game ends when gameStage is set to stage.END
     public void nextTurns(Game risk)
@@ -68,6 +73,7 @@ public class Turns
         risk.getDeck().shuffle();
         risk.getWindow().getTextDisplay("<html>We are now ready to start the game: "
         + risk.getActivePlayers()[0].getName() + " and " + risk.getActivePlayers()[1].getName() + "</html>");
+        risk.getMap().updateUI();
     }
 
     public int whoStarts(ActivePlayer[] activePlayers, Window window)
