@@ -72,7 +72,7 @@ public class Window
 
         //Setting the display constraints
         if (shouldWeightX) {
-            c.weightx = 0.6;
+            c.weightx = 1;
         }
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;

@@ -10,6 +10,7 @@ public class Turns
     public enum stage
     {
         ENTER_NAMES,
+        ASSIGN_COUNTRIES,
         ROLL_TO_PLACE_TERRITORIES,
         MAIN_TURN,
         END
@@ -21,6 +22,10 @@ public class Turns
     {
         return gameStage;
     }
+    
+    public void setGameStage(stage gameStage) {
+		this.gameStage = gameStage;
+	}
 
     // Game ends when gameStage is set to stage.END
     public void nextTurns(Game risk)
@@ -40,9 +45,13 @@ public class Turns
         {
             case ENTER_NAMES:
                 enterPlayerNames(risk);
-                gameStage = stage.ROLL_TO_PLACE_TERRITORIES;
-                risk.getMap().updateUI(gameStage);
+                setGameStage(stage.ASSIGN_COUNTRIES);
+                risk.getMap().updateUI(this.gameStage);
                 break;
+            case ASSIGN_COUNTRIES: 
+            	 assignCountries(risk);
+            	 setGameStage(stage.ROLL_TO_PLACE_TERRITORIES);
+            	 break; 
             case ROLL_TO_PLACE_TERRITORIES:
                 /*
                 * may be better to implement player class as a circular ArrayList
@@ -50,30 +59,40 @@ public class Turns
                 */
                 int playerWhoStarts = whoStarts(risk.getActivePlayers(), risk.getWindow());
                 // Allocating reinforcements implemented here
-                gameStage = stage.MAIN_TURN;
+                setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
                 // Main sequence of turns for both players can be implemented here
                 // stage.END can be moved inside turn method with game winning condition to check if the game should end
-                gameStage = stage.END;
+            	setGameStage(stage.END);
                 break;
             default:
                 break;
         }
     }
 
-    public void enterPlayerNames(Game risk)
+	public void enterPlayerNames(Game risk)
     {
         for(ActivePlayer a: risk.getActivePlayers())
         {
-            risk.getWindow().getTextDisplay("<html>Enter player " + a.getPlayerNumber() + "'s name</html>");
+            risk.getWindow().getTextDisplay("Welcome, player " + a.getPlayerNumber() + "! Enter your name: ");
             a.setName(risk.getWindow().getCommand());
-            risk.getWindow().getTextDisplay("<html>Thanks for that</html>");
-        }
+        } 
+       
+        //Assign Players their colours
+        risk.getWindow().getTextDisplay(risk.getActivePlayers()[0].getName() + " your color is Cyan");
+        risk.getWindow().getTextDisplay(risk.getActivePlayers()[1].getName() + " your color is Pink");
+    }
+    
+    public void assignCountries(Game risk) {
         Country.initialiseUnits(risk.getMap().getCountries());
+        
+        risk.getWindow().getTextDisplay(risk.getActivePlayers()[0].getName() + ", you drew the Countries: " + risk.getActivePlayers()[0].printCountries());
+        risk.getWindow().getTextDisplay(risk.getActivePlayers()[1].getName() + ", you drew the Countries: " + risk.getActivePlayers()[1].printCountries());
+        
         risk.getDeck().shuffle();
-        risk.getWindow().getTextDisplay("<html>We are now ready to start the game: "
-        + risk.getActivePlayers()[0].getName() + " and " + risk.getActivePlayers()[1].getName() + "</html>");
+        risk.getWindow().getTextDisplay("Great, we are now ready to start the game!");
+        
     }
 
     public int whoStarts(ActivePlayer[] activePlayers, Window window)
@@ -89,12 +108,12 @@ public class Turns
 
         if(diceFirstPlayer > diceSecondPlayer)
         {
-            window.getTextDisplay("<html>" + activePlayers[0].getName() + " starts!</html>");
+            window.getTextDisplay(activePlayers[0].getName() + "starts!");
             return 0;
         }
         else
         {
-            window.getTextDisplay("<html>" + activePlayers[1].getName() + " starts!</html>");
+            window.getTextDisplay(activePlayers[1].getName() + " starts!");
             return 1;
         }
     }

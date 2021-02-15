@@ -102,4 +102,13 @@ public abstract class Player
 	{
 		return "[name=" + name + ", playerColor=" + playerColor + "]";
 	}
+    
+	public String printCountries() {
+		String output = "[";
+		for (Country c : getCountriesControlled()) {
+			output = output + c.getName() + ", "; 
+		}
+		output = output.substring(0, output.length()-2) + "]"; 
+		return output;
+	}
 }
