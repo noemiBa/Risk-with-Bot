@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -40,6 +41,12 @@ public class DisplayText extends JPanel {
 	}
 
     public void getTextDisplay(String message)  {
+    	textArea.setForeground(Color.black);
+    	textArea.setText(textArea.getText()+"\n\n"+message);
+    }
+    
+    public void sendErrorMessage(String message) {
+    	textArea.setForeground(new Color(122, 16, 16)); //the textArea text will turn red if there is an erroneous input
     	textArea.setText(textArea.getText()+"\n\n"+message);
     }
 }

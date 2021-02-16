@@ -10,6 +10,7 @@ public class PassivePlayer extends Player
     {
         super(name, playerColor);
     }
+    
     public static PassivePlayer[] initialisePassivePlayers()
     {
         return new PassivePlayer[]

@@ -33,7 +33,13 @@ public class Window
     {
         displayText.getTextDisplay(message);
     }
-
+    
+    // used to print an error message in response to the players' erroneous input
+    public void sendErrorMessage(String message)
+    {
+        displayText.sendErrorMessage(message);
+    }
+    
     // takes the current instruction for each player
     public String getCommand()
     {
