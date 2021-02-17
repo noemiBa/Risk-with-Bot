@@ -5,6 +5,7 @@ import com.botharmon.Game;
 import lib.TextParser;
 import player.ActivePlayer;
 import player.PassivePlayer;
+import ui.Map;
 import ui.Window;
 
 public class Turns
@@ -64,9 +65,8 @@ public class Turns
                 * could also switch player positions in the array to ensure the right player goes first
                 */
                 int playerWhoStarts = whoStarts(risk.getActivePlayers());
-                allocateUnitsActivePlayers(risk.getActivePlayers(), playerWhoStarts);
-                allocateUnitsPassivePlayers(risk.getPassivePlayers());
-                // Allocating reinforcements implemented here
+                allocateUnitsActivePlayers(risk.getActivePlayers(), playerWhoStarts, risk.getMap());
+                //allocateUnitsPassivePlayers(risk.getPassivePlayers());
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
@@ -133,7 +133,7 @@ public class Turns
         }
     }
     
-    public void allocateUnitsActivePlayers(ActivePlayer[] activePlayers, int playerWhoStarts) {
+    public void allocateUnitsActivePlayers(ActivePlayer[] activePlayers, int playerWhoStarts, Map map) {
     	int numberOfUnitsPlayer1 = 36; 
     	int numberOfUnitsPlayer2 = 36; 
     	
@@ -144,15 +144,16 @@ public class Turns
     	String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
     	
     	
-    	System.out.println(input[0] + "," + input[1]);
+    	input[0] = input[0].trim();
     	int numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
     	String countryName = TextParser.parse(input[0]);
     	
     	//validate the user's input
     	numberToAdd = validateNoUnits(numberToAdd, 3); 
-    	countryName = validateCountryName(countryName.trim());
+    	countryName = validateCountryName(countryName);
     	
-    	activePlayers[playerWhoStarts].getCountriesControlled().get(countryName).setNumberOfUnits(numberToAdd);
+    	activePlayers[playerWhoStarts].getCountriesControlled().get(countryName).setNumberOfUnits(activePlayers[playerWhoStarts].getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
+    	map.updateUI(); // updateUI can be moved to where appropriate part of the method, temporarily put here
     }
     
     public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers) {
