@@ -49,7 +49,7 @@ public class Window {
         JFrame frame = new JFrame("Risk");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Window.class.getResource("/images/icon.png")));
 
         //Set up the content pane.
         addComponentsToPane(risk, frame.getContentPane());
@@ -94,7 +94,7 @@ public class Window {
         cDisplay.ipadx = 30;
         cDisplay.weighty = 7;
 
-        JLabel icon = new JLabel(new ImageIcon(Window.class.getResource("/images/icon.png")));
+        JLabel icon = new JLabel(new ImageIcon(Window.class.getResource("/images/displayText.png")));
         JPanel iconPanel = new JPanel();
         iconPanel.setBackground(Color.black);
         iconPanel.add(icon, BorderLayout.CENTER);
@@ -144,6 +144,7 @@ public class Window {
         cMap.gridheight = 2;
 
         pane.add(risk.getMap(), cMap);
+
         pane.validate();
         pane.repaint();
     }
