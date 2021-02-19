@@ -70,11 +70,6 @@ public class Map extends JPanel {
         return countries;
     }
 
-    public Turns.stage getGameStage()
-    {
-        return gameStage;
-    }
-
     public void updateUI(Turns.stage gameStage)
     {
         this.gameStage = gameStage;
@@ -102,7 +97,7 @@ public class Map extends JPanel {
 
         drawSeaLines(g);
 
-        if(getGameStage() == Turns.stage.ENTER_NAMES)
+        if(gameStage == Turns.stage.ENTER_NAMES)
         {
         	//draw the country names
             drawCountriesNames(g);

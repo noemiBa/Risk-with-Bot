@@ -26,7 +26,6 @@ public class Game
     private ActivePlayer[] activePlayers;
     private PassivePlayer[] passivePlayers;
     private Deck deck;
-    private Dice dice;
     private Window window;
     private Turns turns;
 
@@ -38,7 +37,6 @@ public class Game
         risk.passivePlayers = PassivePlayer.initialisePassivePlayers();
         Player.assignCountriesControlled(risk.activePlayers, risk.passivePlayers, risk.map);
         risk.deck = new Deck();
-        risk.dice = new Dice();
         risk.window = new Window(risk);
         risk.turns = new Turns();
         risk.turns.nextTurns(risk);

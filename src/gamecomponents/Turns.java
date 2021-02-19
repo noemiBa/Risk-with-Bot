@@ -10,7 +10,7 @@ import ui.Window;
 
 public class Turns
 {
-	Window window; 
+	private Window window;
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
     public enum stage
     {
@@ -53,7 +53,7 @@ public class Turns
             case ENTER_NAMES:
                 enterPlayerNames(risk);
                 setGameStage(stage.ASSIGN_COUNTRIES);
-                risk.getMap().updateUI(this.gameStage);
+                window.updatePlayerInfo(this.gameStage, risk.getActivePlayers()[0].getName(), risk.getActivePlayers()[1].getName());
                 break;
             case ASSIGN_COUNTRIES: 
             	 assignCountries(risk);
@@ -65,7 +65,7 @@ public class Turns
                 * could also switch player positions in the array to ensure the right player goes first
                 */
                 int playerWhoStarts = whoStarts(risk.getActivePlayers());
-                allocateUnitsActivePlayers(risk.getActivePlayers(), playerWhoStarts, risk.getMap());
+                allocateUnitsActivePlayers(risk.getActivePlayers(), playerWhoStarts);
                 //allocateUnitsPassivePlayers(risk.getPassivePlayers());
                 setGameStage(stage.MAIN_TURN);
                 break;
@@ -133,7 +133,7 @@ public class Turns
         }
     }
     
-    public void allocateUnitsActivePlayers(ActivePlayer[] activePlayers, int playerWhoStarts, Map map) {
+    public void allocateUnitsActivePlayers(ActivePlayer[] activePlayers, int playerWhoStarts) {
     	int numberOfUnitsPlayer1 = 36; 
     	int numberOfUnitsPlayer2 = 36; 
     	
@@ -153,7 +153,7 @@ public class Turns
     	countryName = validateCountryName(countryName);
     	
     	activePlayers[playerWhoStarts].getCountriesControlled().get(countryName).setNumberOfUnits(activePlayers[playerWhoStarts].getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
-    	map.updateUI(); // updateUI can be moved to where appropriate part of the method, temporarily put here
+    	window.updateMap(); // updateUI can be moved to where appropriate part of the method, temporarily put here
     }
     
     public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers) {
