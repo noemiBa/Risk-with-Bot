@@ -61,7 +61,6 @@ public abstract class Player
     /** Removes the number of cards specified from the top of the deck ArrayList and
      * adds to Player cards ArrayList
      * */
-
     public static void assignCountriesControlled(ActivePlayer[] activePlayers, PassivePlayer[] passivePlayers, Map map)
     {
         ArrayList<Integer> countryIndexes = new ArrayList<Integer>();

@@ -1,4 +1,4 @@
-	package gamecomponents;
+package gamecomponents;
 
 import player.*;
 import java.awt.*;
@@ -55,7 +55,6 @@ public class Country {
     /*
      * ACCESSOR methods for instance variables
      */
-
     public String getName() {
         return name;
     }
@@ -71,11 +70,6 @@ public class Country {
     public Player getControlledBy()
     {
         return controlledBy;
-    }
-
-    public int getNumberOfInfantry()
-    {
-        return numberOfUnits;
     }
 
     public ArrayList<Integer> getAdjCountries() {

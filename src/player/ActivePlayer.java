@@ -12,9 +12,9 @@ public class ActivePlayer extends Player
 {
     private int playerNumber;
 
-    public ActivePlayer(int playerNumber, String name, Color playerColor)
-    {
+    public ActivePlayer(int playerNumber, String name, Color playerColor) {	
         super(name, playerColor);
+        validatePlayerNumber(playerNumber);
         this.playerNumber = playerNumber;
     }
 
@@ -32,7 +32,7 @@ public class ActivePlayer extends Player
         return playerNumber;
     }
 
-    private void draw(int numberOfCards, Deck deck)
+    public void draw(int numberOfCards, Deck deck)
     {
         if(getCards().size() <= 5)
         {
@@ -48,6 +48,12 @@ public class ActivePlayer extends Player
     {
         Random r = new Random();
         return r.nextInt((6 - 1) + 1) + 1;
+    }
+    
+    private void validatePlayerNumber(int playerNumber) {
+    	if (playerNumber <= 0) {
+    		throw new IllegalArgumentException("Player number should be positive");
+    	}
     }
 }
 	

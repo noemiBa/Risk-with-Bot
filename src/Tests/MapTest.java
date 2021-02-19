@@ -26,13 +26,13 @@ class MapTest {
 		Map map = new Map();
 
 		Country c = map.getCountries().get(14);
-		assertEquals(c.toString(), "Country [name=Iceland, coord_x=373, coord_y=160, continent=1, adjCountries=[15, 9, 4]]");
+		assertEquals(c.toString(), "Country [name=Iceland, coord_x=373, coord_y=120, continent=1, adjCountries=[15, 9, 4]]");
 		
 		Country c1 = map.getCountries().get(27);
-		assertEquals(c1.toString(), "Country [name=China, coord_x=665, coord_y=290, continent=2, adjCountries=[26, 23, 17, 16, 20, 25]]");
+		assertEquals(c1.toString(), "Country [name=China, coord_x=665, coord_y=250, continent=2, adjCountries=[26, 23, 17, 16, 20, 25]]");
 		
 		Country c2 = map.getCountries().get(41);
-		assertEquals(c2.toString(), "Country [name=Madagascar, coord_x=528, coord_y=513, continent=5, adjCountries=[38, 40]]");
+		assertEquals(c2.toString(), "Country [name=Madagascar, coord_x=528, coord_y=473, continent=5, adjCountries=[38, 40]]");
 	}
 
 }
