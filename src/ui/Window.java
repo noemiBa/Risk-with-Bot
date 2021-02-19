@@ -1,6 +1,9 @@
 package ui;
 
 import com.botharmon.Game;
+import gamecomponents.Turns;
+import player.ActivePlayer;
+import player.PassivePlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,13 +23,34 @@ public class Window {
     final static boolean shouldWeightY = true;
     final static boolean RIGHT_TO_LEFT = false;
 
-    private static DisplayText displayText;
-    private static CommandPanel commandPanel;
+    private DisplayText displayText;
+    private CommandPanel commandPanel;
+    private PlayerInfo playerInfo;
+    private Map map;
 
-    public Window(Game risk) {
+    public Window(Game risk)
+    {
         displayText = new DisplayText();
         commandPanel = new CommandPanel(risk.getActivePlayers());
-        createAndShowGUI(risk);
+        playerInfo = new PlayerInfo();
+        map = risk.getMap();
+        createAndShowGUI(displayText, commandPanel, playerInfo, map);
+    }
+
+    public void updatePlayerInfo(Turns.stage gameStage, ActivePlayer[] activePlayers, PassivePlayer[] passivePlayers)
+    {
+        playerInfo.updateUI(gameStage, activePlayers, passivePlayers);
+        map.updateUI(gameStage);
+    }
+
+    public void updateMap(Turns.stage gameStage)
+    {
+        map.updateUI(gameStage);
+    }
+
+    public void updateMap()
+    {
+        map.updateUI();
     }
 
     // used to print the current message for each player's turn
@@ -46,7 +70,7 @@ public class Window {
         return commandPanel.getCommand();
     }
 
-    public static void createAndShowGUI(Game risk) {
+    public static void createAndShowGUI(DisplayText displayText, CommandPanel commandPanel, PlayerInfo playerInfo, Map map) {
         //Create and set up the window.
         JFrame frame = new JFrame("Risk");
         frame.setResizable(false);
@@ -54,7 +78,7 @@ public class Window {
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Window.class.getResource("/images/icon.png")));
 
         //Set up the content pane.
-        addComponentsToPane(risk, frame.getContentPane());
+        addComponentsToPane(displayText, commandPanel, playerInfo, map, frame.getContentPane());
 
         //Display the window.
         frame.pack();
@@ -62,7 +86,7 @@ public class Window {
         frame.setVisible(true);
     }
 
-    public static void addComponentsToPane(Game risk, Container pane) {
+    public static void addComponentsToPane(DisplayText displayText, CommandPanel commandPanel, PlayerInfo playerInfo, Map map, Container pane) {
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
@@ -70,23 +94,22 @@ public class Window {
         pane.setLayout(new GridBagLayout());
         GridBagConstraints cDisplay = new GridBagConstraints();
         GridBagConstraints cMap = new GridBagConstraints();
-        GridBagConstraints cButton = new GridBagConstraints();
+        GridBagConstraints cPlayerInfo = new GridBagConstraints();
         GridBagConstraints cCommand = new GridBagConstraints();
 
         //Setting the display constraints
         if (shouldWeightX) {
-            cDisplay.weightx = 1;
             cMap.weightx = 1;
             cCommand.weightx = 1;
-            cButton.weightx = 1;
+            cPlayerInfo.weightx = 1;
+            cDisplay.weightx = 1;
         }
 
         if (shouldWeightY) {
             cDisplay.weighty = 1;
             cCommand.weighty = 1;
-            cButton.weighty = 1;
+            cPlayerInfo.weighty = 1;
             cMap.weighty = 10;
-
         }
 
         cDisplay.fill = GridBagConstraints.BOTH;
@@ -122,20 +145,19 @@ public class Window {
             e.printStackTrace();
         }
         // change to image icon
-        JButton button = new JButton(new ImageIcon(card));
-        cButton.fill = GridBagConstraints.BOTH;
-        cButton.gridx = 2;
-        cButton.gridy = 0;
-        cButton.ipadx = 5;
-        cButton.ipady = 5;
+        playerInfo.setPreferredSize(new Dimension(200, 100));
+        cPlayerInfo.fill = GridBagConstraints.BOTH;
+        cPlayerInfo.gridx = 2;
+        cPlayerInfo.gridy = 0;
+        cPlayerInfo.ipadx = 5;
+        cPlayerInfo.ipady = 5;
 
-
-        pane.add(button, cButton);
+        pane.add(playerInfo, cPlayerInfo);
 
         TitledBorder titledBorderMap = BorderFactory.createTitledBorder("MAP");
-        risk.getMap().setBorder(titledBorderMap);
+        map.setBorder(titledBorderMap);
         titledBorderMap.setTitleColor(Color.WHITE);
-        risk.getMap().setBackground(Color.black);
+        map.setBackground(Color.black);
 
         cMap.fill = GridBagConstraints.BOTH;
         cMap.gridx = 1;
@@ -145,7 +167,7 @@ public class Window {
         cMap.gridwidth = 2;
         cMap.gridheight = 2;
 
-        pane.add(risk.getMap(), cMap);
+        pane.add(map, cMap);
 
         pane.validate();
         pane.repaint();

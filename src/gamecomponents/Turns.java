@@ -51,7 +51,7 @@ public class Turns {
             case ENTER_NAMES:
                 enterPlayerNames(risk);
                 setGameStage(stage.ASSIGN_COUNTRIES);
-                risk.getMap().updateUI(this.gameStage);
+                window.updatePlayerInfo(this.gameStage, risk.getActivePlayers(), risk.getPassivePlayers());
                 break;
             case ASSIGN_COUNTRIES:
                 assignCountries(risk);
@@ -172,7 +172,7 @@ public class Turns {
             troops = troops - numberToAdd;
 
             System.out.println("Allocate " + numberToAdd + " to " + countryName); //For test purpose
-            map.updateUI(); // updateUI can be moved to where appropriate part of the method, temporarily put here
+            window.updateMap(); // updateUI can be moved to where appropriate part of the method, temporarily put here
             window.clearText();
         }
     }
@@ -190,7 +190,7 @@ public class Turns {
             String countryName = TextParser.parse(input[0]);
             p.getCountriesControlled().get(countryName).setNumberOfUnits
                     (p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
-            map.updateUI();
+            window.updateMap();
         }
         window.clearText();
     }
