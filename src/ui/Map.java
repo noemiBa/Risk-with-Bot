@@ -27,8 +27,8 @@ public class Map extends JPanel {
     /* 
      * JPanel instance variables
      */
-    private static final int MAP_WIDTH = 640;
-    private static final int MAP_HEIGHT = 565;
+    private static final int MAP_WIDTH = 630;
+    private static final int MAP_HEIGHT = 410;
     private static final int DIAMETER = 20;
     private static final int RADIUS = DIAMETER / 2;
     private static final int SPACING = 5;
@@ -46,7 +46,7 @@ public class Map extends JPanel {
     {
         gameStage = Turns.stage.ENTER_NAMES;
         countries = new ArrayList<Country>();
-        try {
+       try {
             image = ImageIO.read(getClass().getResource("/images/map_color.png"));
         } catch (IOException ex) {
             ex.getMessage();
@@ -88,7 +88,6 @@ public class Map extends JPanel {
     public Dimension getPreferredSize() {
         return new Dimension(MAP_WIDTH, MAP_HEIGHT);
     }
-
 
     /**
      * Overrides the paintComponent method of JPanel. The method draws a filled circle for each Country at the coordinates(x-radius, y-radius). The color of the country
