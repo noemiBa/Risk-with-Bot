@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import javax.swing.border.TitledBorder;
 import javax.swing.AbstractAction;
@@ -48,6 +49,7 @@ public class Window {
         JFrame frame = new JFrame("Risk");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
 
         //Set up the content pane.
         addComponentsToPane(risk, frame.getContentPane());
@@ -89,8 +91,15 @@ public class Window {
         cDisplay.gridx = 0;
         cDisplay.gridy = 0;
         cDisplay.gridheight = 7;
-        cDisplay.ipadx = 100;
+        cDisplay.ipadx = 30;
         cDisplay.weighty = 7;
+
+        JLabel icon = new JLabel(new ImageIcon(Window.class.getResource("/images/icon.png")));
+        JPanel iconPanel = new JPanel();
+        iconPanel.setBackground(Color.black);
+        iconPanel.add(icon, BorderLayout.CENTER);
+
+        displayText.add(iconPanel, BorderLayout.NORTH);
 
         pane.add(displayText, cDisplay);
 
@@ -130,7 +139,7 @@ public class Window {
         cMap.gridx = 1;
         cMap.gridy = 1;
         cMap.ipady = 150;      //make this component tall
-        cMap.ipadx = 220;
+        cMap.ipadx = 230;
         cMap.gridwidth = 2;
         cMap.gridheight = 2;
 

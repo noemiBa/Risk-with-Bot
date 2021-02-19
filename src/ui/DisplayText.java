@@ -22,8 +22,7 @@ public class DisplayText extends JPanel {
 	JTextArea textArea = new JTextArea(TEXT_AREA_HEIGHT, CHARACTER_WIDTH);
 	JScrollPane scrollPane = new JScrollPane(textArea);
 	DefaultCaret caret = (DefaultCaret)textArea.getCaret();
-	private TitledBorder titledBorderText = BorderFactory.createTitledBorder("Read Text: ");
-	
+
 	public DisplayText() {	
 		textArea.setEditable(false);
         textArea.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, FONT_SIZE));
@@ -35,7 +34,7 @@ public class DisplayText extends JPanel {
 		
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
-		setBorder(titledBorderText);
+
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
 		return;

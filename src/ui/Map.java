@@ -27,8 +27,8 @@ public class Map extends JPanel {
     /* 
      * JPanel instance variables
      */
-    private static final int MAP_WIDTH = 630;
-    private static final int MAP_HEIGHT = 410;
+    private static final int MAP_WIDTH = 620;
+    private static final int MAP_HEIGHT = 400;
     private static final int DIAMETER = 20;
     private static final int RADIUS = DIAMETER / 2;
     private static final int SPACING = 5;
