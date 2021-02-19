@@ -29,7 +29,8 @@ public class DisplayText extends JPanel {
         textArea.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, FONT_SIZE));
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		
+		textArea.setBackground(Color.black);
+
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -41,12 +42,14 @@ public class DisplayText extends JPanel {
 	}
 
     public void getTextDisplay(String message)  {
-    	textArea.setForeground(Color.black);
+    	textArea.setForeground(Color.white);
+		Font  fontTextDisplay  = new Font(Font.DIALOG,  Font.BOLD, 16);
+		textArea.setFont(fontTextDisplay);
     	textArea.setText(textArea.getText()+"\n\n"+message);
     }
     
     public void sendErrorMessage(String message) {
     	textArea.setForeground(new Color(122, 16, 16)); //the textArea text will turn red if there is an erroneous input
-    	textArea.setText(textArea.getText()+"\n\n"+message);
+    	textArea.setText(textArea.getText() + "\n\n" + message);
     }
 }
