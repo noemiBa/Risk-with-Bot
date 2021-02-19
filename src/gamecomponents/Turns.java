@@ -179,7 +179,7 @@ public class Turns {
 
     public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map) {
         //divide the units equally between the countries the passive players start with.
-        window.getTextDisplay(activePlayer.getName() + " , now time to allocate the passive troops!\n");
+        window.getTextDisplay(activePlayer.getName() + ", now time to allocate the passive troops!\n");
 
         //Loop through each passive player and set the units with the given country name
         for (PassivePlayer p : passivePlayers) {

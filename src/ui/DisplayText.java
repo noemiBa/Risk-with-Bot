@@ -25,7 +25,7 @@ public class DisplayText extends JPanel {
 
     public DisplayText() {
         textArea.setEditable(false);
-        textArea.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, FONT_SIZE));
+        textArea.setFont(new Font(Font.DIALOG, Font.BOLD, FONT_SIZE));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setBackground(Color.black);
@@ -42,8 +42,6 @@ public class DisplayText extends JPanel {
 
     public void getTextDisplay(String message) {
         textArea.setForeground(Color.white);
-        Font fontTextDisplay = new Font(Font.DIALOG, Font.BOLD, 16);
-        textArea.setFont(fontTextDisplay);
         textArea.setText(textArea.getText() + "\n\n" + message);
     }
 
