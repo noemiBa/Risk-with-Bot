@@ -16,6 +16,7 @@ import javax.swing.AbstractAction;
  */
 public class Window {
     final static boolean shouldWeightX = true;
+    final static boolean shouldWeightY = true;
     final static boolean RIGHT_TO_LEFT = false;
 
     private static DisplayText displayText;
@@ -76,19 +77,29 @@ public class Window {
             cButton.weightx = 1;
         }
 
+        if (shouldWeightY) {
+            cDisplay.weighty = 1;
+            cCommand.weighty = 1;
+            cButton.weighty = 1;
+            cMap.weighty = 10;
+
+        }
+
         cDisplay.fill = GridBagConstraints.BOTH;
         cDisplay.gridx = 0;
         cDisplay.gridy = 0;
         cDisplay.gridheight = 7;
         cDisplay.ipadx = 100;
-
+        cDisplay.weighty = 7;
 
         pane.add(displayText, cDisplay);
 
         cCommand.fill = GridBagConstraints.BOTH;
         cCommand.gridx = 1;
         cCommand.gridy = 0;
-        cCommand.ipadx = 590;
+        cCommand.ipady = 5;
+        cCommand.ipadx = 400;
+        cCommand.weighty = 1;
 
         pane.add(commandPanel, cCommand);
 
@@ -99,13 +110,14 @@ public class Window {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // change to image icon
         JButton button = new JButton(new ImageIcon(card));
         cButton.fill = GridBagConstraints.BOTH;
         cButton.gridx = 2;
         cButton.gridy = 0;
-        cButton.ipadx = 15;
+        cButton.ipadx = 5;
+        cButton.ipady = 5;
+
 
         pane.add(button, cButton);
 
@@ -119,8 +131,8 @@ public class Window {
         cMap.gridy = 1;
         cMap.ipady = 150;      //make this component tall
         cMap.ipadx = 220;
-        cMap.weightx = 0.0;
-        cMap.gridwidth = 3;
+        cMap.gridwidth = 2;
+        cMap.gridheight = 2;
 
         pane.add(risk.getMap(), cMap);
         pane.validate();
