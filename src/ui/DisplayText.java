@@ -4,15 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
 
-public class DisplayText extends JPanel {
+public class DisplayText extends JPanel
+{
     private static final long serialVersionUID = 1L;
     public static int instruction = 1;
     private static final int TEXT_AREA_HEIGHT = 2;
@@ -23,7 +22,8 @@ public class DisplayText extends JPanel {
     JScrollPane scrollPane = new JScrollPane(textArea);
     DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 
-    public DisplayText() {
+    public DisplayText()
+    {
         textArea.setEditable(false);
         textArea.setFont(new Font(Font.DIALOG, Font.BOLD, FONT_SIZE));
         textArea.setLineWrap(true);
@@ -37,19 +37,21 @@ public class DisplayText extends JPanel {
 
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
-        return;
     }
 
-    public void getTextDisplay(String message) {
+    public void getTextDisplay(String message)
+    {
         textArea.setForeground(Color.white);
         textArea.setText(textArea.getText() + "\n\n" + message);
     }
 
-    public void clearTextDisplay(){
+    public void clearTextDisplay()
+    {
     	textArea.setText("");
 	}
 
-    public void sendErrorMessage(String message) {
+    public void sendErrorMessage(String message)
+    {
         clearTextDisplay();
         textArea.setForeground(new Color(122, 16, 16)); //the textArea text will turn red if there is an erroneous input
         textArea.setText(textArea.getText() + "\n\n" + message);

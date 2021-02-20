@@ -14,29 +14,32 @@ public class Turns {
     Window window;
 
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
-    public enum stage {
+    public enum stage
+    {
         ENTER_NAMES,
         ASSIGN_COUNTRIES,
         ROLL_TO_PLACE_TERRITORIES,
         MAIN_TURN,
         END
-    }
-
-    ;
+    };
 
     private stage gameStage = stage.ENTER_NAMES;
 
-    public stage getGameStage() {
+    public stage getGameStage()
+    {
         return gameStage;
     }
 
-    public void setGameStage(stage gameStage) {
+    public void setGameStage(stage gameStage)
+    {
         this.gameStage = gameStage;
     }
 
     // Game ends when gameStage is set to stage.END
-    public void nextTurns(Game risk) {
-        while (gameStage != stage.END) {
+    public void nextTurns(Game risk)
+    {
+        while (gameStage != stage.END)
+        {
             makeTurns(risk);
             // for testing purposes
             System.out.println(gameStage);
@@ -44,7 +47,8 @@ public class Turns {
     }
 
     // each players turn for each stage is implemented here
-    public void makeTurns(Game risk) {
+    public void makeTurns(Game risk)
+    {
         window = risk.getWindow();
 
         switch (gameStage) {
@@ -73,26 +77,25 @@ public class Turns {
         }
     }
 
-    public void enterPlayerNames(Game risk) {
+    public void enterPlayerNames(Game risk)
+    {
         for (ActivePlayer a : risk.getActivePlayers()) {    //welcome the user and ask them to enter their names
             window.getTextDisplay("Welcome, player " + a.getPlayerNumber() + "! Enter your name: ");
 
             //take what the user types and put it in the string playerName
             String playerName = risk.getWindow().getCommand();
-
-            //ensure the input entered by the user is valid
+            while(playerName.length() > 30)
+            {
+                window.getTextDisplay("Sorry, that name is too long. Try typing a shortened version. It must be no longer than 20 characters.");
+                playerName = risk.getWindow().getCommand();
+            }
             a.setName(validatePlayerName(playerName));
         }
-
-
         window.clearText();
-
-        //Assign Players their colours
-        window.getTextDisplay(risk.getActivePlayers()[0].getName() + " your color is Cyan");
-        window.getTextDisplay(risk.getActivePlayers()[1].getName() + " your color is Pink");
     }
 
-    public void assignCountries(Game risk) {
+    public void assignCountries(Game risk)
+    {
         Country.initialiseUnits(risk.getMap().getCountries());
 
         window.getTextDisplay(risk.getActivePlayers()[0].getName() + ", you drew the Countries: " + risk.getActivePlayers()[0].printCountries());
@@ -101,47 +104,48 @@ public class Turns {
         risk.getDeck().shuffle();
     }
 
-    public int whoStarts(ActivePlayer[] activePlayers) {
+    public int whoStarts(ActivePlayer[] activePlayers)
+    {
         int diceFirstPlayer = activePlayers[0].throwDice();
         int diceSecondPlayer = activePlayers[1].throwDice();
         //inform the user 
         displayDiceRoll(activePlayers, diceFirstPlayer, diceSecondPlayer);
 
-        while (diceFirstPlayer == diceSecondPlayer) {    //if it's a draw
+        while (diceFirstPlayer == diceSecondPlayer) // if it's a draw
+        {
             window.getTextDisplay("It was a draw, let's roll again");
             displayDiceRoll(activePlayers, diceFirstPlayer, diceSecondPlayer);
 
             diceFirstPlayer = activePlayers[0].throwDice();
             diceSecondPlayer = activePlayers[1].throwDice();
         }
-
-        if (diceFirstPlayer > diceSecondPlayer) {
-            window.getTextDisplay(activePlayers[0].getName() + " starts!");
+        if (diceFirstPlayer > diceSecondPlayer)
             return 0;
-        } else {
-            window.getTextDisplay(activePlayers[1].getName() + " starts!");
+        else
             return 1;
-        }
     }
 
-    public void allocateUnits(ActivePlayer[] activePlayers, int firstToPlay, Map map, Game risk) {
+    public void allocateUnits(ActivePlayer[] activePlayers, int firstToPlay, Map map, Game risk)
+    {
         //print instructions
         int secondToPlay = 0;
 
         //changing value case is equal
-        if (firstToPlay == 0) {
+        if (firstToPlay == 0)
             secondToPlay = 1;
-        }
 
         int count;
 
         //Nine rounds for each player to complete allocation
-        for(count = 1; count <= 18; count++){
-            if (count % 2 == 1) {
+        for(count = 1; count <= 18; count++)
+        {
+            if (count % 2 == 1)
+            {
                 allocateUnitsActivePlayers(activePlayers[firstToPlay], map, risk);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[firstToPlay], map);
             }
-            if (count % 2 == 0) {
+            if (count % 2 == 0)
+            {
                 allocateUnitsActivePlayers(activePlayers[secondToPlay], map, risk);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[secondToPlay], map);
             }
@@ -149,19 +153,22 @@ public class Turns {
         }
     }
 
-    public void allocateUnitsActivePlayers(ActivePlayer activePlayers, Map map, Game risk) {
+    public void allocateUnitsActivePlayers(ActivePlayer activePlayers, Map map, Game risk)
+    {
         int troops = 3;
 
-        while (troops != 0) {
+        while (troops != 0)
+        {
             window.getTextDisplay(activePlayers.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
             
             String countryName = ""; 
             int numberToAdd = -1;
-            try {
-            String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-            input[0] = input[0].trim();
-            countryName = TextParser.parse(input[0]);
-            numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
+            try
+            {
+                String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
+                input[0] = input[0].trim();
+                countryName = TextParser.parse(input[0]);
+                numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
             }
             catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {} //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
             
@@ -180,7 +187,8 @@ public class Turns {
         }
     }
 
-    public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map) {
+    public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map)
+    {
         //divide the units equally between the countries the passive players start with.
         window.getTextDisplay(activePlayer.getName() + ", now time to allocate the passive troops!\n");
 
@@ -204,7 +212,8 @@ public class Turns {
      * @param activePlayers: an array containing information regarding the two main players
      * @param diceOne, diceTwo: int representing the result of the die rolls
      */
-    private void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo) {
+    private void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo)
+    {
         window.getTextDisplay(activePlayers[0].getName() + " rolled a " + diceOne + "\n"
                 + activePlayers[1].getName() + " rolled a " + diceTwo);
     }
@@ -215,7 +224,8 @@ public class Turns {
      * @param playerName: the input entered by the user
      * @return the valid playerName
      */
-    private String validatePlayerName(String playerName) {
+    private String validatePlayerName(String playerName)
+    {
         //while the player name is an empty String or a number
         while (playerName.trim().isEmpty() || playerName.matches("[0-9]+")) {
             window.sendErrorMessage("That doesn't quite look like a name, try again!");
@@ -229,7 +239,8 @@ public class Turns {
      * @param numberToAdd: the input entered by the user
      * @return the valid numberToAdd
      */
-    private int validateNoUnits(int numberToAdd, int numberUnitsLeft) {
+    private int validateNoUnits(int numberToAdd, int numberUnitsLeft)
+    {
     	while (numberToAdd ==  -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
             window.sendErrorMessage("Please, enter a valid number of units to add to the country.");
             numberToAdd = Integer.parseInt(window.getCommand());
@@ -247,8 +258,10 @@ public class Turns {
      * @param countryName: the input entered by the user
      * @return the valid countryName
      */
-    private String validateCountryName(String countryName) {
-        while (countryName.equals("Error")) {
+    private String validateCountryName(String countryName)
+    {
+        while (countryName.equals("Error"))
+        {
             System.out.println("here");
             window.sendErrorMessage("We couldn't quite catch that, enter a new country name please");
             countryName = TextParser.parse(window.getCommand().trim());
@@ -256,16 +269,16 @@ public class Turns {
         return countryName;
     }
 
-    public String getColorName(PassivePlayer passivePlayer) {
-        if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174))) {
+    public String getColorName(PassivePlayer passivePlayer)
+    {
+        if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174)))
             return "Pale Green";
-        } else if (passivePlayer.getPlayerColor().equals(new Color(235, 232, 234))) {
+        else if (passivePlayer.getPlayerColor().equals(new Color(235, 232, 234)))
             return "Light Grey";
-        } else if (passivePlayer.getPlayerColor().equals(new Color(248, 250, 162))) {
+        else if (passivePlayer.getPlayerColor().equals(new Color(248, 250, 162)))
             return "Pale Yellow";
-        } else if (passivePlayer.getPlayerColor().equals(new Color(237, 181, 126))) {
+        else if (passivePlayer.getPlayerColor().equals(new Color(237, 181, 126)))
             return "Peach";
-        }
         return null;
     }
 }
