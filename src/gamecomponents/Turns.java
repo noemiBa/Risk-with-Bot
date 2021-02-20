@@ -99,8 +99,6 @@ public class Turns {
         window.getTextDisplay(risk.getActivePlayers()[1].getName() + ", you drew the Countries: " + risk.getActivePlayers()[1].printCountries());
 
         risk.getDeck().shuffle();
-        window.getTextDisplay("Great, we are now ready to start the game!");
-
     }
 
     public int whoStarts(ActivePlayer[] activePlayers) {
@@ -156,12 +154,17 @@ public class Turns {
 
         while (troops != 0) {
             window.getTextDisplay(activePlayers.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
-
+            
+            String countryName = ""; 
+            int numberToAdd = -1;
+            try {
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
             input[0] = input[0].trim();
-            String countryName = TextParser.parse(input[0]);
-            int numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
-
+            countryName = TextParser.parse(input[0]);
+            numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
+            }
+            catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {} //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
+            
             //validate the user's input
             numberToAdd = validateNoUnits(numberToAdd, troops);
             countryName = validateCountryName(countryName);
@@ -227,14 +230,15 @@ public class Turns {
      * @return the valid numberToAdd
      */
     private int validateNoUnits(int numberToAdd, int numberUnitsLeft) {
-        if (numberToAdd > 3 || numberToAdd < 1) {
+    	while (numberToAdd ==  -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
+            window.sendErrorMessage("Please, enter a valid number of units to add to the country.");
+            numberToAdd = Integer.parseInt(window.getCommand());
+        }
+    	
+    	while (numberToAdd > 3 || numberToAdd < 1) {
             window.sendErrorMessage("You don't have that many units left I'm afraid, enter a new number");
             numberToAdd = Integer.parseInt(window.getCommand());
         }
-       /* if (numberToAdd > numberUnitsLeft) {
-            window.sendErrorMessage("You don't have that many units left I'm afraid, enter a new number");
-            numberToAdd = Integer.parseInt(window.getCommand());
-        }*/
         return numberToAdd;
     }
 
