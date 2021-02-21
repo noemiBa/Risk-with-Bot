@@ -187,7 +187,7 @@ public class TurnsTest
                 testBot.enterText(testInput[i++]);
                 String[] input = risk.getWindow().getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
                 input[0] = input[0].trim();
-                countryName = risk.getTurns().validateCountryName(TextParser.parse(input[0]));
+                //countryName = risk.getTurns().validateCountryName(TextParser.parse(input[0]));
                 if (risk.getTurns().isInteger(input[1]) == false || input[1] == null) {
                     risk.getWindow().getTextDisplay("I am sorry, this is not a number or you forgot the number, please enter the number to allocate again!");
                     risk.getWindow().getCommand();
