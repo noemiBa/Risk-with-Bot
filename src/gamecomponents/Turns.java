@@ -269,7 +269,7 @@ public class Turns {
             window.sendErrorMessage("You don't have that many units left! You only have " + numberUnitsLeft + " enter a new valid number to add to " + countryName);
             numberToAdd = validateNumberToAdd(window.getCommand());
         }
-
+        window.clearText();
         return numberToAdd;
     }
 
@@ -306,6 +306,7 @@ public class Turns {
             input = window.getCommand();
         }
         int numberToAdd = Integer.parseInt(input);
+        window.clearText();
         return numberToAdd;
     }
 
@@ -325,15 +326,15 @@ public class Turns {
 
     public String validateCountry(String countryName, Player player) {
 
-        validateCountryName(countryName);
-
         CustomArrayList<Country> countries = player.getCountriesControlled();
 
         while (countries.get(countryName) == null) {
-            window.sendErrorMessage("Sorry, it looks like " + player.getName() + " does not own " + countryName + "!"
-                    + "\nEnter a country of " + player.getName() + "'s colour!");
+            window.sendErrorMessage("Sorry, it looks like " + player.getName() + " does not own this country or you typed it wrong!"
+                    + "\nEnter a country of " + player.getName() + "'s colour");
             countryName = TextParser.parse(window.getCommand().trim());
         }
+
+        window.clearText();
         return countryName;
     }
 
