@@ -153,7 +153,7 @@ public class TurnsTest
             catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {} //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
 
             //validate the user's input
-            numberToAdd = risk.getTurns().validateNoUnits(numberToAdd, troops);
+            numberToAdd = risk.getTurns().validateNoUnits(numberToAdd, troops, countryName);
             countryName =  risk.getTurns().validateCountryName(countryName);
 
             risk.getActivePlayers()[0].getCountriesControlled().get(countryName).setNumberOfUnits
