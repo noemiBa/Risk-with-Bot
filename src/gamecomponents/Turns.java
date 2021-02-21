@@ -1,51 +1,45 @@
 package gamecomponents;
 
 import com.botharmon.Game;
-
+import lib.CustomArrayList;
 import lib.TextParser;
 import player.ActivePlayer;
 import player.PassivePlayer;
+import player.Player;
 import ui.Map;
 import ui.Window;
 
 import java.awt.*;
 
-public class Turns
-{
+public class Turns {
     private Window window;
 
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
-    public enum stage
-    {
+    public enum stage {
         ENTER_NAMES,
         ASSIGN_COUNTRIES,
         ROLL_TO_PLACE_TERRITORIES,
         MAIN_TURN,
         END
-    };
+    }
 
     private stage gameStage = stage.ENTER_NAMES;
 
-    public stage getGameStage()
-    {
+    public stage getGameStage() {
         return gameStage;
     }
 
-    public void setWindow(Window window)
-    {
+    public void setWindow(Window window) {
         this.window = window;
     }
 
-    public void setGameStage(stage gameStage)
-    {
+    public void setGameStage(stage gameStage) {
         this.gameStage = gameStage;
     }
 
     // Game ends when gameStage is set to stage.END
-    public void nextTurns(Game risk)
-    {
-        while (gameStage != stage.END)
-        {
+    public void nextTurns(Game risk) {
+        while (gameStage != stage.END) {
             makeTurns(risk);
             // for testing purposes
             System.out.println(gameStage);
@@ -53,8 +47,7 @@ public class Turns
     }
 
     // each players turn for each stage is implemented here
-    public void makeTurns(Game risk)
-    {
+    public void makeTurns(Game risk) {
         window = risk.getWindow();
 
         switch (gameStage) {
@@ -83,38 +76,36 @@ public class Turns
         }
     }
 
-    public void enterPlayerNames(Game risk)
-    {
+    public void enterPlayerNames(Game risk) {
         //welcome the user and ask them to enter their names
         window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[0].getPlayerNumber() + "! Enter your name: ");
-        String playerName;
-        for (int i = 0; i < risk.getActivePlayers().length;)
-        {
+        String playerName = null;
+        for (int i = 0; i < risk.getActivePlayers().length; ) {
             //take what the user types and put it in the string playerName
             playerName = risk.getWindow().getCommand();
-            if(playerName.length() <= 20)
-            {
+            if (playerName.length() <= 20) {
                 risk.getActivePlayers()[i].setName(validatePlayerName(playerName));
                 i++;
-                if(i < risk.getActivePlayers().length)
+                if (i < risk.getActivePlayers().length)
                     window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
-            }
-            else
+            } else
                 window.getTextDisplay("Sorry, that name is too long. Try typing a shortened version. It must be no longer than 20 characters.");
         }
+
+        validateDifferentName(risk.getActivePlayers(), playerName, risk);
+
         window.clearText();
     }
 
-    public void assignCountries(Game risk)
-    {
+
+    public void assignCountries(Game risk) {
         Country.initialiseUnits(risk.getMap().getCountries());
         window.getTextDisplay(risk.getActivePlayers()[0].getName() + ", you drew the Countries: " + risk.getActivePlayers()[0].printCountries());
         window.getTextDisplay(risk.getActivePlayers()[1].getName() + ", you drew the Countries: " + risk.getActivePlayers()[1].printCountries());
         risk.getDeck().shuffle();
     }
 
-    public int whoStarts(ActivePlayer[] activePlayers)
-    {
+    public int whoStarts(ActivePlayer[] activePlayers) {
         int diceFirstPlayer = activePlayers[0].throwDice();
         int diceSecondPlayer = activePlayers[1].throwDice();
         //inform the user 
@@ -128,14 +119,14 @@ public class Turns
             diceFirstPlayer = activePlayers[0].throwDice();
             diceSecondPlayer = activePlayers[1].throwDice();
         }
+
         if (diceFirstPlayer > diceSecondPlayer)
             return 0;
         else
             return 1;
     }
 
-    public void allocateUnits(ActivePlayer[] activePlayers, int firstToPlay, Map map, Game risk)
-    {
+    public void allocateUnits(ActivePlayer[] activePlayers, int firstToPlay, Map map, Game risk) {
         //print instructions
         int secondToPlay = 0;
 
@@ -146,15 +137,12 @@ public class Turns
         int count;
 
         //Nine rounds for each player to complete allocation
-        for(count = 1; count <= 18; count++)
-        {
-            if (count % 2 == 1)
-            {
+        for (count = 1; count <= 18; count++) {
+            if (count % 2 == 1) {
                 allocateUnitsActivePlayers(activePlayers[firstToPlay], map, risk);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[firstToPlay], map);
             }
-            if (count % 2 == 0)
-            {
+            if (count % 2 == 0) {
                 allocateUnitsActivePlayers(activePlayers[secondToPlay], map, risk);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[secondToPlay], map);
             }
@@ -162,28 +150,31 @@ public class Turns
         }
     }
 
-    public void allocateUnitsActivePlayers(ActivePlayer activePlayer, Map map, Game risk)
-    {
+    public void allocateUnitsActivePlayers(ActivePlayer activePlayer, Map map, Game risk) {
         int troops = 3;
 
-        while (troops != 0)
-        {
+        while (troops != 0) {
             window.getTextDisplay(activePlayer.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
-            
-            String countryName = ""; 
+
+            String countryName = "";
             int numberToAdd = -1;
-            try
-            {
+            try {
                 String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
                 input[0] = input[0].trim();
-                countryName = TextParser.parse(input[0]);
-                numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
-            }
-            catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {} //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
-            
+                countryName = validateCountryName(TextParser.parse(input[0]));
+                if (isInteger(input[1]) == false || input[1] == null) {
+                    window.getTextDisplay("I am sorry, this is not a number or you forgot the number, please enter the number to allocate again!");
+                    window.getCommand();
+                } else {
+                    numberToAdd = Integer.parseInt(input[1]);
+                }
+
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+            } //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
+
             //validate the user's input
-            numberToAdd = validateNoUnits(numberToAdd, troops);
-            countryName = validateCountryName(countryName);
+            numberToAdd = validateNoUnits(numberToAdd, troops, countryName);
+            countryName = validateCountry(countryName, activePlayer);
 
             activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits
                     (activePlayer.getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
@@ -196,18 +187,20 @@ public class Turns
         }
     }
 
-    public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map)
-    {
+    public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map) {
         //divide the units equally between the countries the passive players start with.
         window.getTextDisplay(activePlayer.getName() + ", now time to allocate the passive troops!\n");
 
         //Loop through each passive player and set the units with the given country name
         for (PassivePlayer p : passivePlayers) {
-            window.getTextDisplay("Enter the country name of color " + getColorName(p));
+            window.getTextDisplay("Time to allocate troops for " + p.getName() +
+                    " of color " + getColorName(p) + "\nPlease enter the country name: ");
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
             input[0] = input[0].trim();
             String countryName = TextParser.parse(input[0]);
+            countryName = validateCountry(countryName, p);
+
             p.getCountriesControlled().get(countryName).setNumberOfUnits
                     (p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
             window.updateMap();
@@ -215,14 +208,12 @@ public class Turns
         window.clearText();
     }
 
-
     /* private helper method, displays the what number the players have rolled
      *
      * @param activePlayers: an array containing information regarding the two main players
      * @param diceOne, diceTwo: int representing the result of the die rolls
      */
-    public void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo)
-    {
+    public void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo) {
         window.getTextDisplay(activePlayers[0].getName() + " rolled a " + diceOne + "\n"
                 + activePlayers[1].getName() + " rolled a " + diceTwo);
     }
@@ -233,12 +224,26 @@ public class Turns
      * @param playerName: the input entered by the user
      * @return the valid playerName
      */
-    public String validatePlayerName(String playerName)
-    {
+    public String validatePlayerName(String playerName) {
         //while the player name is an empty String or a number
         while (playerName.trim().isEmpty() || playerName.matches("[0-9]+")) {
             window.sendErrorMessage("That doesn't quite look like a name, try again!");
             playerName = window.getCommand(); //send an error message and take and discard the input
+        }
+        return playerName;
+    }
+
+    /* public helper method, ask to second player to enter a different name than player one
+     *
+     * @param numberToAdd: array of active players, the input entered by the user and game instance
+     * @return the valid player name
+     */
+    public String validateDifferentName(ActivePlayer[] activePlayers, String playerName, Game risk) {
+        while (activePlayers[1].getName().equals(activePlayers[0].getName())) {
+            window.getTextDisplay("Looks like you guys have the same name, what a coincidence! First Player arrived first, sorry!\n" +
+                    "Second Player enter a new name: ");
+            playerName = risk.getWindow().getCommand();
+            risk.getActivePlayers()[1].setName(validatePlayerName(playerName));
         }
         return playerName;
     }
@@ -248,41 +253,94 @@ public class Turns
      * @param numberToAdd: the input entered by the user
      * @return the valid numberToAdd
      */
-    public int validateNoUnits(int numberToAdd, int numberUnitsLeft)
-    {
-    	while (numberToAdd ==  -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
-            window.sendErrorMessage("Please, enter a valid number of units to add to the country.");
-            numberToAdd = Integer.parseInt(window.getCommand());
+    public int validateNoUnits(int numberToAdd, int numberUnitsLeft, String countryName) {
+
+        while (numberToAdd == -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
+            window.sendErrorMessage("You forgot to type the units you want to allocate to " + countryName + "\nEnter the number: ");
+            numberToAdd = validateNumberToAdd(window.getCommand());
         }
-    	
-    	while (numberToAdd > 3 || numberToAdd < 1) {
-            window.sendErrorMessage("You don't have that many units left I'm afraid, enter a new number");
-            numberToAdd = Integer.parseInt(window.getCommand());
+
+        while (numberToAdd > 3 || numberToAdd < 1) {
+            window.sendErrorMessage("That is invalid, please enter a number between 1-3 to add to " + countryName);
+            numberToAdd = validateNumberToAdd(window.getCommand());
         }
+
+        while (numberToAdd > numberUnitsLeft) {
+            window.sendErrorMessage("You don't have that many units left! You only have " + numberUnitsLeft + " enter a new valid number to add to " + countryName);
+            numberToAdd = validateNumberToAdd(window.getCommand());
+        }
+
         return numberToAdd;
     }
+
+    public static boolean isInteger(String str) {
+        if (str == null) {
+            return false;
+        }
+
+        int length = str.length();
+        if (length == 0) {
+            return false;
+        }
+
+        int i = 0;
+        if (str.charAt(0) == '-') {
+            if (length == 1) {
+                return false;
+            }
+            i = 1;
+        }
+        for (; i < length; i++) {
+            char c = str.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int validateNumberToAdd(String input) {
+
+        while (isInteger(input) == false) {
+            window.sendErrorMessage("No No No, this is not a number, please enter a number this time:");
+            input = window.getCommand();
+        }
+        int numberToAdd = Integer.parseInt(input);
+        return numberToAdd;
+    }
+
 
     /* private helper method, displays an error message if the player has entered an invalid input (or ambiguous name) as country to add units to.
      *
      * @param countryName: the input entered by the user
      * @return the valid countryName
      */
-    public String validateCountryName(String countryName)
-    {
-        while (countryName.equals("Error"))
-        {
-            System.out.println("here");
+    public String validateCountryName(String countryName) {
+        while (countryName.equals("Error")) {
             window.sendErrorMessage("We couldn't quite catch that, enter a new country name please");
             countryName = TextParser.parse(window.getCommand().trim());
         }
         return countryName;
     }
 
-    public String getColorName(PassivePlayer passivePlayer)
-    {
-        if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174)))
+    public String validateCountry(String countryName, Player player) {
+
+        validateCountryName(countryName);
+
+        CustomArrayList<Country> countries = player.getCountriesControlled();
+
+        while (countries.get(countryName) == null) {
+            window.sendErrorMessage("Sorry, it looks like " + player.getName() + " does not own " + countryName + "!"
+                    + "\nEnter a country of " + player.getName() + "'s colour!");
+            countryName = TextParser.parse(window.getCommand().trim());
+        }
+        return countryName;
+    }
+
+    public String getColorName(PassivePlayer passivePlayer) {
+        if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174))) {
             return "Pale Green";
-        else if (passivePlayer.getPlayerColor().equals(new Color(235, 232, 234)))
+        } else if (passivePlayer.getPlayerColor().equals(new Color(235, 232, 234)))
             return "Light Grey";
         else if (passivePlayer.getPlayerColor().equals(new Color(248, 250, 162)))
             return "Pale Yellow";
