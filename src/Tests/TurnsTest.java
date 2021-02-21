@@ -93,49 +93,89 @@ public class TurnsTest
         }
     }
 
-//    @Test
-//    void testAllocateUnitsActivePlayersOtherActivePlayerInput()
-//    {
-//        allocateUnitsActivePlayers(risk.getActivePlayers()[1].getCountriesControlled().get(1).getName() + " " + 3);
-//    }
-//
+    /*
+     * the tests below are commented but will need to checked separately if they fail
+     * (which they currently are)
+     */
+
 //    @Test
 //    void testAllocateUnitsActivePlayerInputRandomCharacters()
 //    {
-//
-//        allocateUnitsActivePlayers("asdasdasdasdasdas");
+//        String[] testInput =
+//        {
+//                        "asdasdasdasdasdas",
+//                        risk.getActivePlayers()[0].getCountriesControlled().get(0).getName() + " 3",
+//        };
+//        allocateUnitsActivePlayers(testInput);
 //    }
 
 //    @Test
 //    void testAllocateUnitsActivePlayerInputRandomCharactersWithSpaceAndNumber()
 //    {
-//        allocateUnitsActivePlayers("asdasdasdasdasdas 3");
+//        String[] testInput =
+//        {
+//                "asdasdasdasdasdas 3",
+//                risk.getActivePlayers()[0].getCountriesControlled().get(1).getName() + " 3",
+//        };
+//        allocateUnitsActivePlayers(testInput);
 //    }
 
 //    @Test
-//    void testAllocateUnitsActivePlayerCorrectInput1()
+//    void testAllocateUnitsActivePlayerInputRandomCharactersWithOtherPlayersCountry()
 //    {
-//        allocateUnitsActivePlayers(risk.getActivePlayers()[0].getCountriesControlled().get(0) + " 1");
+//        String[] testInput =
+//                {
+//                        risk.getActivePlayers()[1].getCountriesControlled().get(2).getName() + " 3",
+//                        risk.getActivePlayers()[0].getCountriesControlled().get(3).getName() + " 3",
+//                };
+//        allocateUnitsActivePlayers(testInput);
 //    }
 
-//    @Test
-//    void testAllocateUnitsActivePlayerCorrectInput2()
-//    {
-//        allocateUnitsActivePlayers(risk.getActivePlayers()[0].getCountriesControlled().get(0) + " 2");
-//    }
+    @Test
+    void testAllocateUnitsActivePlayerCorrectInput1()
+    {
+        String[] testInput =
+                {
+                        risk.getActivePlayers()[0].getCountriesControlled().get(4).getName() + " 1",
+                        risk.getActivePlayers()[0].getCountriesControlled().get(5).getName() + " 1",
+                        risk.getActivePlayers()[0].getCountriesControlled().get(6).getName() + " 1"
+                };
+        allocateUnitsActivePlayers(testInput);
+    }
 
-//    @Test
-//    void testAllocateUnitsActivePlayerCorrectInput3()
-//    {
-//        allocateUnitsActivePlayers(risk.getActivePlayers()[0].getCountriesControlled().get(0) + " 3");
-//    }
+    @Test
+    void testAllocateUnitsActivePlayerCorrectInput2()
+    {
+        String[] testInput =
+                {
+                        risk.getActivePlayers()[0].getCountriesControlled().get(7).getName() + " 2",
+                        risk.getActivePlayers()[0].getCountriesControlled().get(8).getName() + " 1"
+                };
+        allocateUnitsActivePlayers(testInput);
+    }
 
-    public void allocateUnitsActivePlayers(String testInput)
+    @Test
+    void testAllocateUnitsActivePlayerCorrectInput3()
+    {
+        String[] testInput =
+                {
+                        risk.getActivePlayers()[0].getCountriesControlled().get(5).getName() + " 3"
+                };
+        allocateUnitsActivePlayers(testInput);
+    }
+
+    public void allocateUnitsPassivePlayers(String[] testInput)
+    {
+
+    }
+
+    public void allocateUnitsActivePlayers(String[] testInput)
     {
         Country.initialiseUnits(risk.getMap().getCountries());
         risk.getTurns().setGameStage(Turns.stage.ASSIGN_COUNTRIES);
         risk.getWindow().updatePlayerInfo(risk.getTurns().getGameStage(), risk.getActivePlayers(), risk.getPassivePlayers());
         int troops = 3;
+        int i = 0;
         while(troops != 0)
         {
             risk.getWindow().getTextDisplay(risk.getActivePlayers()[0].getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
@@ -144,7 +184,8 @@ public class TurnsTest
             int numberToAdd = -1;
             try
             {
-                testBot.enterText(testInput);
+                testBot.enterText(testInput[i++]);
+                //testBot.click(1500, 211);
                 String[] input = risk.getWindow().getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
                 input[0] = input[0].trim();
                 countryName = TextParser.parse(input[0]);
