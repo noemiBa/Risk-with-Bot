@@ -22,7 +22,7 @@ public class TextParser {
 			new PatternName(Pattern.compile("(W\\sUS.*?)|(W\\sUn.*?)|(West\\sUS.*?)|(West\\sUn.*?)", Pattern.CASE_INSENSITIVE), "W United States"),
 			new PatternName(Pattern.compile("(CE.{0,7}A.*?)|(CA.*?)|(C\\sAM.*?)", Pattern.CASE_INSENSITIVE), "Central America"),
 			new PatternName(Pattern.compile("(A.{0,3}K.*?)|ALAS.*?", Pattern.CASE_INSENSITIVE), "Alaska"),
-			new PatternName(Pattern.compile("(G.{0,5}B.*?)|(UK.*?)|(ENG.*?)|(United\\sKingdom.*?)",Pattern.CASE_INSENSITIVE), "Great Britain"), //10
+			new PatternName(Pattern.compile("(G.{0,5}B.*?)|(ENG.*?)|(United\\sKingdom.*?)",Pattern.CASE_INSENSITIVE), "Great Britain"), //10
 			new PatternName(Pattern.compile("(W\\sEU.*?)|(West\\sEU.*?)", Pattern.CASE_INSENSITIVE), "W Europe"),
 			new PatternName(Pattern.compile("(S\\sEU.*?)|(South\\sEU.*?)", Pattern.CASE_INSENSITIVE), "S Europe"),
 			new PatternName(Pattern.compile("(UKRA.*?)|(UKR.*?)|(UA.*?)", Pattern.CASE_INSENSITIVE), "Ukraine"),
