@@ -28,6 +28,7 @@ public class TestBot extends Robot
 
     public void enterText(String command)
     {
+
         click(880, 211);
         StringSelection stringSelection = new StringSelection(command);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

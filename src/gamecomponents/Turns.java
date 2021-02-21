@@ -192,17 +192,15 @@ public class Turns {
         window.getTextDisplay(activePlayer.getName() + ", now time to allocate the passive troops!\n");
 
         //Loop through each passive player and set the units with the given country name
-        for (PassivePlayer p : passivePlayers) {
+        for (PassivePlayer p : passivePlayers)
+        {
             window.getTextDisplay("Time to allocate troops for " + p.getName() +
                     " who's colour is " + getColorName(p) + "\nPlease enter the country name: ");
 
-            String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-            input[0] = input[0].trim();
-            String countryName = TextParser.parse(input[0]);
+            String input = window.getCommand(); //splits the string between letters and digits
+            String countryName = TextParser.parse(input);
             countryName = validateCountry(countryName, p);
-
-            p.getCountriesControlled().get(countryName).setNumberOfUnits
-                    (p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
+            p.getCountriesControlled().get(countryName).setNumberOfUnits(p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
             window.updateMap();
         }
         window.clearText();
@@ -256,7 +254,7 @@ public class Turns {
     public int validateNoUnits(int numberToAdd, int numberUnitsLeft, String countryName) {
 
         while (numberToAdd == -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
-            window.sendErrorMessage("You forgot to type the units you want to allocate to " + countryName + "\nEnter the number: ");
+            //window.sendErrorMessage("You forgot to type the units you want to allocate to " + countryName + "\nEnter the number: ");
             numberToAdd = validateNumberToAdd(window.getCommand());
         }
 
@@ -273,7 +271,7 @@ public class Turns {
         return numberToAdd;
     }
 
-    public static boolean isInteger(String str) {
+    public boolean isInteger(String str) {
         if (str == null) {
             return false;
         }

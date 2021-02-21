@@ -94,8 +94,7 @@ public class TurnsTest
     }
 
     /*
-     * the tests below are commented but will need to checked separately if they fail
-     * (which they currently are)
+     * the tests below need to be altered
      */
 
 //    @Test
@@ -104,7 +103,8 @@ public class TurnsTest
 //        String[] testInput =
 //        {
 //                        "asdasdasdasdasdas",
-//                        risk.getActivePlayers()[0].getCountriesControlled().get(0).getName() + " 3",
+//                        risk.getActivePlayers()[0].getCountriesControlled().get(1).getName(),
+//                        "3"
 //        };
 //        allocateUnitsActivePlayers(testInput);
 //    }
@@ -135,11 +135,11 @@ public class TurnsTest
     void testAllocateUnitsActivePlayerCorrectInput1()
     {
         String[] testInput =
-                {
-                        risk.getActivePlayers()[0].getCountriesControlled().get(4).getName() + " 1",
-                        risk.getActivePlayers()[0].getCountriesControlled().get(5).getName() + " 1",
-                        risk.getActivePlayers()[0].getCountriesControlled().get(6).getName() + " 1"
-                };
+        {
+            risk.getActivePlayers()[0].getCountriesControlled().get(4).getName() + " 1",
+            risk.getActivePlayers()[0].getCountriesControlled().get(5).getName() + " 1",
+            risk.getActivePlayers()[0].getCountriesControlled().get(6).getName() + " 1"
+        };
         allocateUnitsActivePlayers(testInput);
     }
 
@@ -176,33 +176,36 @@ public class TurnsTest
         risk.getWindow().updatePlayerInfo(risk.getTurns().getGameStage(), risk.getActivePlayers(), risk.getPassivePlayers());
         int troops = 3;
         int i = 0;
-        while(troops != 0)
-        {
-            risk.getWindow().getTextDisplay(risk.getActivePlayers()[0].getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
+        while (troops != 0) {
+            risk.getWindow().getTextDisplay(risk.getActivePlayers()[0].getName() + ", you have " + troops + " trrops in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
 
             String countryName = "";
             int numberToAdd = -1;
             try
             {
+                System.out.println(testInput[i] + " was entered");
                 testBot.enterText(testInput[i++]);
-                //testBot.click(1500, 211);
                 String[] input = risk.getWindow().getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
                 input[0] = input[0].trim();
-                countryName = TextParser.parse(input[0]);
-                numberToAdd = Integer.parseInt(input[1]); //NEED TO VALIDATE that it is actually an integer
-            }
-            catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {} //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
+                countryName = risk.getTurns().validateCountryName(TextParser.parse(input[0]));
+                if (risk.getTurns().isInteger(input[1]) == false || input[1] == null) {
+                    risk.getWindow().getTextDisplay("I am sorry, this is not a number or you forgot the number, please enter the number to allocate again!");
+                    risk.getWindow().getCommand();
+                } else {
+                    numberToAdd = Integer.parseInt(input[1]);
+                }
+
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+            } //if we enter this catch statement, it means the user only entered the country name and no no. of units / or entered a string instead of a number.
 
             //validate the user's input
             numberToAdd = risk.getTurns().validateNoUnits(numberToAdd, troops, countryName);
-            countryName =  risk.getTurns().validateCountryName(countryName);
+            countryName = risk.getTurns().validateCountry(countryName, risk.getActivePlayers()[0]);
 
             risk.getActivePlayers()[0].getCountriesControlled().get(countryName).setNumberOfUnits
                     (risk.getActivePlayers()[0].getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
 
             troops = troops - numberToAdd;
-
-            System.out.println("Allocate " + numberToAdd + " to " + countryName); //For test purpose
             risk.getWindow().updateMap(); // updateUI can be moved to where appropriate part of the method, temporarily put here
             risk.getWindow().clearText();
         }
