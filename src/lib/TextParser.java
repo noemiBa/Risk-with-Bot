@@ -8,8 +8,7 @@ public class TextParser {
 	/* An array containing all of the patterns for the game to recognise, and the Names of the countries the refer to. 
 	 * The Java library Regex Pattern was used to create the patterns. 
 	 * 
-	 * Note: the . wild card tells the program to expect a character, and the {min,max} in the cury brackets indicates the minimum
-	 * and maximum number of characters to be expected (where the maximum is equivalent to the length of the full string Name.
+	 * Note: the . wild card tells the program to expect a character, and the *? indicates that the number of characters to expect is unknown
 	 * The escape sequence \s indicates the presence of a space.
 	 */
 	public static PatternName [] patterns = {

@@ -99,7 +99,7 @@ public class Window {
 
         //Setting the display constraints
         if (shouldWeightX) {
-            cMap.weightx = 1;
+            cMap.weightx = 100;
             cCommand.weightx = 1;
             cPlayerInfo.weightx = 1;
             cDisplay.weightx = 1;
@@ -116,8 +116,7 @@ public class Window {
         cDisplay.gridx = 0;
         cDisplay.gridy = 0;
         cDisplay.gridheight = 7;
-        cDisplay.ipadx = 30;
-        cDisplay.weighty = 7;
+        cDisplay.weighty = 1;
 
         JLabel icon = new JLabel(new ImageIcon(Window.class.getResource("/images/displayText.png")));
         JPanel iconPanel = new JPanel();
