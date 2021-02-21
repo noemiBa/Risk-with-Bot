@@ -46,20 +46,60 @@ public class Game
     {
         return map;
     }
+
     public ActivePlayer[] getActivePlayers()
     {
         return activePlayers;
     }
+
     public PassivePlayer[] getPassivePlayers()
     {
         return passivePlayers;
     }
+
     public Deck getDeck()
     {
         return deck;
     }
+
     public Window getWindow()
     {
         return window;
+    }
+
+    public Turns getTurns()
+    {
+        return turns;
+    }
+
+    public void setMap(Map map)
+    {
+        this.map = map;
+    }
+
+    public void setActivePlayers(ActivePlayer[] activePlayers)
+    {
+        this.activePlayers = activePlayers;
+    }
+
+    public void setPassivePlayers(PassivePlayer[] passivePlayers)
+    {
+        this.passivePlayers = passivePlayers;
+    }
+
+
+    public void setDeck(Deck deck)
+    {
+        this.deck = deck;
+    }
+
+    public void setWindow(Window window)
+    {
+        this.window = window;
+    }
+
+    public void setTurns(Turns turns)
+    {
+        this.turns = turns;
     }
 }

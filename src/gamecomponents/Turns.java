@@ -10,8 +10,9 @@ import ui.Window;
 
 import java.awt.*;
 
-public class Turns {
-    Window window;
+public class Turns
+{
+    private Window window;
 
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
     public enum stage
@@ -28,6 +29,11 @@ public class Turns {
     public stage getGameStage()
     {
         return gameStage;
+    }
+
+    public void setWindow(Window window)
+    {
+        this.window = window;
     }
 
     public void setGameStage(stage gameStage)
@@ -79,17 +85,22 @@ public class Turns {
 
     public void enterPlayerNames(Game risk)
     {
-        for (ActivePlayer a : risk.getActivePlayers()) {    //welcome the user and ask them to enter their names
-            window.getTextDisplay("Welcome, player " + a.getPlayerNumber() + "! Enter your name: ");
-
+        //welcome the user and ask them to enter their names
+        window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[0].getPlayerNumber() + "! Enter your name: ");
+        String playerName;
+        for (int i = 0; i < risk.getActivePlayers().length;)
+        {
             //take what the user types and put it in the string playerName
-            String playerName = risk.getWindow().getCommand();
-            while(playerName.length() > 30)
+            playerName = risk.getWindow().getCommand();
+            if(playerName.length() <= 20)
             {
-                window.getTextDisplay("Sorry, that name is too long. Try typing a shortened version. It must be no longer than 20 characters.");
-                playerName = risk.getWindow().getCommand();
+                risk.getActivePlayers()[i].setName(validatePlayerName(playerName));
+                i++;
+                if(i < risk.getActivePlayers().length)
+                    window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
             }
-            a.setName(validatePlayerName(playerName));
+            else
+                window.getTextDisplay("Sorry, that name is too long. Try typing a shortened version. It must be no longer than 20 characters.");
         }
         window.clearText();
     }
@@ -97,10 +108,8 @@ public class Turns {
     public void assignCountries(Game risk)
     {
         Country.initialiseUnits(risk.getMap().getCountries());
-
         window.getTextDisplay(risk.getActivePlayers()[0].getName() + ", you drew the Countries: " + risk.getActivePlayers()[0].printCountries());
         window.getTextDisplay(risk.getActivePlayers()[1].getName() + ", you drew the Countries: " + risk.getActivePlayers()[1].printCountries());
-
         risk.getDeck().shuffle();
     }
 
@@ -153,13 +162,13 @@ public class Turns {
         }
     }
 
-    public void allocateUnitsActivePlayers(ActivePlayer activePlayers, Map map, Game risk)
+    public void allocateUnitsActivePlayers(ActivePlayer activePlayer, Map map, Game risk)
     {
         int troops = 3;
 
         while (troops != 0)
         {
-            window.getTextDisplay(activePlayers.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
+            window.getTextDisplay(activePlayer.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
             
             String countryName = ""; 
             int numberToAdd = -1;
@@ -176,8 +185,8 @@ public class Turns {
             numberToAdd = validateNoUnits(numberToAdd, troops);
             countryName = validateCountryName(countryName);
 
-            activePlayers.getCountriesControlled().get(countryName).setNumberOfUnits
-                    (activePlayers.getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
+            activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits
+                    (activePlayer.getCountriesControlled().get(countryName).getNumberOfUnits() + numberToAdd);
 
             troops = troops - numberToAdd;
 
@@ -212,7 +221,7 @@ public class Turns {
      * @param activePlayers: an array containing information regarding the two main players
      * @param diceOne, diceTwo: int representing the result of the die rolls
      */
-    private void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo)
+    public void displayDiceRoll(ActivePlayer[] activePlayers, int diceOne, int diceTwo)
     {
         window.getTextDisplay(activePlayers[0].getName() + " rolled a " + diceOne + "\n"
                 + activePlayers[1].getName() + " rolled a " + diceTwo);
@@ -224,7 +233,7 @@ public class Turns {
      * @param playerName: the input entered by the user
      * @return the valid playerName
      */
-    private String validatePlayerName(String playerName)
+    public String validatePlayerName(String playerName)
     {
         //while the player name is an empty String or a number
         while (playerName.trim().isEmpty() || playerName.matches("[0-9]+")) {
@@ -239,7 +248,7 @@ public class Turns {
      * @param numberToAdd: the input entered by the user
      * @return the valid numberToAdd
      */
-    private int validateNoUnits(int numberToAdd, int numberUnitsLeft)
+    public int validateNoUnits(int numberToAdd, int numberUnitsLeft)
     {
     	while (numberToAdd ==  -1) { //numberToAdd is initialised as -1. If by the time this method is called numberToAdd is still -1, there was an issue with the user inp
             window.sendErrorMessage("Please, enter a valid number of units to add to the country.");
@@ -258,7 +267,7 @@ public class Turns {
      * @param countryName: the input entered by the user
      * @return the valid countryName
      */
-    private String validateCountryName(String countryName)
+    public String validateCountryName(String countryName)
     {
         while (countryName.equals("Error"))
         {
