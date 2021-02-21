@@ -154,7 +154,7 @@ public class Turns {
         int troops = 3;
 
         while (troops != 0) {
-            window.getTextDisplay(activePlayer.getName() + ", you have " + troops + " in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
+            window.getTextDisplay(activePlayer.getName() + ", you have " + troops + " trrops in total to allocate. Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
 
             String countryName = "";
             int numberToAdd = -1;
@@ -194,7 +194,7 @@ public class Turns {
         //Loop through each passive player and set the units with the given country name
         for (PassivePlayer p : passivePlayers) {
             window.getTextDisplay("Time to allocate troops for " + p.getName() +
-                    " of color " + getColorName(p) + "\nPlease enter the country name: ");
+                    " who's colour is " + getColorName(p) + "\nPlease enter the country name: ");
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
             input[0] = input[0].trim();
