@@ -8,7 +8,8 @@ public class TextParser {
 	/* An array containing all of the patterns for the game to recognise, and the Names of the countries the refer to. 
 	 * The Java library Regex Pattern was used to create the patterns. 
 	 * 
-	 * Note: the . wild card tells the program to expect a character, and the *? indicates that the number of characters to expect is unknown
+	 * Note: the . wild card tells the program to expect a character, and the {min,max} in the cury brackets indicates the minimum
+	 * and maximum number of characters to be expected (where the maximum is equivalent to the length of the full string Name.
 	 * The escape sequence \s indicates the presence of a space.
 	 */
 	public static PatternName [] patterns = {
@@ -24,7 +25,7 @@ public class TextParser {
 			new PatternName(Pattern.compile("(G.{0,5}B.*?)|(UK.*?)|(ENG.*?)|(United\\sKingdom.*?)",Pattern.CASE_INSENSITIVE), "Great Britain"), //10
 			new PatternName(Pattern.compile("(W\\sEU.*?)|(West\\sEU.*?)", Pattern.CASE_INSENSITIVE), "W Europe"),
 			new PatternName(Pattern.compile("(S\\sEU.*?)|(South\\sEU.*?)", Pattern.CASE_INSENSITIVE), "S Europe"),
-			new PatternName(Pattern.compile("(UK.{0,2}A.*?)|(UKR.*?)|(UA.*?)", Pattern.CASE_INSENSITIVE), "Ukraine"),
+			new PatternName(Pattern.compile("(UKRA.*?)|(UKR.*?)|(UA.*?)", Pattern.CASE_INSENSITIVE), "Ukraine"),
 			new PatternName(Pattern.compile("(N\\sEU.*?)|(North\\sEU.*?)", Pattern.CASE_INSENSITIVE), "N Europe"),
 			new PatternName(Pattern.compile("(ISL.*?)|(ICE.*?)", Pattern.CASE_INSENSITIVE), "Iceland"),
 			new PatternName(Pattern.compile("Scan.*?", Pattern.CASE_INSENSITIVE), "Scandinavia"),
@@ -39,7 +40,7 @@ public class TextParser {
 			new PatternName(Pattern.compile("Irk.*?", Pattern.CASE_INSENSITIVE), "Irkutsk"),
 			new PatternName(Pattern.compile("SI.*?", Pattern.CASE_INSENSITIVE), "Siberia"),
 			new PatternName(Pattern.compile("M.{0,1}N.*?", Pattern.CASE_INSENSITIVE), "Mongolia"),
-			new PatternName(Pattern.compile("(C.{0,2}N.*?)|(CH.*?)", Pattern.CASE_INSENSITIVE), "China"),
+			new PatternName(Pattern.compile("(CH.{0,1}N.*?)|(CH.*?)", Pattern.CASE_INSENSITIVE), "China"),
 			new PatternName(Pattern.compile("(E\\sAU.*?)|(East\\sAU.*?)", Pattern.CASE_INSENSITIVE), "E Australia"),
 			new PatternName(Pattern.compile("(PNG.*?)|(NG.*?)|(N.{0,3}G.*?)", Pattern.CASE_INSENSITIVE), "New Guinea"), //30
 			new PatternName(Pattern.compile("(W\\sAU.*?)|(West\\sAU.*?)", Pattern.CASE_INSENSITIVE), "W Australia"),
@@ -48,7 +49,7 @@ public class TextParser {
 			new PatternName(Pattern.compile("PE.*?", Pattern.CASE_INSENSITIVE), "Peru"),
 			new PatternName(Pattern.compile("BR.*?", Pattern.CASE_INSENSITIVE), "Brazil"),
 			new PatternName(Pattern.compile("AR.*?", Pattern.CASE_INSENSITIVE), "Argentina"),
-			new PatternName(Pattern.compile("C.{0,2}G.*?", Pattern.CASE_INSENSITIVE), "Congo"),
+			new PatternName(Pattern.compile("(CON.*?)|(CG.*?)", Pattern.CASE_INSENSITIVE), "Congo"),
 			new PatternName(Pattern.compile("(N\\sAF.*?)|(North\\sAF.*?)", Pattern.CASE_INSENSITIVE), "N Africa"),
 			new PatternName(Pattern.compile("(S\\sAF.*?)|(South\\sAF.*?)", Pattern.CASE_INSENSITIVE), "S Africa"),
 			new PatternName(Pattern.compile("EG.*?", Pattern.CASE_INSENSITIVE), "Egypt"), //40
