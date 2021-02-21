@@ -10,7 +10,7 @@ import java.util.Random;
 public class Dice
 {
     //To check who start allocating and attacking
-
+/*
 
     public void attack(ActivePlayer attackPlayer, Country attackCountry, Country defendCountry) {
 
@@ -200,4 +200,4 @@ public class Dice
         defendCountry.setControlledBy(attackPlayer);
         defendCountry.setNumberOfUnits(1);
     }
-}
+*/}
