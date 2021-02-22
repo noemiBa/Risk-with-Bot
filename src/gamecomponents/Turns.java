@@ -152,10 +152,11 @@ public class Turns {
 
     public void allocateUnitsActivePlayers(ActivePlayer activePlayer, Map map, Game risk) {
         int troops = 3;
-        window.getTextDisplay(activePlayer.getName() + ", you have " + troops + " troops in total to allocate.");
-        while (troops != 0) {
-
-            window.getTextDisplay("Please enter the country name or a short version and the number of troops you want to allocate separate by space, then press enter");
+        while (troops != 0)
+        {
+            window.getTextDisplay(activePlayer.getName() +  ", please enter a country name belonging to you or a shortened version " +
+             "and the number of troops you want to allocate separated by space, then press enter");
+            window.getTextDisplay("You have " + troops + (troops == 1? " troop": " troops") + " to allocate");
             String countryName = "";
             int numberToAdd = -1;
 
@@ -164,33 +165,36 @@ public class Turns {
             if(input.length != 2)
             {
                 window.clearText();
-                window.sendErrorMessage("You are missing an argument");
+                window.sendErrorMessage("You must enter a country and a number");
             }
             else
             {
                 try
                 {
-                    numberToAdd = Integer.parseInt(input[1]);
                     activePlayer.getCountriesControlled().get(input[0]);
-                    if((countryName = TextParser.parse(input[0])).equals("Error"))
+                    countryName = TextParser.parse(input[0]);
+                    numberToAdd = Integer.parseInt(input[1]);
+                    if(numberToAdd > 3 || numberToAdd < 1 || troops < numberToAdd)
                     {
-                        throw new NullPointerException("");
+                        window.clearText();
+                        window.sendErrorMessage("You can enter at most " + troops + " for this allocation");
                     }
-                    activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-                    .get(countryName).getNumberOfUnits() + numberToAdd);
-                    troops -= numberToAdd;
-                    System.out.println("Allocate " + numberToAdd + " to " + countryName); //For test purpose
-                    window.updateMap(); // updateUI can be moved to where appropriate part of the method, temporarily put here
-                    window.clearText();
+                    else
+                    {
+                        activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
+                                .get(countryName).getNumberOfUnits() + numberToAdd);
+                        troops -= numberToAdd;
+                        window.updateMap();
+                        window.clearText();
+                    }
                 }
-                catch(NumberFormatException | NullPointerException p)
+                catch(NumberFormatException | NullPointerException e)
                 {
                     window.clearText();
-                    window.sendErrorMessage("Error, country name or number missing");
+                    window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
             }
         }
-
     }
 
     public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer, Map map) {
@@ -200,8 +204,8 @@ public class Turns {
         //Loop through each passive player and set the units with the given country name
         for (PassivePlayer p : passivePlayers)
         {
-            window.getTextDisplay("Time to allocate troops for " + p.getName() +
-                    " who's colour is " + getColorName(p) + "\nPlease enter the country name: ");
+            window.getTextDisplay("To allocate troops for " + p.getName() +
+                    " who's colour is " + getColorName(p) + " please enter their country name: ");
 
             String input = window.getCommand(); //splits the string between letters and digits
             String countryName = TextParser.parse(input);
@@ -277,46 +281,11 @@ public class Turns {
         return numberToAdd;
     }
 
-    public boolean isInteger(String str) {
-        if (str == null) {
-            return false;
-        }
-
-        int length = str.length();
-        if (length == 0) {
-            return false;
-        }
-
-        int i = 0;
-        if (str.charAt(0) == '-') {
-            if (length == 1) {
-                return false;
-            }
-            i = 1;
-        }
-        for (; i < length; i++) {
-            char c = str.charAt(i);
-            if (c < '0' || c > '9') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     /* private helper method, displays an error message if the player has entered an invalid input (or ambiguous name) as country to add units to.
      *
      * @param countryName: the input entered by the user
      * @return the valid countryName
      */
-
-//    public String validateCountryName(String countryName) {
-//        while (countryName.equals("Error")) {
-//            window.sendErrorMessage("We couldn't quite catch that, enter a new country name please");
-//            countryName = TextParser.parse(window.getCommand().trim());
-//        }
-//        return countryName;
-//    }
 
     public String validateCountry(String countryName, Player player) {
 
