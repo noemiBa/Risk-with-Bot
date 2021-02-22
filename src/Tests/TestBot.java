@@ -1,7 +1,5 @@
 package Tests;
 
-import ui.Window;
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -11,10 +9,18 @@ import java.awt.event.KeyEvent;
 public class TestBot extends Robot
 {
 
-    public TestBot() throws AWTException {}
+    private final int commandPanelPosX;
+    private final int commandPanelPosY;
+
+    public TestBot(int commandPanelPosX, int commandPanelPosY) throws AWTException
+    {
+        this.commandPanelPosX = commandPanelPosX;
+        this.commandPanelPosY = commandPanelPosY;
+    }
 
     public void click(int x, int y)
     {
+        mouseMove(0, 0);
         mouseMove(x, y);
         mousePress(InputEvent.BUTTON1_DOWN_MASK);
         mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
@@ -26,10 +32,15 @@ public class TestBot extends Robot
         keyRelease(keyEvent);
     }
 
+    public void pressEnter()
+    {
+        keyPress(KeyEvent.VK_ENTER);
+        keyRelease(KeyEvent.VK_ENTER);
+    }
+
     public void enterText(String command)
     {
-
-        click(880, 211);
+        click(commandPanelPosX, commandPanelPosY);
         StringSelection stringSelection = new StringSelection(command);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, stringSelection);
@@ -38,11 +49,5 @@ public class TestBot extends Robot
         typeKey(KeyEvent.VK_V);
         keyRelease(KeyEvent.VK_CONTROL);
         pressEnter();
-    }
-
-    public void pressEnter()
-    {
-        keyPress(KeyEvent.VK_ENTER);
-        keyRelease(KeyEvent.VK_ENTER);
     }
 }
