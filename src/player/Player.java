@@ -101,12 +101,4 @@ public abstract class Player {
         output = output.substring(0, output.length() - 2) + "]";
         return output;
     }
-
-    public static int numberOfCountriesControlledBy(Player player) {
-        int count = 0;
-        for (Country c : player.getCountriesControlled()) {
-            count++;
-        }
-        return count;
-    }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Turns {
     private Window window;
-
+    private static int currentPlayer = 0;
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
     public enum stage {
         ENTER_NAMES,
@@ -40,6 +40,7 @@ public class Turns {
 
     // Game ends when gameStage is set to stage.END
     public void nextTurns(Game risk) {
+        int currentPlayer = 0;
         while (gameStage != stage.END) {
             makeTurns(risk);
             // for testing purposes
@@ -50,7 +51,6 @@ public class Turns {
     // each players turn for each stage is implemented here
     public void makeTurns(Game risk) {
         window = risk.getWindow();
-
         switch (gameStage) {
             case ENTER_NAMES:
                 enterPlayerNames(risk);
@@ -62,20 +62,18 @@ public class Turns {
                 setGameStage(stage.ROLL_TO_PLACE_TERRITORIES);
                 break;
             case ROLL_TO_PLACE_TERRITORIES:
-                int playerWhoStartsAllocating = whoStarts(risk.getActivePlayers());
-                allocateUnits(risk.getActivePlayers(), playerWhoStartsAllocating, risk);
-                //allocateUnitsPassivePlayers(risk.getPassivePlayers());
+                currentPlayer = whoStarts(risk.getActivePlayers());
+                allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
+                currentPlayer = whoStarts(risk.getActivePlayers());
+                // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
+                window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
+                "! Each turn consists of placing reinforcements, attacking, drawing a card and reallocating units");
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
-                int playerWhoStartsMainTurn = whoStarts(risk.getActivePlayers());
-                while (endMainTurn(risk.getActivePlayers()) != true) {
-                    mainTurn(risk.getActivePlayers(), playerWhoStartsMainTurn);
-                }
-                setGameStage(stage.END);
+                mainTurn(risk.getActivePlayers()[currentPlayer]);
+                currentPlayer = switchTurn();
                 break;
-            case END:
-                window.getTextDisplay("Congratulations " + getWinnerName(risk.getActivePlayers()) + " you conqueered the world! Thanks for playing");
             default:
                 break;
         }
@@ -129,7 +127,6 @@ public class Turns {
                 allocateUnitsActivePlayers(activePlayers[secondToPlay]);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[secondToPlay]);
             }
-            System.out.println("round " + count);
         }
     }
 
@@ -188,26 +185,21 @@ public class Turns {
         window.clearText();
     }
 
-    public void mainTurn(ActivePlayer[] activePlayers, int firstToPlay) {
-        window.getTextDisplay("Lets Start the game! This turn consist in Reinforcements, Attack, Draw a card and Reallocate");
-        int secondToPlay = 0;
-        if (firstToPlay == 0) {
-            secondToPlay = 1;
-        }
-        reinforcementsAllocation(activePlayers[firstToPlay]);
-
-        reinforcementsAllocation(activePlayers[secondToPlay]);
+    // methods for each turn are called here
+    public void mainTurn(ActivePlayer activePlayer)
+    {
+        reinforcementsAllocation(activePlayer);
+        // other mainTurn methods go here
+        // any method called after the attack method will need to have an if check to check if gameStage has been set to END
         window.clearText();
     }
 
     public void reinforcementsAllocation(ActivePlayer activePlayer) {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
-
-        window.getTextDisplay(activePlayer.getName() + " it is your turn to reinforce!");
         while (numberOfReinforcements != 0) {
-            window.getTextDisplay("\bYou have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements.\b")
-                    + "\nPlease enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by space, then press enter");
-
+            window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
+                    + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by space, " +
+                     "then press enter");
             String countryName = "";
             int numberToAdd = -1;
 
@@ -240,12 +232,20 @@ public class Turns {
         }
     }
 
+    private int switchTurn()
+    {
+        if (currentPlayer == 0)
+            return 1;
+        else
+            return 0;
+    }
+
     public int numberOfReinforcements(ActivePlayer activePlayer) {
         //3 is the minimum by the rules
-        if (Player.numberOfCountriesControlledBy(activePlayer) < 6) {
+        if (activePlayer.getCountriesControlled().size() < 6) {
             return 3;
         } else {
-            return Player.numberOfCountriesControlledBy(activePlayer) / 2;
+            return activePlayer.getCountriesControlled().size() / 2;
         }
     }
 
@@ -268,10 +268,9 @@ public class Turns {
         while (diceFirstPlayer == diceSecondPlayer) // if it's a draw
         {
             window.getTextDisplay("It was a draw, let's roll again");
-            displayDiceRoll(activePlayers, diceFirstPlayer, diceSecondPlayer);
-
             diceFirstPlayer = activePlayers[0].throwDice();
             diceSecondPlayer = activePlayers[1].throwDice();
+            displayDiceRoll(activePlayers, diceFirstPlayer, diceSecondPlayer);
         }
 
         if (diceFirstPlayer > diceSecondPlayer)
@@ -362,21 +361,13 @@ public class Turns {
         return null;
     }
 
-    public boolean endMainTurn(ActivePlayer[] activePlayers) {
+    // checkWinner can be called after each active player attack, this is the only time, the number of countries each player controls will change
+    public void checkWinner(ActivePlayer[] activePlayers) {
         for (ActivePlayer a : activePlayers) {
-            if (a.numberOfCountriesControlledBy(a) == 42) {
-                return true;
+            if (a.getCountriesControlled().size() == 42) {
+                window.getTextDisplay("Congratulations " + a.getName() + " you conquered the world! Thanks for playing");
+                setGameStage(stage.END);
             }
         }
-        return false;
-    }
-
-    public String getWinnerName(ActivePlayer[] activePlayers) {
-        for (ActivePlayer a : activePlayers) {
-            if (a.numberOfCountriesControlledBy(a) == 42) {
-                return a.getName();
-            }
-        }
-        return null;
     }
 }
