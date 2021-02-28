@@ -14,6 +14,12 @@ public class ErrorHandler {
 		 this.window = window; 
 	 }
 	 
+	 public void validateCountryAndUnitsEntered(String[] input) {
+		 while (input.length != 2) {
+             window.sendErrorMessage("You must enter a country and a number");
+         } 
+	 }
+	 
 	/* method displays an error message if the player has entered an invalid input as their name.
     *
     * @param risk: the game currently being played

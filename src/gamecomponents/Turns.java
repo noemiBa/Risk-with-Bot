@@ -14,9 +14,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Turns {
-    private Window window;
-    private static int currentPlayer = 0;
-    private ErrorHandler e; 
+    protected Window window;
+    protected static int currentPlayer = 0;
+    protected ErrorHandler e; 
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
     public enum stage {
         ENTER_NAMES,
@@ -75,7 +75,7 @@ public class Turns {
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
-                mainTurn(risk.getActivePlayers()[currentPlayer]);
+                MainTurn main = new MainTurn(risk.getActivePlayers()[currentPlayer]);
                 currentPlayer = switchTurn();
                 break;
             default:
@@ -189,70 +189,7 @@ public class Turns {
         window.clearText();
     }
 
-    // methods for each turn are called here
-    public void mainTurn(ActivePlayer activePlayer)
-    {
-        reinforcementsAllocation(activePlayer);
-        // other mainTurn methods go here
-        // any method called after the attack method will need to have an if check to check if gameStage has been set to END
-        window.clearText();
-    }
-
-    public void reinforcementsAllocation(ActivePlayer activePlayer) {
-        int numberOfReinforcements = numberOfReinforcements(activePlayer);
-        while (numberOfReinforcements != 0) {
-            window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
-                    + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by space, " +
-                     "then press enter");
-            String countryName = "";
-            int numberToAdd = -1;
-
-            String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-            input[0] = input[0].trim();
-            if (input.length != 2) {
-                window.clearText();
-                window.sendErrorMessage("You must enter a country and a number");
-            } else {
-                try {
-                    activePlayer.getCountriesControlled().get(input[0]);
-                    countryName = TextParser.parse(input[0]);
-                    numberToAdd = Integer.parseInt(input[1]);
-                    if (numberToAdd > numberOfReinforcements || numberToAdd < 1) {
-                        window.clearText();
-                        window.sendErrorMessage("You can enter at most " + numberOfReinforcements + " for this allocation");
-                    } else {
-                        activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-                                .get(countryName).getNumberOfUnits() + numberToAdd);
-                        numberOfReinforcements = numberOfReinforcements - numberToAdd;
-                        window.updateMap();
-                        window.clearText();
-                    }
-                } catch (NumberFormatException | NullPointerException e) {
-                    window.clearText();
-                    window.sendErrorMessage("You entered the number or country name incorrectly");
-                }
-                System.out.println(numberOfReinforcements);
-            }
-        }
-    }
-
-    private int switchTurn()
-    {
-        if (currentPlayer == 0)
-            return 1;
-        else
-            return 0;
-    }
-
-    public int numberOfReinforcements(ActivePlayer activePlayer) {
-        //3 is the minimum by the rules
-        if (activePlayer.getCountriesControlled().size() < 6) {
-            return 3;
-        } else {
-            return activePlayer.getCountriesControlled().size() / 2;
-        }
-    }
-
+  
     /* private helper method, displays the what number the players have rolled
      *
      * @param activePlayers: an array containing information regarding the two main players
@@ -283,7 +220,13 @@ public class Turns {
             return 1;
     }
 
-    
+    private int switchTurn()
+    {
+        if (currentPlayer == 0)
+            return 1;
+        else
+            return 0;
+    }
 
     public String getColorName(PassivePlayer passivePlayer) {
         if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174))) {
