@@ -41,8 +41,8 @@ public class MainTurn extends Turns
             input[0] = input[0].trim();
             e.validateCountryAndUnitsEntered(input);
                 try {
-                    activePlayer.getCountriesControlled().get(input[0]);
                     countryName = TextParser.parse(input[0]);
+                    activePlayer.getCountriesControlled().get(countryName);
                     numberToAdd = Integer.parseInt(input[1]);
                     if (numberToAdd > numberOfReinforcements || numberToAdd < 1) {
                         window.clearText();
@@ -54,7 +54,7 @@ public class MainTurn extends Turns
                         window.updateMap();
                         window.clearText();
                     }
-                } catch (NumberFormatException | NullPointerException e) {
+                } catch (IllegalArgumentException | NullPointerException e) {
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
                 System.out.println(numberOfReinforcements);
