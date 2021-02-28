@@ -79,8 +79,8 @@ public class Turns {
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
-                MainTurn main = new MainTurn(risk.getActivePlayers()[currentPlayer], risk);
-                currentPlayer = switchTurn();
+//                MainTurn main = new MainTurn(risk.getActivePlayers()[currentPlayer], risk);
+//                currentPlayer = switchTurn();
                 break;
             default:
                 break;
@@ -89,22 +89,14 @@ public class Turns {
 
     public void enterPlayerNames(Game risk) {
         //welcome the user and ask them to enter their names
-        window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[0].getPlayerNumber() + "! Enter your name: ");
         String playerName = null;
-        for (int i = 0; i < risk.getActivePlayers().length; ) {
-            //take what the user types and put it in the string playerName
+        for (int i = 0; i < risk.getActivePlayers().length; i++)
+        {
+            window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
             playerName = risk.getWindow().getCommand();
-            if (playerName.length() <= 20) {
-                risk.getActivePlayers()[i].setName(e.validatePlayerName(playerName));
-                i++;
-                if (i < risk.getActivePlayers().length)
-                    window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
-            } else
-                window.getTextDisplay("Sorry, that name is too long. Try typing a shortened version. It must be no longer than 20 characters.");
+            risk.getActivePlayers()[i].setName(e.validatePlayerName(playerName));
+            window.clearText();
         }
-
-        e.validateDifferentName(risk.getActivePlayers(), playerName, risk);
-
         window.clearText();
     }
 
@@ -154,8 +146,8 @@ public class Turns {
                 window.sendErrorMessage("You must enter a country and a number");
             } else {
                 try {
-                    activePlayer.getCountriesControlled().get(input[0]);
                     countryName = TextParser.parse(input[0]);
+                    activePlayer.getCountriesControlled().get(countryName);
                     numberToAdd = Integer.parseInt(input[1]);
                     if (numberToAdd > 3 || numberToAdd < 1 || troops < numberToAdd) {
                         window.clearText();
@@ -167,7 +159,7 @@ public class Turns {
                         window.updateMap();
                         window.clearText();
                     }
-                } catch (NumberFormatException | NullPointerException e) {
+                } catch (IllegalArgumentException | NullPointerException e) {
                     window.clearText();
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }

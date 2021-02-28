@@ -28,8 +28,8 @@ public class ErrorHandler {
     */
    public String validatePlayerName(String playerName) {
        //while the player name is an empty String or a number
-       while (playerName.trim().isEmpty() || playerName.matches("[0-9]+")) {
-           window.sendErrorMessage("That doesn't quite look like a name, try again!");
+       while (playerName.trim().isEmpty() || playerName.matches("[0-9]+") || playerName.length() > 15) {
+           window.sendErrorMessage("This name is too long or using incorrect characters, try again!");
            playerName = window.getCommand(); //send an error message and take and discard the input
        }
        return playerName;
