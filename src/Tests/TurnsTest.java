@@ -63,7 +63,7 @@ public class TurnsTest
             playerName = risk.getWindow().getCommand();
             if(playerName.length() <= 20)
             {
-                risk.getActivePlayers()[i].setName(risk.getTurns().validatePlayerName(playerName));
+              //  risk.getActivePlayers()[i].setName(risk.getTurns().validatePlayerName(playerName));
                 i++;
                 if(i < risk.getActivePlayers().length)
                     risk.getWindow().getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
