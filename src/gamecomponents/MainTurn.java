@@ -15,6 +15,8 @@ public class MainTurn extends Turns
 	private Game risk;
 	private Window window;
 	private ErrorHandler e;
+	private ActivePlayer activePlayer; 
+	
 	  // methods for each turn are called here
     public MainTurn(ActivePlayer activePlayer, Game risk)
     {
@@ -22,6 +24,8 @@ public class MainTurn extends Turns
         this.risk = risk;
     	this.window = risk.getWindow();
     	this.e = risk.getTurns().getE();
+    	this.activePlayer = activePlayer; 
+    	test(); 
         reinforcementsAllocation(activePlayer);
         // other mainTurn methods go here
         // any method called after the attack method will need to have an if check to check if gameStage has been set to END
@@ -93,8 +97,37 @@ public class MainTurn extends Turns
         }
         return 0;
     }
-
-
+    
+    public void test() { 
+    	window.getTextDisplay(activePlayer.getName() + " TEST TEST TEST Enter two country names separated by a space");
+    	String[] input = window.getCommand().split("\\s+"); //splits the string between spaces
+        input[0] = TextParser.parse(input[0].trim());
+        input[1] = TextParser.parse(input[1].trim());
+        System.out.println(isConnected(input[0], input[1]));
+    }
+    
+    public boolean isConnected(String countryOrigin, String countryDestination) {
+    	
+    	ArrayList<Country> countries = risk.getMap().getCountries(); 
+    	ArrayList<Integer> adjIndexes = countries.get(Country.getIndex(countryOrigin)).getAdjCountries();
+    	if (isConnectedHelper(countryOrigin, countryDestination) == true) {
+    		return true;
+    	}
+    	else {
+    		for (int i = 0; i<adjIndexes.size(); i++) {
+    			isAdjacent(countries.get(adjIndexes.get(i)).getName(), countryDestination);
+    		}
+    	}
+    	return false; 
+    }
+    
+    private boolean isConnectedHelper(String countryA, String countryB) {
+    	if (isAdjacent(countryA, countryB) && controlledBySamePlayer(activePlayer, countryA, countryB)) {
+    		return true; 
+    	}
+    	return false; 
+    }
+    
     public boolean isAdjacent(String countryA, String countryB) {
     	ArrayList<Country> countries = risk.getMap().getCountries(); 
     	boolean isAdjacent = false; 
