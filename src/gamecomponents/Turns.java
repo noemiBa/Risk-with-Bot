@@ -79,8 +79,8 @@ public class Turns {
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
-//                MainTurn main = new MainTurn(risk.getActivePlayers()[currentPlayer], risk);
-//                currentPlayer = switchTurn();
+                MainTurn main = new MainTurn(risk.getActivePlayers()[currentPlayer], risk);
+                currentPlayer = switchTurn();
                 break;
             default:
                 break;
