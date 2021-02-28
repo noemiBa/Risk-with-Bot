@@ -1,12 +1,18 @@
 package gamecomponents;
 
+import java.util.ArrayList;
+
+import com.botharmon.Game;
+
 import lib.TextParser;
 import player.ActivePlayer;
 
 public class MainTurn  extends Turns{
+	Game risk; 
 	  // methods for each turn are called here
-    public MainTurn(ActivePlayer activePlayer)
-    {
+    public MainTurn(ActivePlayer activePlayer, Game risk)
+    {	super(); 
+    	this.risk = risk; 
         reinforcementsAllocation(activePlayer);
         // other mainTurn methods go here
         // any method called after the attack method will need to have an if check to check if gameStage has been set to END
@@ -53,6 +59,25 @@ public class MainTurn  extends Turns{
         } else {
             return activePlayer.getCountriesControlled().size() / 2;
         }
+    }
+    
+    public boolean isAdjacent(String countryA, String countryB) {
+    	ArrayList<Country> countries = risk.getMap().getCountries(); 
+    	boolean isAdjacent = false; 
+    	
+    	if (countries.get(Country.getIndex(countryA)).getAdjCountries().contains(Country.getIndex(countryB))) {
+    		isAdjacent = true; 
+    	}
+    	return isAdjacent; 
+    }
+    
+    public boolean controlledBySamePlayer(ActivePlayer player, String countryA, String countryB) {
+    	boolean controlledBySamePlayer = false; 
+    	if (player.getCountriesControlled().get(countryA) != null && player.getCountriesControlled().get(countryB) != null) {
+    		controlledBySamePlayer = true; 
+    	}
+    	
+    	return controlledBySamePlayer; 
     }
 
 }
