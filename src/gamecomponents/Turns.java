@@ -14,9 +14,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Turns {
-    protected Window window;
-    protected static int currentPlayer = 0;
-    protected ErrorHandler e; 
+    private Window window;
+    private static int currentPlayer = 0;
+    private ErrorHandler e;
     // Can be modified, feel free to change the ENUM values to add, remove, reorder stages of the game
     public enum stage {
         ENTER_NAMES,
@@ -32,6 +32,10 @@ public class Turns {
         return gameStage;
     }
 
+    public ErrorHandler getE()
+    {
+        return e;
+    }
     public void setWindow(Window window) {
         this.window = window;
     }
@@ -122,7 +126,7 @@ public class Turns {
         int count;
 
         //Nine rounds for each player to complete allocation
-        for (count = 1; count <= 2; count++) {
+        for (count = 1; count <= 18; count++) {
             if (count % 2 == 1) {
                 allocateUnitsActivePlayers(activePlayers[firstToPlay]);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[firstToPlay]);

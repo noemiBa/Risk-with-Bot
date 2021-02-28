@@ -4,15 +4,23 @@ import java.util.ArrayList;
 
 import com.botharmon.Game;
 
+import lib.ErrorHandler;
 import lib.TextParser;
 import player.ActivePlayer;
+import ui.Window;
 
-public class MainTurn  extends Turns{
-	Game risk; 
+public class MainTurn extends Turns
+{
+	private Game risk;
+	private Window window;
+	private ErrorHandler e;
 	  // methods for each turn are called here
     public MainTurn(ActivePlayer activePlayer, Game risk)
-    {	super(); 
-    	this.risk = risk; 
+    {
+        super();
+        this.risk = risk;
+    	this.window = risk.getWindow();
+    	this.e = risk.getTurns().getE();
         reinforcementsAllocation(activePlayer);
         // other mainTurn methods go here
         // any method called after the attack method will need to have an if check to check if gameStage has been set to END
@@ -49,7 +57,7 @@ public class MainTurn  extends Turns{
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
                 System.out.println(numberOfReinforcements);
-            }
+        }
     }
 
     public int numberOfReinforcements(ActivePlayer activePlayer) {
