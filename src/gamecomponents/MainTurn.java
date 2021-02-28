@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.botharmon.Game;
 
+import lib.CustomArrayList;
 import lib.ErrorHandler;
 import lib.TextParser;
 import player.ActivePlayer;
@@ -62,13 +63,38 @@ public class MainTurn extends Turns
 
     public int numberOfReinforcements(ActivePlayer activePlayer) {
         //3 is the minimum by the rules
-        if (activePlayer.getCountriesControlled().size() < 6) {
-            return 3;
+        if (activePlayer.getCountriesControlled().size() < 9) {
+            return 3 + continentReinforcement(activePlayer);
         } else {
-            return activePlayer.getCountriesControlled().size() / 2;
+            return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
         }
     }
-    
+
+    /* private helper method, return the extra troops if a player own a continent
+     *
+     * @param activePlayer: to call the custom array list of countries that the player owns
+     */
+    public int continentReinforcement(ActivePlayer player) {
+        CustomArrayList<Country> countries = player.getCountriesControlled();
+
+        //Use lambda to count if the continent name appear on the list as the same amount of the countries that the continent owns
+        if (countries.stream().filter(s -> s.getContinentName().equals("Asia")).count() == 12) {
+            return 7;
+        } else if (countries.stream().filter(s -> s.getContinentName().equals("N America")).count() == 9) {
+            return 5;
+        } else if (countries.stream().filter(s -> s.getContinentName().equals("Europe")).count() == 7) {
+            return 5;
+        } else if (countries.stream().filter(s -> s.getContinentName().equals("Australia")).count() == 4) {
+            return 2;
+        } else if (countries.stream().filter(s -> s.getContinentName().equals("S America")).count() == 4) {
+            return 2;
+        } else if (countries.stream().filter(s -> s.getContinentName().equals("Africa")).count() == 6) {
+            return 3;
+        }
+        return 0;
+    }
+
+
     public boolean isAdjacent(String countryA, String countryB) {
     	ArrayList<Country> countries = risk.getMap().getCountries(); 
     	boolean isAdjacent = false; 
