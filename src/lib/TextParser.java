@@ -65,16 +65,14 @@ public class TextParser {
 	 * @Return: the full parsed name, or "Error"
 	 */
 	public static String parse(String input) {
-		String output = "Error";
-		
-		for (int i=0; i<patterns.length; i++) {
+		String output = "";
+		for (int i = 0; i < patterns.length; i++) {
 			Matcher matcher = patterns[i].getPattern().matcher(input);
 			if (matcher.matches()) {
 				return output = patterns[i].getName();
 			}
 		}
-		
-		return output; 
+		throw new NullPointerException();
 	}
 	
 	/* Nested inner class PatternName, contains the pattern to be recognised at the name of a 

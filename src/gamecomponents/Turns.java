@@ -159,7 +159,7 @@ public class Turns {
                         window.updateMap();
                         window.clearText();
                     }
-                } catch (IllegalArgumentException | NullPointerException e) {
+                } catch (NullPointerException | NumberFormatException e) {
                     window.clearText();
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
@@ -173,11 +173,10 @@ public class Turns {
 
         //Loop through each passive player and set the units with the given country name
         for (PassivePlayer p : passivePlayers) {
+            window.clearText();
             window.getTextDisplay("To allocate troops for " + p.getName() +
                     " who's colour is " + getColorName(p) + " please enter their country name: ");
-
-            String input = window.getCommand(); //splits the string between letters and digits
-            String countryName = TextParser.parse(input);
+            String countryName = "";
             countryName = e.validateCountry(countryName, p);
             p.getCountriesControlled().get(countryName).setNumberOfUnits(p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
             window.updateMap();
