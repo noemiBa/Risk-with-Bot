@@ -84,7 +84,7 @@ public class ErrorHandler {
                 player.getCountriesControlled().get(countryName);
                 isInvalidCountry = false;
             }
-            catch(NullPointerException e)
+            catch(IllegalArgumentException | NullPointerException e)
             {
                 window.sendErrorMessage("Sorry, it looks like " + player.getName() + " does not own this country or you typed it wrong!"
                         + "\nEnter a country of " + player.getName() + "'s colour");

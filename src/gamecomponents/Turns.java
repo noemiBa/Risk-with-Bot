@@ -159,7 +159,7 @@ public class Turns {
                         window.updateMap();
                         window.clearText();
                     }
-                } catch (NullPointerException | NumberFormatException e) {
+                } catch (IllegalArgumentException | NullPointerException e) {
                     window.clearText();
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }

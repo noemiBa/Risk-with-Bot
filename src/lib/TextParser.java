@@ -72,7 +72,7 @@ public class TextParser {
 				return output = patterns[i].getName();
 			}
 		}
-		throw new NullPointerException();
+		throw new IllegalArgumentException();
 	}
 	
 	/* Nested inner class PatternName, contains the pattern to be recognised at the name of a 

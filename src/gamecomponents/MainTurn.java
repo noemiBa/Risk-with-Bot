@@ -58,7 +58,7 @@ public class MainTurn extends Turns
                         window.updateMap();
                         window.clearText();
                     }
-                } catch (NullPointerException | NumberFormatException e) {
+                } catch (IllegalArgumentException | NullPointerException e) {
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
                 System.out.println(numberOfReinforcements);
