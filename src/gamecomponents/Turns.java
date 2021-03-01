@@ -90,6 +90,7 @@ public class Turns {
         {
             window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
             playerName = risk.getWindow().getCommand();
+            e.validateDifferentName(risk.getActivePlayers(), playerName, risk);
             risk.getActivePlayers()[i].setName(e.validatePlayerName(playerName));
             window.clearText();
         }
