@@ -1,17 +1,13 @@
 package gamecomponents;
 
 import com.botharmon.Game;
-import lib.CustomArrayList;
 import lib.ErrorHandler;
 import lib.TextParser;
 import player.ActivePlayer;
 import player.PassivePlayer;
-import player.Player;
-import ui.Map;
 import ui.Window;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Turns {
     private Window window;
@@ -134,7 +130,7 @@ public class Turns {
         int troops = 3;
         while (troops != 0) {
             window.getTextDisplay(activePlayer.getName() + ", please enter a country name belonging to you or a shortened version " +
-                    "and the number of troops you want to allocate separated by space, then press enter");
+                    "and the number of troops you want to allocate separated by a space, then press enter");
             window.getTextDisplay("You have " + troops + (troops == 1 ? " troop" : " troops") + " to allocate");
             String countryName = "";
             int numberToAdd = -1;

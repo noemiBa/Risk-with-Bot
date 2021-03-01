@@ -25,8 +25,9 @@ public class MainTurn extends Turns
     	this.window = risk.getWindow();
     	this.e = risk.getTurns().getE();
     	this.activePlayer = activePlayer; 
-    	test(); 
+    	test();
         reinforcementsAllocation(activePlayer);
+        attack(activePlayer);
         // other mainTurn methods go here
         // any method called after the attack method will need to have an if check to check if gameStage has been set to END
         window.clearText();
@@ -36,14 +37,17 @@ public class MainTurn extends Turns
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
         while (numberOfReinforcements != 0) {
             window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
-                    + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by space, " +
+                    + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by a space, " +
                      "then press enter");
             String countryName = "";
             int numberToAdd = -1;
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
             input[0] = input[0].trim();
-            e.validateCountryAndUnitsEntered(input);
+            if (input.length != 2) {
+                window.clearText();
+                window.sendErrorMessage("You must enter a country and a number");
+            } else {
                 try {
                     countryName = TextParser.parse(input[0]);
                     activePlayer.getCountriesControlled().get(countryName);
@@ -62,6 +66,7 @@ public class MainTurn extends Turns
                     window.sendErrorMessage("You entered the number or country name incorrectly");
                 }
                 System.out.println(numberOfReinforcements);
+            }
         }
     }
 
@@ -97,6 +102,21 @@ public class MainTurn extends Turns
         }
         return 0;
     }
+
+    public void attack(ActivePlayer activePlayer) {
+        String attackWith = "";
+        String countryToAttack = "";
+
+        window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with");
+        attackWith = e.validateCountry(attackWith, activePlayer);
+        attackWith = e.validateNumberOfUnits(attackWith, activePlayer);
+        window.clearText();
+        window.getTextDisplay(attackWith + " selected.");
+
+        countryToAttack = e.validateAttack(activePlayer, activePlayer.getCountry(attackWith), countryToAttack);
+        ArrayList <Integer> player1Rolls = new ArrayList<Integer>();
+        ArrayList <Integer> player2Rolls = new ArrayList<Integer>();
+    }
     
     public void test() { 
     	window.getTextDisplay(activePlayer.getName() + " TEST TEST TEST Enter two country names separated by a space");
@@ -108,8 +128,8 @@ public class MainTurn extends Turns
     
     public boolean isConnected(String countryOrigin, String countryDestination) {
     	
-    	ArrayList<Country> countries = risk.getMap().getCountries(); 
-    	ArrayList<Integer> adjIndexes = countries.get(Country.getIndex(countryOrigin)).getAdjCountries();
+    	CustomArrayList<Country> countries = risk.getMap().getCountries();
+    	ArrayList<Integer> adjIndexes = countries.get(Country.getIndex(countryOrigin)).getAdjCountriesIndexes();
     	if (isConnectedHelper(countryOrigin, countryDestination) == true) {
     		return true;
     	}
@@ -129,10 +149,10 @@ public class MainTurn extends Turns
     }
     
     public boolean isAdjacent(String countryA, String countryB) {
-    	ArrayList<Country> countries = risk.getMap().getCountries(); 
+    	CustomArrayList<Country> countries = risk.getMap().getCountries();
     	boolean isAdjacent = false; 
     	
-    	if (countries.get(Country.getIndex(countryA)).getAdjCountries().contains(Country.getIndex(countryB))) {
+    	if (countries.get(Country.getIndex(countryA)).getAdjCountriesIndexes().contains(Country.getIndex(countryB))) {
     		isAdjacent = true; 
     	}
     	return isAdjacent; 

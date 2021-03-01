@@ -52,7 +52,7 @@ class CountryTest {
 		country.setContinent(0); 
 		country.setNumberOfUnits(4);
 		country.setControlledBy(player);
-		country.setAdjCountries(new ArrayList<Integer>());
+		country.setAdjCountriesIndexes(new ArrayList<Integer>());
 		
 		assertEquals(country.getName(), "Ireland");
 		assertEquals(country.getCoord_x(), 5); 
@@ -60,7 +60,7 @@ class CountryTest {
 		assertEquals(country.getContinent(), 0);
 		assertEquals(country.getNumberOfUnits(), 4);
 		assertEquals(country.getControlledBy(), player);
-		assertEquals(country.getAdjCountries().toString(), "[]");
+		assertEquals(country.getAdjCountriesIndexes().toString(), "[]");
 		
 	}
 	
@@ -78,8 +78,8 @@ class CountryTest {
 
 		ArrayList<Integer> adjCountries = new ArrayList<Integer>();
 		adjCountries.add(0);
-		c.setAdjCountries(adjCountries);
-		assertEquals(c.getAdjCountries().toString(), "[0]");
+		c.setAdjCountriesIndexes(adjCountries);
+		assertEquals(c.getAdjCountriesIndexes().toString(), "[0]");
 
 		c.setControlledBy(player);
 		assertEquals(c.getControlledBy().toString(), "[name=Dumbledore, playerColor=java.awt.Color[r=0,g=0,b=255]]");

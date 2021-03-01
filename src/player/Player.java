@@ -34,6 +34,15 @@ public abstract class Player {
     }
 
     /*Accessor methods*/
+    public Country getCountry(int i) {
+        return countriesControlled.get(i);
+    }
+
+    /*Accessor methods*/
+    public Country getCountry(String identifier) {
+        return countriesControlled.get(identifier);
+    }
+
     public CustomArrayList<Country> getCountriesControlled() {
         return countriesControlled;
     }

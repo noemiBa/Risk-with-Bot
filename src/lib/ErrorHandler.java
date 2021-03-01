@@ -5,7 +5,10 @@ import com.botharmon.Game;
 import gamecomponents.Country;
 import player.ActivePlayer;
 import player.Player;
+import ui.Map;
 import ui.Window;
+
+import java.util.ArrayList;
 
 public class ErrorHandler {
     Window window;
@@ -86,10 +89,53 @@ public class ErrorHandler {
             }
             catch(IllegalArgumentException | NullPointerException e)
             {
-                window.sendErrorMessage("Sorry, it looks like " + player.getName() + " does not own this country or you typed it wrong!"
+                window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country or you typed it wrong!"
                         + "\nEnter a country of " + player.getName() + "'s colour");
             }
         }
         return countryName;
+    }
+
+    public String validateNumberOfUnits(String countryName, Player player)
+    {
+        while(player.getCountry(countryName).getNumberOfUnits() == 1)
+        {
+            window.sendErrorMessage("Sorry, it looks like the country you tried to attack with has insufficent units." +
+            "Enter a country of " + player.getName() + "'s colour with at least 2 units");
+            countryName = validateCountry(countryName, player);
+        }
+        return countryName;
+    }
+
+    public String validateAttack(ActivePlayer activePlayer, Country attackWith, String countryToAttack)
+    {
+        boolean isInvalidAttack = true;
+        while(isInvalidAttack)
+        {
+            window.getTextDisplay("You can attack the following countries: ");
+            for(Country c: attackWith.getAdjCountries())
+            {
+                if(!c.getControlledBy().equals(activePlayer))
+                {
+                    window.getTextDisplay(c.getName());
+                }
+            }
+            window.getTextDisplay("Enter a country to attack");
+            countryToAttack = window.getCommand().replaceAll("\\s+","");
+            try
+            {
+                countryToAttack = TextParser.parse(countryToAttack);
+                if(!attackWith.getAdjCountry(countryToAttack).getControlledBy().equals(activePlayer))
+                    isInvalidAttack = false;
+                else
+                    window.sendErrorMessage("Sorry, it looks like the country you're attacking is controlled by you");
+            }
+            catch(IllegalArgumentException | NullPointerException e)
+            {
+                window.sendErrorMessage("Sorry, it looks like the country you entered is not adjacent to " + attackWith.getName() +
+                " or was entered incorrectly");
+            }
+        }
+        return countryToAttack;
     }
 }

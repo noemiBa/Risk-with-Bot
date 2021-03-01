@@ -1,5 +1,6 @@
 package gamecomponents;
 
+import lib.CustomArrayList;
 import player.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,7 +17,8 @@ public class Country {
     private int continent;
     private Player controlledBy;
     private int numberOfUnits;
-    private ArrayList<Integer> adjCountries;
+    private CustomArrayList<Country> adjCountries;
+    private ArrayList<Integer> adjCountriesIndexes;
 
     /** Constructor: constructs the object Country. Here the continent index is set to -1 to start, and the arrayList of adjacent countries initialised.
      * @param name: the name of the country
@@ -31,7 +33,8 @@ public class Country {
         this.coord_x = coord_x;
         this.coord_y = coord_y;
         this.continent = -1;
-        this.adjCountries = new ArrayList<Integer>();
+        this.adjCountriesIndexes = new ArrayList<Integer>();
+        this.adjCountries = new CustomArrayList<Country>();
         this.numberOfUnits = 0;
     }
     
@@ -72,12 +75,27 @@ public class Country {
         return controlledBy;
     }
 
-    public ArrayList<Integer> getAdjCountries() {
+    public Country getAdjCountry(int i)
+    {
+        return adjCountries.get(i);
+    }
+
+    public Country getAdjCountry(String identifier)
+    {
+        return adjCountries.get(identifier);
+    }
+
+    public CustomArrayList<Country> getAdjCountries()
+    {
         return adjCountries;
     }
 
+    public ArrayList<Integer> getAdjCountriesIndexes() {
+        return adjCountriesIndexes;
+    }
+
     public int getAdjCountriesLength() {
-        return adjCountries.size();
+        return adjCountriesIndexes.size();
     }
 
     public int getCoord_y() {
@@ -93,8 +111,8 @@ public class Country {
         this.numberOfUnits = numberOfUnits;
     }
 
-    public void setAdjCountries(ArrayList<Integer> adjCountries) {
-        this.adjCountries = adjCountries;
+    public void setAdjCountriesIndexes(ArrayList<Integer> adjCountries) {
+        this.adjCountriesIndexes = adjCountries;
     }
 
     public void setContinent(int contintent) {
@@ -106,7 +124,7 @@ public class Country {
         this.controlledBy = controlledBy;
     }
 
-    public static void initialiseUnits(ArrayList<Country> countries)
+    public static void initialiseUnits(CustomArrayList<Country> countries)
     {
         for (Country c: countries)
         {
@@ -135,7 +153,7 @@ public class Country {
     @Override
     public String toString() {
         return "Country [name=" + name + ", coord_x=" + coord_x + ", coord_y=" + coord_y + ", continent=" + continent
-                + ", adjCountries=" + adjCountries + "]";
+                + ", adjCountries=" + adjCountriesIndexes + "]";
     }
     
     /* private methods used for exception handling.

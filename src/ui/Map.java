@@ -1,18 +1,17 @@
 package ui;
 
 import gamecomponents.*;
+import lib.CustomArrayList;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.awt.Font;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.PanelUI;
 
 public class Map extends JPanel {
 
@@ -33,7 +32,7 @@ public class Map extends JPanel {
     private static final int RADIUS = DIAMETER / 2;
     private static final int SPACING = 5;
 
-    private ArrayList<Country> countries;
+    private CustomArrayList<Country> countries;
     private Turns.stage gameStage;
     private BufferedImage image;
 
@@ -45,29 +44,41 @@ public class Map extends JPanel {
     public Map()
     {
         gameStage = Turns.stage.ENTER_NAMES;
-        countries = new ArrayList<Country>();
+        countries = new CustomArrayList<Country>();
        try {
             image = ImageIO.read(getClass().getResource("/images/map_color.png"));
         } catch (IOException ex) {
             ex.getMessage();
         }
 
-        int j = 0;
         for (int i = 0; i < GameData.NUM_COUNTRIES; i++) {
-            countries.add(new Country(GameData.COUNTRY_NAMES[i], COUNTRY_COORD[i][j], COUNTRY_COORD[i][j + 1])); //add Countries instance variables to the arrayList of type Country
+            countries.add(GameData.COUNTRY_NAMES[i], new Country(GameData.COUNTRY_NAMES[i], COUNTRY_COORD[i][0], COUNTRY_COORD[i][1])); //add Countries instance variables to the arrayList of type Country
             countries.get(i).setContinent(GameData.CONTINENT_IDS[i]); //set the Continent id for each country
 
-            ArrayList<Integer> adjCountries = new ArrayList<Integer>();  //Create an array to contain the indexes of the countries adjacent to Country.get(i)
-            for (int k = 0; k < GameData.ADJACENT[i].length; k++) {
-                adjCountries.add(GameData.ADJACENT[i][k]);
+            for (int j = 0; j < GameData.ADJACENT[i].length; j++) {
+                countries.get(i).getAdjCountriesIndexes().add(GameData.ADJACENT[i][j]);
             }
-            countries.get(i).setAdjCountries(adjCountries);
+        }
+        for(Country c: countries)
+        {
+            for(Integer i: c.getAdjCountriesIndexes())
+            {
+                c.getAdjCountries().add(countries.get(i).getName(), countries.get(i));
+            }
         }
     }
 
     /*Accessor methods*/
-    public ArrayList<Country> getCountries() {
+    public CustomArrayList<Country> getCountries() {
         return countries;
+    }
+
+    public Country getCountry(int i) {
+        return countries.get(i);
+    }
+
+    public Country getCountry(String identifier) {
+        return countries.get(identifier);
     }
 
     public void updateUI(Turns.stage gameStage)
@@ -120,9 +131,9 @@ public class Map extends JPanel {
             for (int i = 0; i < c.getAdjCountriesLength(); i++) {
 
                 //do NOT draw the sea line between Alaska and Kamchatka in the middle of the screen.
-                if ((c.getName() != "Alaska" || countries.get(c.getAdjCountries().get(i)).getName() != "Kamchatka") && (c.getName() != "Kamchatka" || countries.get(c.getAdjCountries().get(i)).getName() != "Alaska")) {
+                if ((c.getName() != "Alaska" || countries.get(c.getAdjCountriesIndexes().get(i)).getName() != "Kamchatka") && (c.getName() != "Kamchatka" || countries.get(c.getAdjCountriesIndexes().get(i)).getName() != "Alaska")) {
                     g.setColor(Color.LIGHT_GRAY);
-                    g.drawLine(c.getCoord_x(), c.getCoord_y(), countries.get(c.getAdjCountries().get(i)).getCoord_x(), countries.get(c.getAdjCountries().get(i)).getCoord_y());
+                    g.drawLine(c.getCoord_x(), c.getCoord_y(), countries.get(c.getAdjCountriesIndexes().get(i)).getCoord_x(), countries.get(c.getAdjCountriesIndexes().get(i)).getCoord_y());
                 }
             }
         }
