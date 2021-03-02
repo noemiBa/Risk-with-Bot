@@ -1,6 +1,8 @@
 package gamecomponents;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.botharmon.Game;
 
@@ -119,32 +121,43 @@ public class MainTurn extends Turns
     }
     
     public void test() { 
+    	//activePlayer.setCountriesControlled(); 
     	window.getTextDisplay(activePlayer.getName() + " TEST TEST TEST Enter two country names separated by a space");
     	String[] input = window.getCommand().split("\\s+"); //splits the string between spaces
         input[0] = TextParser.parse(input[0].trim());
         input[1] = TextParser.parse(input[1].trim());
+       
         System.out.println(isConnected(input[0], input[1]));
     }
     
     public boolean isConnected(String countryOrigin, String countryDestination) {
-    	
     	CustomArrayList<Country> countries = risk.getMap().getCountries();
-    	ArrayList<Integer> adjIndexes = countries.get(Country.getIndex(countryOrigin)).getAdjCountriesIndexes();
-    	if (isConnectedHelper(countryOrigin, countryDestination) == true) {
-    		return true;
-    	}
-    	else {
-    		for (int i = 0; i<adjIndexes.size(); i++) {
-    			isAdjacent(countries.get(adjIndexes.get(i)).getName(), countryDestination);
+    	Queue<Country> queue = new LinkedList<Country>(); 
+    	String newOrigin = ""; 
+    	
+    	queue.add(countries.get(countryOrigin)); 
+    	
+    	while (queue.size() >= 1) {
+    	    
+    		newOrigin = queue.remove().getName();
+    		
+    		//for each element removed from the queue, check whether it is the destination country
+    		if (newOrigin.equals(countryDestination)) {
+    			return true; 
     		}
-    	}
-    	return false; 
-    }
-    
-    private boolean isConnectedHelper(String countryA, String countryB) {
-    	if (isAdjacent(countryA, countryB) && controlledBySamePlayer(activePlayer, countryA, countryB)) {
-    		return true; 
-    	}
+    		
+    		ArrayList<Integer> adjIndexes = countries.get(newOrigin).getAdjCountriesIndexes();
+    		
+    		for (Integer i : adjIndexes) {
+    			if (controlledBySamePlayer(newOrigin, countries.get(i).getName())) {
+    				//to avoid an infinite loop
+    	    		if (countries.get(i).getName().equals(countryOrigin)) {
+    	    			break; 
+    	    		}
+    				queue.add(countries.get(i));
+    			}
+    		}
+    	}  
     	return false; 
     }
     
@@ -152,15 +165,15 @@ public class MainTurn extends Turns
     	CustomArrayList<Country> countries = risk.getMap().getCountries();
     	boolean isAdjacent = false; 
     	
-    	if (countries.get(Country.getIndex(countryA)).getAdjCountriesIndexes().contains(Country.getIndex(countryB))) {
+    	if (countries.get(countryA).getAdjCountriesIndexes().contains(Country.getIndex(countryB))) {
     		isAdjacent = true; 
     	}
     	return isAdjacent; 
     }
     
-    public boolean controlledBySamePlayer(ActivePlayer player, String countryA, String countryB) {
+    public boolean controlledBySamePlayer(String countryA, String countryB) {
     	boolean controlledBySamePlayer = false; 
-    	if (player.getCountriesControlled().get(countryA) != null && player.getCountriesControlled().get(countryB) != null) {
+    	if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
     		controlledBySamePlayer = true; 
     	}
     	

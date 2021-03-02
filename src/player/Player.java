@@ -54,8 +54,13 @@ public abstract class Player {
     public Color getPlayerColor() {
         return playerColor;
     }
+    
+    //for testing purposes. Will be removed
+    public void setCountriesControlled(CustomArrayList<Country> countriesControlled) {
+		this.countriesControlled = countriesControlled;
+	}
 
-    public ArrayList<Card> getCards() {
+	public ArrayList<Card> getCards() {
         return cards;
     }
 
