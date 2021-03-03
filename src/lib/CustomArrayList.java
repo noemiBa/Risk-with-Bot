@@ -17,6 +17,12 @@ public class CustomArrayList<E> extends ArrayList<E>
         super.add(e);
     }
 
+    public void remove(String identifier, E e)
+    {
+        keySets.remove(identifier, e);
+        super.remove(e);
+    }
+
     public E get(String identifier)
     {
         return keySets.get(identifier);

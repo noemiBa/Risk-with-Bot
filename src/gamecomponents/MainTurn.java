@@ -1,12 +1,12 @@
 package gamecomponents;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.botharmon.Game;
 
-import gamecomponents.Turns.stage;
 import lib.CustomArrayList;
 import lib.ErrorHandler;
 import lib.TextParser;
@@ -33,11 +33,11 @@ public class MainTurn extends Turns
     	
     	//mainTurn sequence
     	reinforcementsAllocation(activePlayer);
-        attack(activePlayer);
         //need to check if the game has ended after each attack
         checkWinner(players);
+        attack(activePlayer);
         fortify(activePlayer);
-        
+
         // other mainTurn methods go here
         window.clearText();
     }
@@ -109,18 +109,83 @@ public class MainTurn extends Turns
     }
 
     public void attack(ActivePlayer activePlayer) {
-        String attackWith = "";
-        String countryToAttack = "";
+        String countryAttacking = "";
+        String countryDefending = "";
+        while(!countryAttacking.equals("skip"))
+        {
+            window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with or enter 'skip' to progress to the next stage");
+            countryAttacking = e.validateAttackPhaseChoice(countryAttacking, activePlayer);
+            if(!countryAttacking.equals("skip"))
+            {
+                countryAttacking = e.validateNumberOfUnitsAttacking(countryAttacking, activePlayer);
+                window.clearText();
+                window.getTextDisplay(countryAttacking + " selected.");
+                countryDefending = e.validateAttack(activePlayer, activePlayer.getCountry(countryAttacking), countryDefending);
+                window.clearText();
 
-        window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with");
-        attackWith = e.validateCountry(attackWith, activePlayer);
-        attackWith = e.validateNumberOfUnits(attackWith, activePlayer);
-        window.clearText();
-        window.getTextDisplay(attackWith + " selected.");
+                ArrayList <Integer> activePlayerRolls = new ArrayList<Integer>();
+                ArrayList <Integer> otherPlayerRolls = new ArrayList<Integer>();
 
-        countryToAttack = e.validateAttack(activePlayer, activePlayer.getCountry(attackWith), countryToAttack);
-        ArrayList <Integer> player1Rolls = new ArrayList<Integer>();
-        ArrayList <Integer> player2Rolls = new ArrayList<Integer>();
+                int numberOfAttacks, numberOfDefences;
+                if(activePlayer.getCountry(countryAttacking).getNumberOfUnits() >= 4)
+                    numberOfAttacks = 3;
+                else
+                    numberOfAttacks = activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1;
+                if(risk.getMap().getCountry(countryDefending).getNumberOfUnits() >= 2)
+                    numberOfDefences = 2;
+                else
+                    numberOfDefences = 1;
+
+                for(int i = 1; i <= numberOfAttacks; i++)
+                    activePlayerRolls.add(activePlayer.throwDice());
+
+                for(int i = 1; i <= numberOfDefences; i++)
+                    otherPlayerRolls.add(activePlayer.throwDice());
+
+                activePlayerRolls.sort(Collections.reverseOrder()); // sort in descending order
+                otherPlayerRolls.sort(Collections.reverseOrder());
+                String otherPlayerName = risk.getMap().getCountry(countryDefending).getControlledBy().getName();
+
+                window.getTextDisplay(activePlayer.getName() + (activePlayerRolls.size() == 1 ? " rolled a " + activePlayerRolls.get(0): "'s rolls were " + activePlayerRolls));
+                window.getTextDisplay(risk.getMap().getCountry(countryDefending).getControlledBy().getName() +
+                        (otherPlayerRolls.size() == 1 ? " rolled a " + otherPlayerRolls.get(0): "'s rolls were " + otherPlayerRolls));
+
+                int successfulAttacks = 0, successfulDefends = 0;
+                for(int i = 0, j = 0; i < numberOfAttacks && j < numberOfDefences; i++, j++)
+                {
+                    if(activePlayerRolls.get(i) > otherPlayerRolls.get(j))
+                    {
+                        successfulAttacks++;
+                        risk.getMap().getCountry(countryDefending).setNumberOfUnits(risk.getMap().getCountry(countryDefending).getNumberOfUnits() - 1);
+                        if(risk.getMap().getCountry(countryDefending).getNumberOfUnits() == 0)
+                        {
+                            risk.getMap().getCountry(countryDefending).getControlledBy().getCountriesControlled().remove
+                                    (risk.getMap().getCountry(countryDefending).getName(), risk.getMap().getCountry(countryDefending));
+                            activePlayer.getCountriesControlled().add(risk.getMap().getCountry
+                                    (countryDefending).getName(), risk.getMap().getCountry(countryDefending));
+                            risk.getMap().getCountry(countryDefending).setControlledBy(activePlayer);
+                            activePlayer.getCountry(countryDefending).setNumberOfUnits(activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1);
+                            activePlayer.getCountry(countryAttacking).setNumberOfUnits(1);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        successfulDefends++;
+                        activePlayer.getCountry(countryAttacking).setNumberOfUnits(activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1);
+                    }
+
+                }
+                risk.getWindow().updateMap();
+                risk.getWindow().getTextDisplay
+                        (
+                                activePlayer.getName() + " loses " + successfulDefends + (successfulDefends == 1 ? " unit" : " units") + " and " +
+                                        otherPlayerName + " loses " + successfulAttacks + (successfulAttacks == 1 ? " unit" : " units")
+                        );
+                if(risk.getMap().getCountry(countryDefending).getControlledBy().equals(activePlayer))
+                    risk.getWindow().getTextDisplay(activePlayer.getName() + " has conquered " + risk.getMap().getCountry(countryDefending).getName());
+            }
+        }
     }
     
     // checkWinner can be called after each active player attack, this is the only time, the number of countries each player controls will change

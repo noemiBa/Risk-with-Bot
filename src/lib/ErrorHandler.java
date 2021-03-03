@@ -113,7 +113,30 @@ public class ErrorHandler {
         return countryName;
     }
 
-    public String validateNumberOfUnits(String countryName, Player player)
+    public String validateAttackPhaseChoice(String choice, Player player)
+    {
+        boolean isInvalidCountry = true;
+        while(isInvalidCountry)
+        {
+            choice = window.getCommand().replaceAll("\\s+","").toLowerCase();
+            if(choice.equals("skip"))
+                return choice;
+            try
+            {
+                choice = TextParser.parse(choice);
+                player.getCountriesControlled().get(choice);
+                isInvalidCountry = false;
+            }
+            catch(IllegalArgumentException | NullPointerException e)
+            {
+                window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country or you typed it wrong!"
+                        + "\nEnter a country of " + player.getName() + "'s colour");
+            }
+        }
+        return choice;
+    }
+
+    public String validateNumberOfUnitsAttacking(String countryName, Player player)
     {
         while(player.getCountry(countryName).getNumberOfUnits() == 1)
         {
@@ -124,13 +147,13 @@ public class ErrorHandler {
         return countryName;
     }
 
-    public String validateAttack(ActivePlayer activePlayer, Country attackWith, String countryToAttack)
+    public String validateAttack(ActivePlayer activePlayer, Country countryAttacking, String countryDefending)
     {
         boolean isInvalidAttack = true;
         while(isInvalidAttack)
         {
             window.getTextDisplay("You can attack the following countries: ");
-            for(Country c: attackWith.getAdjCountries())
+            for(Country c: countryAttacking.getAdjCountries())
             {
                 if(!c.getControlledBy().equals(activePlayer))
                 {
@@ -138,21 +161,21 @@ public class ErrorHandler {
                 }
             }
             window.getTextDisplay("Enter a country to attack");
-            countryToAttack = window.getCommand().replaceAll("\\s+","");
+            countryDefending = window.getCommand().replaceAll("\\s+","");
             try
             {
-                countryToAttack = TextParser.parse(countryToAttack);
-                if(!attackWith.getAdjCountry(countryToAttack).getControlledBy().equals(activePlayer))
+                countryDefending = TextParser.parse(countryDefending);
+                if(!countryAttacking.getAdjCountry(countryDefending).getControlledBy().equals(activePlayer))
                     isInvalidAttack = false;
                 else
                     window.sendErrorMessage("Sorry, it looks like the country you're attacking is controlled by you");
             }
             catch(IllegalArgumentException | NullPointerException e)
             {
-                window.sendErrorMessage("Sorry, it looks like the country you entered is not adjacent to " + attackWith.getName() +
-                " or was entered incorrectly");
+                window.sendErrorMessage("Sorry, it looks like the country you entered is not adjacent to " + countryAttacking.getName() +
+                        " or was entered incorrectly");
             }
         }
-        return countryToAttack;
+        return countryDefending;
     }
 }
