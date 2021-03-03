@@ -53,7 +53,7 @@ public class DisplayText extends JPanel
     public void sendErrorMessage(String message)
     {
         clearTextDisplay();
-        textArea.setForeground(new Color(122, 16, 16)); //the textArea text will turn red if there is an erroneous input
+        textArea.setForeground(new Color(173, 109, 109)); //the textArea text will turn red if there is an erroneous input
         textArea.setText(textArea.getText() + "\n\n" + message);
     }
 }

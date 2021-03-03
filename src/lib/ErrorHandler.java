@@ -3,6 +3,7 @@ package lib;
 import com.botharmon.Game;
 
 import gamecomponents.Country;
+import gamecomponents.MainTurn;
 import player.ActivePlayer;
 import player.Player;
 import ui.Map;
@@ -16,21 +17,9 @@ public class ErrorHandler {
 		 this.window = window; 
     }
     
-    public String[] validateCountryAndUnitsEntered(String[] input) {
-        while (input.length != 2) {
-            window.sendErrorMessage("You must enter a country name and a number");
-            input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-        }
-        return input; 
-    }
-    
-    public String[] validateCountriesAndUnitsEntered(String[] input) {
-        while (input.length != 3) {
-            window.sendErrorMessage("You must enter two country names and a number");
-            input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-        }
-        return input; 
-    }
+    /*
+     ****** GET PLAYER NAMES -  ERROR HANDLING
+     * */
 	 
 	/* method displays an error message if the player has entered an invalid input as their name.
     *
@@ -60,7 +49,20 @@ public class ErrorHandler {
         }
         return playerName;
     }
-
+    
+    
+    /*
+     ******* ALLOCATE UNITS - ERROR HANDLING
+     * */
+    
+    public String[] validateCountryAndUnitsEntered(String[] input) {
+        while (input.length != 2) {
+            window.sendErrorMessage("You must enter a country name and a number");
+            input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
+        }
+        return input; 
+    }
+    
    /* displays an error message if the player has entered an invalid input as the number of Units to Add.
     *
     * @param numberToAdd: the input entered by the user
@@ -69,24 +71,12 @@ public class ErrorHandler {
     public int validateNoUnitsAllocation(int numberToAdd, int numberUnitsLeft) {
     	while (numberToAdd > 3 || numberToAdd < 1 || numberUnitsLeft < numberToAdd) {
     		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation. Re-enter the number of units: ");
-    		numberToAdd = Integer.parseInt(window.getCommand()); 
+    		String numberStr = window.getCommand(); 
+    		numberToAdd = isInteger(numberStr); 
     	} 
         return numberToAdd;
     }
     
-    /* displays an error message if the player has entered an invalid input as the number of Units to Add.
-    *
-    * @param numberToAdd: the input entered by the user
-    * @return the valid numberToAdd
-    */
-    public int validateNoUnitsReinforcement(int numberToAdd, int numberUnitsLeft) {
-    	while (numberToAdd > 3 || numberToAdd < 1 || numberUnitsLeft < numberToAdd) {
-    		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation. Re-enter the number of units: ");
-    		numberToAdd = Integer.parseInt(window.getCommand()); 
-    	} 
-        return numberToAdd;
-    }
-
    /* displays an error message if the player has entered an invalid input (or ambiguous name) as country to add units to.
     *
     * @param countryName: the input entered by the user
@@ -112,7 +102,28 @@ public class ErrorHandler {
         }
         return countryName;
     }
-
+    
+    /*
+     ***** REINFORCEMENT STAGE - ERROR HANDLING
+     * */
+   
+    /* displays an error message if the player has entered an invalid input as the number of Units to Add.
+    *
+    * @param numberToAdd: the input entered by the user
+    * @return the valid numberToAdd
+    */
+    public int validateNoUnitsReinforcement(int numberToAdd, int numberUnitsLeft) {
+    	while (numberToAdd < 1 || numberUnitsLeft < numberToAdd) {
+    		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation. Re-enter the number of units: ");
+    		String numberStr = window.getCommand(); 
+    		numberToAdd = isInteger(numberStr); 
+    	} 
+        return numberToAdd;
+    }
+    
+    /*
+     ***** ATTACK STAGE - ERROR HANDLING
+     * */
     public String validateAttackPhaseChoice(String choice, Player player)
     {
         boolean isInvalidCountry = true;
@@ -177,5 +188,70 @@ public class ErrorHandler {
             }
         }
         return countryDefending;
+    }
+    
+    /*
+     ******* FORTIFY STAGE - ERROR HANDLING
+     * */
+    
+    public String[] validateCountriesAndUnitsEnteredFortify(String[] input) {
+        while (input.length != 3) {
+            window.sendErrorMessage("You must enter two country names and a number");
+            input = window.getCommand().split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
+        }
+        return input; 
+    }
+    
+    public String[] validateCountriesConnected(MainTurn main, Boolean isConnected) {
+    	String[] input = new String[3]; 
+
+    	while (isConnected == false) {
+    		try {
+    			window.sendErrorMessage("That wasn't right! Please take this seriously. This is a war, afterall! \n\n"
+    					+ "Enter the country to move units from, the destination country and the number of units to move, separated by a space:");
+
+    			input = window.getCommand().split("\\s+"); //splits the string between spaces
+
+    			validateCountriesAndUnitsEnteredFortify(input); 
+
+    			String countryOrigin = TextParser.parse(input[0].trim());
+    			String countryDestination = TextParser.parse(input[1].trim());
+    			String numberToMove = input[2].trim(); 
+    			
+    			if (!numberToMove.matches("[0-9]+")) {
+    				window.sendErrorMessage("That wasn't an integer! ");
+    				throw new IllegalArgumentException(); 
+    			}
+    			
+    			isConnected = main.isConnected(countryOrigin, countryDestination);
+    		}
+    		catch (IllegalArgumentException ex) {
+    			validateCountriesConnected(main, false); 
+    		}
+    	}
+
+    	return input; 
+    }
+    
+    /* displays an error message if the player has entered an invalid input as the number of Units to Add.
+    *
+    * @param numberToAdd: the input entered by the user
+    * @return the valid numberToAdd
+    */
+    public int validateNoUnitsFortify(int numberToMove, int numberUnitsLeft) {
+    	while (numberToMove < 1 || (numberUnitsLeft-1) < numberToMove) {
+    		window.sendErrorMessage("You can enter at most " + (numberUnitsLeft-1) + " for this allocation. Re-enter the number of units: ");
+    		String number = window.getCommand(); 
+    		numberToMove = isInteger(number); 
+    	} 
+        return numberToMove;
+    }
+    
+    public int isInteger(String numberStr) {
+		while (!numberStr.matches("[0-9]+")) {
+			window.sendErrorMessage("That wasn't an integer! Please, re-enter the number of units: ");
+			numberStr = window.getCommand(); 
+		}
+		return Integer.parseInt(numberStr); 
     }
 }
