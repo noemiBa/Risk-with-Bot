@@ -67,7 +67,7 @@ public class Turns {
                 break;
             case ROLL_TO_PLACE_TERRITORIES:
                 currentPlayer = whoStarts(risk.getActivePlayers());
-               // allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
+                allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
                 window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
@@ -90,10 +90,11 @@ public class Turns {
         {
             window.getTextDisplay("Welcome, player " + risk.getActivePlayers()[i].getPlayerNumber() + "! Enter your name: ");
             playerName = risk.getWindow().getCommand();
-            e.validateDifferentName(risk.getActivePlayers(), playerName, risk);
             risk.getActivePlayers()[i].setName(e.validatePlayerName(playerName));
+            e.validateDifferentName(risk.getActivePlayers(), playerName, risk);
             window.clearText();
         }
+       
         window.clearText();
     }
 
@@ -137,32 +138,28 @@ public class Turns {
             int numberToAdd = -1;
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-            input[0] = input[0].trim();
-            if (input.length != 2) {
-                window.clearText();
-                window.sendErrorMessage("You must enter a country and a number");
-            } else {
-                try {
-                    countryName = TextParser.parse(input[0]);
-                    activePlayer.getCountriesControlled().get(countryName);
-                    numberToAdd = Integer.parseInt(input[1]);
-                    if (numberToAdd > 3 || numberToAdd < 1 || troops < numberToAdd) {
-                        window.clearText();
-                        window.sendErrorMessage("You can enter at most " + troops + " for this allocation");
-                    } else {
-                        activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-                                .get(countryName).getNumberOfUnits() + numberToAdd);
-                        troops -= numberToAdd;
-                        window.updateMap();
-                        window.clearText();
-                    }
-                } catch (IllegalArgumentException | NullPointerException e) {
-                    window.clearText();
-                    window.sendErrorMessage("You entered the number or country name incorrectly");
-                }
+            
+            input = e.validateCountryAndUnitsEntered(input);
+            
+            try {
+            	countryName = TextParser.parse(input[0].trim());
+            	activePlayer.getCountriesControlled().get(countryName);
+            	numberToAdd = Integer.parseInt(input[1]);
+
+            	numberToAdd = e.validateNoUnits(numberToAdd, troops); 
+            	activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
+            			.get(countryName).getNumberOfUnits() + numberToAdd);
+            	troops -= numberToAdd;
+            	window.updateMap();
+            	window.clearText();
+
+            } catch (IllegalArgumentException | NullPointerException e) {
+            	window.clearText();
+            	window.sendErrorMessage("You entered the number or country name incorrectly");
             }
         }
-    }
+        }
+    
 
     public void allocateUnitsPassivePlayers(PassivePlayer[] passivePlayers, ActivePlayer activePlayer) {
         //divide the units equally between the countries the passive players start with.
@@ -230,15 +227,5 @@ public class Turns {
         else if (passivePlayer.getPlayerColor().equals(new Color(237, 181, 126)))
             return "Peach";
         return null;
-    }
-
-    // checkWinner can be called after each active player attack, this is the only time, the number of countries each player controls will change
-    public void checkWinner(ActivePlayer[] activePlayers) {
-        for (ActivePlayer a : activePlayers) {
-            if (a.getCountriesControlled().size() == 42) {
-                window.getTextDisplay("Congratulations " + a.getName() + " you conquered the world! Thanks for playing");
-                setGameStage(stage.END);
-            }
-        }
     }
 }
