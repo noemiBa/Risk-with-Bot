@@ -59,21 +59,19 @@ public class MainTurn extends Turns
             	countryName = TextParser.parse(input[0].trim());
             	activePlayer.getCountriesControlled().get(countryName);
             	numberToAdd = Integer.parseInt(input[1]);
-            	if (numberToAdd > numberOfReinforcements || numberToAdd < 1) {
-            		window.clearText();
-            		window.sendErrorMessage("You can enter at most " + numberOfReinforcements + " for this allocation");
-            	} else {
-            		activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-            				.get(countryName).getNumberOfUnits() + numberToAdd);
-            		numberOfReinforcements = numberOfReinforcements - numberToAdd;
-            		window.updateMap();
-            		window.clearText();
-            	}
+
+            	numberToAdd = e.validateNoUnitsReinforcement(numberToAdd, numberOfReinforcements);
+            	activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
+            			.get(countryName).getNumberOfUnits() + numberToAdd);
+            	numberOfReinforcements = numberOfReinforcements - numberToAdd;
+            	window.updateMap();
+            	window.clearText();
+
             } catch (IllegalArgumentException | NullPointerException e) {
             	window.sendErrorMessage("You entered the number or country name incorrectly");
             }
-                System.out.println(numberOfReinforcements);
-            }
+            System.out.println(numberOfReinforcements);
+        }
         }
     
 

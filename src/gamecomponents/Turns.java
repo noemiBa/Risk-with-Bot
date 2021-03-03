@@ -67,7 +67,7 @@ public class Turns {
                 break;
             case ROLL_TO_PLACE_TERRITORIES:
                 currentPlayer = whoStarts(risk.getActivePlayers());
-                allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
+                //allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
                 window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
@@ -146,7 +146,7 @@ public class Turns {
             	activePlayer.getCountriesControlled().get(countryName);
             	numberToAdd = Integer.parseInt(input[1]);
 
-            	numberToAdd = e.validateNoUnits(numberToAdd, troops); 
+            	numberToAdd = e.validateNoUnitsAllocation(numberToAdd, troops); 
             	activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
             			.get(countryName).getNumberOfUnits() + numberToAdd);
             	troops -= numberToAdd;

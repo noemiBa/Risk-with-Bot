@@ -66,9 +66,23 @@ public class ErrorHandler {
     * @param numberToAdd: the input entered by the user
     * @return the valid numberToAdd
     */
-    public int validateNoUnits(int numberToAdd, int numberUnitsLeft) {
+    public int validateNoUnitsAllocation(int numberToAdd, int numberUnitsLeft) {
     	while (numberToAdd > 3 || numberToAdd < 1 || numberUnitsLeft < numberToAdd) {
-    		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation");
+    		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation. Re-enter the number of units: ");
+    		numberToAdd = Integer.parseInt(window.getCommand()); 
+    	} 
+        return numberToAdd;
+    }
+    
+    /* displays an error message if the player has entered an invalid input as the number of Units to Add.
+    *
+    * @param numberToAdd: the input entered by the user
+    * @return the valid numberToAdd
+    */
+    public int validateNoUnitsReinforcement(int numberToAdd, int numberUnitsLeft) {
+    	while (numberToAdd > 3 || numberToAdd < 1 || numberUnitsLeft < numberToAdd) {
+    		window.sendErrorMessage("You can enter at most " + numberUnitsLeft + " for this allocation. Re-enter the number of units: ");
+    		numberToAdd = Integer.parseInt(window.getCommand()); 
     	} 
         return numberToAdd;
     }
