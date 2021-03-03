@@ -122,7 +122,7 @@ class TestTextParser {
 	
 	@Test
 	void testParseWUnitedS() {
-		matcher = patterns[6].getPattern().matcher("W USA");
+		matcher = patterns[6].getPattern().matcher("WUSA");
 		assertTrue(matcher.matches());
 		
 		matcher = patterns[6].getPattern().matcher("West US");
@@ -171,9 +171,6 @@ class TestTextParser {
 		assertTrue(matcher.matches());
 		
 		matcher = patterns[9].getPattern().matcher("United Kingdom");
-		assertTrue(matcher.matches());
-		
-		matcher = patterns[9].getPattern().matcher("UK");
 		assertTrue(matcher.matches());
 		
 		matcher = patterns[9].getPattern().matcher("Great Britain");
@@ -434,8 +431,6 @@ class TestTextParser {
 	
 	@Test
 	void testParseChina() {
-		matcher = patterns[27].getPattern().matcher("CN");
-		assertTrue(matcher.matches());
 		
 		matcher = patterns[27].getPattern().matcher("CHi");
 		assertTrue(matcher.matches());
