@@ -200,9 +200,14 @@ public class ErrorHandler {
      * */
     
     public String[] validateCountriesAndUnitsEnteredFortify(String[] input) {
-        while (input.length != 3) {
+    	while (input.length != 3) {
             window.sendErrorMessage("You must enter two country names and a number");
             input = window.getCommand().split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
+
+			if (input[0].equals("skip")) {
+				input[0] = "skip"; 
+				return input; 
+			}
         }
         return input; 
     }
@@ -216,7 +221,12 @@ public class ErrorHandler {
     					+ "Enter the country to move units from, the destination country and the number of units to move, separated by a space:");
 
     			input = window.getCommand().split("\\s+"); //splits the string between spaces
-
+    			
+//    			if (input.equals("skip")) {
+//    				input[0] = "skip"; 
+//    				return input; 
+//    			}
+    			
     			input = validateCountriesAndUnitsEnteredFortify(input); 
 
     			String countryOrigin = TextParser.parse(input[0].trim());

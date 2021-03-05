@@ -176,45 +176,47 @@ public class MainTurn extends Turns {
     }
 
     public void fortify(ActivePlayer activePlayer) {
-        String countryOrigin = "";
-        String countryDestination = "";
-        int unitsToMove = -1;
+    	String countryOrigin = "";
+    	String countryDestination = "";
+    	int unitsToMove = -1;
 
-        window.clearText();
-        window.getTextDisplay(activePlayer.getName() + ", enter the country to move units from, the destination country and the number of units to move, separated by a space. \n\n"
-                + "Simply enter 'skip' to progress to the next stage");
-        window.getTextDisplay("Please, do not enter spaces between country names e.g. enter N Europe as Neurope");
-        String inputStr = window.getCommand().toLowerCase();
-        if (!inputStr.equals("skip")) {
-            String[] input = inputStr.split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
+    	window.clearText();
+    	window.getTextDisplay(activePlayer.getName() + ", enter the country to move units from, the destination country and the number of units to move, separated by a space. \n\n"
+    			+ "Simply enter 'skip' to progress to the next stage");
+    	window.getTextDisplay("Please, do not enter spaces between country names e.g. enter N Europe as Neurope");
+    	String inputStr = window.getCommand().toLowerCase();
+    	if (!inputStr.equals("skip")) {
+    		String[] input = inputStr.split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
 
-            input = e.validateCountriesAndUnitsEnteredFortify(input);
+    		input = e.validateCountriesAndUnitsEnteredFortify(input);
 
-            try {
-                countryOrigin = TextParser.parse(input[0].trim());
-                countryDestination = TextParser.parse(input[1].trim());
-                unitsToMove = Integer.parseInt(input[2].trim());
+    		if (!input[0].equals("skip")) {
+    			try {
+    				countryOrigin = TextParser.parse(input[0].trim());
+    				countryDestination = TextParser.parse(input[1].trim());
+    				unitsToMove = Integer.parseInt(input[2].trim());
 
-                if (isConnected(countryOrigin, countryDestination) == false) {
-                    throw new IllegalArgumentException("The two countries are not connected");
-                }
-            }
-            //if the textParser cannot parse the country name, if the countries are not connected or if an integer was not entered, the input will be re-taken
-            catch (IllegalArgumentException ex) {
-                input = e.validateCountriesConnected(this, false);
-                countryOrigin = TextParser.parse(input[0].trim());
-                countryDestination = TextParser.parse(input[1].trim());
-                unitsToMove = Integer.parseInt(input[2].trim());
-            }
+    				if (isConnected(countryOrigin, countryDestination) == false) {
+    					throw new IllegalArgumentException("The two countries are not connected");
+    				}
+    			}
+    			//if the textParser cannot parse the country name, if the countries are not connected or if an integer was not entered, the input will be re-taken
+    			catch (IllegalArgumentException ex) {
+    				input = e.validateCountriesConnected(this, false);
+    				countryOrigin = TextParser.parse(input[0].trim());
+    				countryDestination = TextParser.parse(input[1].trim());
+    				unitsToMove = Integer.parseInt(input[2].trim());
+    			}
 
-            int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
-            unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
+    			int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
+    			unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
 
-            activePlayer.getCountriesControlled().get(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
+    			activePlayer.getCountriesControlled().get(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
 
-            int unitsInCountryDestination = activePlayer.getCountriesControlled().get(countryDestination).getNumberOfUnits();
-            activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
-        }
+    			int unitsInCountryDestination = activePlayer.getCountriesControlled().get(countryDestination).getNumberOfUnits();
+    			activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
+    		}
+    	}
 //    	System.out.println(countryOrigin + " " +  countryDestination); 
 //    	System.out.println(isConnected(countryOrigin, countryDestination) + " to move " + unitsToMove);
         window.updateMap();
