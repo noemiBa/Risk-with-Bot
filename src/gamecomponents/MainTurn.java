@@ -106,7 +106,7 @@ public class MainTurn extends Turns {
         String countryDefending = "";
         while (!countryAttacking.equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with or enter 'skip' to progress to the next stage");
-            countryAttacking = e.validateAttackPhaseChoice(countryAttacking, activePlayer);
+            countryAttacking = e.validateCountry(countryAttacking, activePlayer);
             if (!countryAttacking.equals("skip")) {
                 countryAttacking = e.validateNumberOfUnitsAttacking(countryAttacking, activePlayer);
                 window.clearText();

@@ -165,6 +165,12 @@ public class ErrorHandler {
                     "Enter a country of " + player.getName() + "'s colour with at least 2 units");
             countryName = window.getCommand().trim();
             countryName = TextParser.parse(countryName);
+
+            while (player.getCountriesControlled().get(countryName) == null) {
+				window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country"); 
+				countryName = window.getCommand().trim();
+    			countryName = TextParser.parse(countryName);
+            }
         }
         return countryName;
     }
@@ -227,11 +233,7 @@ public class ErrorHandler {
     					+ "Enter the country to move units from, the destination country and the number of units to move, separated by a space:");
 
     			input = window.getCommand().split("\\s+"); //splits the string between spaces
-    			
-//    			if (input.equals("skip")) {
-//    				input[0] = "skip"; 
-//    				return input; 
-//    			}
+ 
     			
     			input = validateCountriesAndUnitsEnteredFortify(input); 
 
