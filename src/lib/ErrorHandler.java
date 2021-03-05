@@ -217,7 +217,7 @@ public class ErrorHandler {
 
     			input = window.getCommand().split("\\s+"); //splits the string between spaces
 
-    			validateCountriesAndUnitsEnteredFortify(input); 
+    			input = validateCountriesAndUnitsEnteredFortify(input); 
 
     			String countryOrigin = TextParser.parse(input[0].trim());
     			String countryDestination = TextParser.parse(input[1].trim());
