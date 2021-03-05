@@ -152,13 +152,19 @@ public class ErrorHandler {
         return choice;
     }
 
-    public String validateNumberOfUnitsAttacking(String countryName, Player player)
-    {
-        while(player.getCountry(countryName).getNumberOfUnits() == 1)
-        {
-            window.sendErrorMessage("Sorry, it looks like the country you tried to attack with has insufficent units." +
-            "Enter a country of " + player.getName() + "'s colour with at least 2 units");
-            countryName = validateCountry(countryName, player);
+  
+    public String validateNumberOfUnitsAttacking(String countryName, Player player) {
+        countryName = TextParser.parse(countryName);
+
+        if (player.getCountry(countryName).getNumberOfUnits() > 1) {
+            return countryName;
+        }
+
+        while (player.getCountry(countryName).getNumberOfUnits() == 1) {
+            window.sendErrorMessage("Sorry, it looks like " + countryName + " has insufficient units." +
+                    "Enter a country of " + player.getName() + "'s colour with at least 2 units");
+            countryName = window.getCommand().trim();
+            countryName = TextParser.parse(countryName);
         }
         return countryName;
     }
