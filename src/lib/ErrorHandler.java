@@ -82,25 +82,30 @@ public class ErrorHandler {
     * @param countryName: the input entered by the user
     * @return the valid countryName
     */
-    public String validateCountry(String countryName, Player player)
-    {
-        boolean isInvalidCountry = true;
-        while(isInvalidCountry)
-        {
-            countryName = window.getCommand().replaceAll("\\s+","");
-            try
-            {
-                countryName = TextParser.parse(countryName);
-                player.getCountriesControlled().get(countryName);
-                isInvalidCountry = false;
-            }
-            catch(IllegalArgumentException | NullPointerException e)
-            {
-                window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country or you typed it wrong!"
-                        + "\nEnter a country of " + player.getName() + "'s colour");
-            }
-        }
-        return countryName;
+    public String validateCountry(String countryName, Player player)  {
+    	Country country = player.getCountriesControlled().get(countryName);
+    	
+    	while (countryName.trim().isEmpty()) {
+    		try {
+    			countryName = window.getCommand().trim();
+    			countryName = TextParser.parse(countryName);
+    			country = player.getCountriesControlled().get(countryName);
+    			
+    			while (country == null) {
+    				window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country"); 
+    				countryName = window.getCommand().trim();
+        			countryName = TextParser.parse(countryName);
+        			country = player.getCountriesControlled().get(countryName);
+    			}
+    			
+    		}
+    		catch(IllegalArgumentException | NullPointerException e) {
+    			countryName = ""; 
+    			window.sendErrorMessage("Sorry, it looks like " + player.getName() + " you typed the name wrong."
+                        + "\nEnter a country of " + player.getName() + "'s colour (and mind your spelling this time)");
+    		}
+    	}
+    	return country.getName();
     }
     
     /*

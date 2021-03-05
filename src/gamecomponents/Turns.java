@@ -67,7 +67,7 @@ public class Turns {
                 break;
             case ROLL_TO_PLACE_TERRITORIES:
                 currentPlayer = whoStarts(risk.getActivePlayers());
-                allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
+                //allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
                 window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
@@ -140,7 +140,6 @@ public class Turns {
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
             
             input = e.validateCountryAndUnitsEntered(input);
-            
             try {
             	countryName = TextParser.parse(input[0].trim());
             	activePlayer.getCountriesControlled().get(countryName);
@@ -154,7 +153,6 @@ public class Turns {
             	window.clearText();
 
             } catch (IllegalArgumentException | NullPointerException e) {
-            	window.clearText();
             	window.sendErrorMessage("You entered the number or country name incorrectly");
             }
         }
