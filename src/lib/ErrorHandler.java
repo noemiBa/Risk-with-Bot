@@ -143,45 +143,38 @@ public class ErrorHandler {
      * @param player: the player who is currently attacking
      * @return the array attackChoice now containing valid choices.
      */
-    public String[] validateCountryAttacking(String[] attackChoice, Player player)
-    {
+   public String[] validateCountryAttacking(String[] attackChoice, Player player) {50-u76t7yuj 5
         boolean isValidChoice = false;
         int numberOfAttacks;
         String userInput;
-        while(!isValidChoice)
-        {
+        while (!isValidChoice) {
             userInput = window.getCommand().trim().toLowerCase();
             //allow the user to skip the turn.
-            if(userInput.equals("skip"))
-            {
+            if (userInput.equals("skip")) {
                 attackChoice[0] = "skip";
                 return attackChoice;
             }
-             try{ 
-            //split between string characters and digits.
-            attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");                      
-            //ensure that both a country name and the number of units to attack with were entered.
+            try {
+                //split between string characters and digits.
+                attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+                //ensure that both a country name and the number of units to attack with were entered.
                 attackChoice = validateCountryAndUnitsEntered(attackChoice);
                 attackChoice[0] = attackChoice[0].trim();
                 attackChoice[1] = attackChoice[1].trim();
-           
+
                 attackChoice[0] = TextParser.parse(attackChoice[0]);
                 player.getCountry(attackChoice[0]);
                 numberOfAttacks = isInteger(attackChoice[1]);
-                if(player.getCountry(attackChoice[0]).getNumberOfUnits() == 1)
+                if (player.getCountry(attackChoice[0]).getNumberOfUnits() == 1)
                     window.sendErrorMessage("Sorry, it looks like " + attackChoice[0] + " has insufficient units." +
                             " Enter a country of " + player.getName() + "'s colour with at least 2 units");
-                else if(numberOfAttacks >= player.getCountry(attackChoice[0]).getNumberOfUnits() || numberOfAttacks > 3 || numberOfAttacks < 1)
-                {
+                else if (numberOfAttacks >= player.getCountry(attackChoice[0]).getNumberOfUnits() || numberOfAttacks > 3 || numberOfAttacks < 1) {
                     window.sendErrorMessage("Sorry, you can only attack with at most " +
                             (player.getCountry(attackChoice[0]).getNumberOfUnits() - 1) + " units");
-                }
-                else
-                {
+                } else {
                     isValidChoice = true;
                 }
-            }
-           } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 window.sendErrorMessage("Sorry, it looks like what you entered isn't a country. Enter a country belonging to "
                         + player.getName() + " with at least 2 units");
             } catch (NullPointerException e) {
