@@ -137,23 +137,24 @@ public class ErrorHandler {
         String userInput;
         while(!isValidChoice)
         {
-            userInput = window.getCommand();
+            userInput = window.getCommand().trim().toLowerCase();
             if(userInput.equals("skip"))
             {
                 attackChoice[0] = "skip";
                 return attackChoice;
             }
             attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            attackChoice = validateCountryAndUnitsEntered(attackChoice);
             attackChoice[0] = attackChoice[0].trim();
             attackChoice[1] = attackChoice[1].trim();
-            attackChoice = validateCountryAndUnitsEntered(attackChoice);
+           
             try
             {
                 attackChoice[0] = TextParser.parse(attackChoice[0]);
                 player.getCountry(attackChoice[0]);
                 numberOfAttacks = isInteger(attackChoice[1]);
                 if(player.getCountry(attackChoice[0]).getNumberOfUnits() == 1)
-                    window.sendErrorMessage("Sorry, it looks like " + attackChoice + " has insufficient units." +
+                    window.sendErrorMessage("Sorry, it looks like " + attackChoice[0] + " has insufficient units." +
                             " Enter a country of " + player.getName() + "'s colour with at least 2 units");
                 else if(numberOfAttacks >= player.getCountry(attackChoice[0]).getNumberOfUnits() || numberOfAttacks > 3
                 || numberOfAttacks < 1)

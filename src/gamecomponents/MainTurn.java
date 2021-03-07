@@ -206,7 +206,7 @@ public class MainTurn extends Turns {
                     }
                 }
                 //if the textParser cannot parse the country name, if the countries are not connected or if an integer was not entered, the input will be re-taken
-                catch (IllegalArgumentException ex) {
+                catch (IllegalArgumentException | NullPointerException ex) {
                     input = e.validateCountriesConnected(this, false);
                     countryOrigin = TextParser.parse(input[0].trim());
                     countryDestination = TextParser.parse(input[1].trim());
@@ -284,9 +284,14 @@ public class MainTurn extends Turns {
      */
     public boolean controlledBySamePlayer(String countryA, String countryB) {
         boolean controlledBySamePlayer = false;
-        if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
-            controlledBySamePlayer = true;
+        try {
+	        if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
+	            controlledBySamePlayer = true;
+	        }
         }
+        catch (NullPointerException ex) {
+        	return controlledBySamePlayer = false;
+        }; 
 
         return controlledBySamePlayer;
     }
