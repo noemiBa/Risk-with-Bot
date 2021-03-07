@@ -35,22 +35,23 @@ public class MainTurn extends Turns {
 
         //mainTurn sequence
         reinforcementsAllocation(activePlayer);
-        //need to check if the game has ended after each attack
-        checkWinner(players);
         attack(activePlayer);
         fortify(activePlayer);
 
-        // other mainTurn methods go here
         window.clearText();
     }
 
-    /* reinforcements method, give troops to each passive player in their rounds
+    /* Method for the reinforcement stage of the game. It gives a minimum of three units to the user to allocate between countries controlled by them.
+     * The number of units given to the user is number of countries owned divided by 3 (ignoring the decimal part)
+     * If an user controls an entire continent, bonus units will be given. 
      *
      * @param activePlayer: to call the custom array list of countries that the player owns
      */
     public void reinforcementsAllocation(ActivePlayer activePlayer) {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
-        while (numberOfReinforcements != 0) {
+        
+        //while the user still has reinforcements to allocate...
+        while (numberOfReinforcements != 0) { 
             window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
                     + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by a space, " +
                     "then press enter");
@@ -58,14 +59,16 @@ public class MainTurn extends Turns {
             int numberToAdd = -1;
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-
+            
+            //ensure that both a country name and the number of units to be allocated to that country are entered.
             input = e.validateCountryAndUnitsEntered(input);
 
             try {
                 countryName = TextParser.parse(input[0].trim());
                 activePlayer.getCountriesControlled().get(countryName);
                 numberToAdd = Integer.parseInt(input[1]);
-
+                
+                //ensure that the number of units entered by the user to be allocate is valid
                 numberToAdd = e.validateNoUnitsReinforcement(numberToAdd, numberOfReinforcements);
                 activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
                         .get(countryName).getNumberOfUnits() + numberToAdd);
@@ -81,21 +84,23 @@ public class MainTurn extends Turns {
         }
     }
 
-    /* public helper method, return the number of troops for reinforcements
+    /* private helper method, return the number of troops for reinforcements to be given to the user. 
      *
      * @param activePlayer: to call the custom array list of countries that the player owns
      */
-    public int numberOfReinforcements(ActivePlayer activePlayer) {
-        //3 is the minimum by the rules
-        if (activePlayer.getCountriesControlled().size() < 9) return 3 + continentReinforcement(activePlayer);
-        else return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
+    private int numberOfReinforcements(ActivePlayer activePlayer) {
+        //3 is the minimum number of reinforcements according to the rules
+        if (activePlayer.getCountriesControlled().size() < 9) 
+        	return 3 + continentReinforcement(activePlayer);
+        else 
+        	return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
     }
 
     /* private helper method, return the extra troops if a player own a continent
      *
      * @param activePlayer: to call the custom array list of countries that the player owns
      */
-    public int continentReinforcement(ActivePlayer player) {
+    private int continentReinforcement(ActivePlayer player) {
         CustomArrayList<Country> countries = player.getCountriesControlled();
 
         //Use lambda to count if the continent name appear on the list as the same amount of the countries that the continent owns
@@ -108,38 +113,52 @@ public class MainTurn extends Turns {
 
         return 0;
     }
-
+    
+    /* Method for the attack stage of the game. It allows the user to attack and try to dominate an adjacent country - the user can keep attacking until he
+     * still has units to attack with. The user cannot attack with a country containing a single unit. 
+     * 
+     * @param activePlayer: the player whose turn this is. 
+     */
     public void attack(ActivePlayer activePlayer) {
-        String[] attackChoice = {"", ""};
+        //initialise the variables
+    	String[] attackChoice = {"", ""};
         String countryDefending = "";
         int numberOfAttacks, numberOfDefences;
-
+        
+        //while the user decides not to skip to the next stage...
         while (!attackChoice[0].equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with and the number of units you want to attack with " +
              "or enter 'skip' to progress " + "to the next stage");
+            
+            //ensure that the user entered a valid country to attack with and a valid number of units.
             attackChoice = e.validateCountryAttacking(attackChoice, activePlayer);
             if (!attackChoice[0].equals("skip")) {
                 numberOfAttacks = Integer.parseInt(attackChoice[1]);
                 window.clearText();
                 window.getTextDisplay(attackChoice[0] + " selected.");
+                
+                //ensure that the user has entered an adjacent country to attack 
                 countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(attackChoice[0]), countryDefending);
                 window.clearText();
-
+                
                 ArrayList<Integer> activePlayerRolls = new ArrayList<Integer>();
                 ArrayList<Integer> otherPlayerRolls = new ArrayList<Integer>();
-
+                
+                //if the country being attacked belongs to an active player, ask them how many dices to defend with.
                 numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
-
+                
+                //roll the dices for both users.
                 for (int i = 1; i <= numberOfAttacks; i++)
                     activePlayerRolls.add(activePlayer.throwDice());
 
                 for (int i = 1; i <= numberOfDefences; i++)
                     otherPlayerRolls.add(activePlayer.throwDice());
 
-                activePlayerRolls.sort(Collections.reverseOrder()); // sort in descending order
+                activePlayerRolls.sort(Collections.reverseOrder()); // sort the dice rolls in descending order
                 otherPlayerRolls.sort(Collections.reverseOrder());
                 String otherPlayerName = risk.getMap().getCountry(countryDefending).getControlledBy().getName();
-
+                
+                //compare the highest roll with the highest roll and the second highest roll with the second highest roll...
                 window.getTextDisplay(activePlayer.getName() + (activePlayerRolls.size() == 1 ? " rolled a " + activePlayerRolls.get(0) : "'s rolls were " + activePlayerRolls));
                 window.getTextDisplay(risk.getMap().getCountry(countryDefending).getControlledBy().getName() +
                         (otherPlayerRolls.size() == 1 ? " rolled a " + otherPlayerRolls.get(0) : "'s rolls were " + otherPlayerRolls));
@@ -148,6 +167,7 @@ public class MainTurn extends Turns {
                 for (int i = 0, j = 0; i < numberOfAttacks && j < numberOfDefences; i++, j++) {
                     if (activePlayerRolls.get(i) > otherPlayerRolls.get(j)) {
                         successfulAttacks++;
+                        //update the map after each successful attack
                         risk.getMap().getCountry(countryDefending).setNumberOfUnits(risk.getMap().getCountry(countryDefending).getNumberOfUnits() - 1);
                         if (risk.getMap().getCountry(countryDefending).getNumberOfUnits() == 0) {
                             risk.getMap().getCountry(countryDefending).getControlledBy().getCountriesControlled().remove
@@ -166,13 +186,14 @@ public class MainTurn extends Turns {
                 }
                 risk.getWindow().updateMap();
                 risk.getWindow().getTextDisplay
-                        (
+                        (	    //inform the users of the outcome of the attack
                                 activePlayer.getName() + " loses " + successfulDefends + (successfulDefends == 1 ? " unit" : " units") + " and " +
                                         otherPlayerName + " loses " + successfulAttacks + (successfulAttacks == 1 ? " unit" : " units")
                         );
                 if (risk.getMap().getCountry(countryDefending).getControlledBy().equals(activePlayer))
                     risk.getWindow().getTextDisplay(activePlayer.getName() + " has conquered " + risk.getMap().getCountry(countryDefending).getName());
             }
+            //check whether one of the players has won the game after each attack.
             checkWinner(risk.getActivePlayers());
         }
     }
@@ -287,7 +308,7 @@ public class MainTurn extends Turns {
         return controlledBySamePlayer;
     }
 
-    /* public helper method, that check if any of the players has 0 troops, what means the other won
+    /* Method checks if any of the players has 0 troops, what means the other won
      *
      * @param activePlayers: array of active players to get the countries controlled by
      */
