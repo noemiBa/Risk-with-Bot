@@ -70,6 +70,7 @@ public class MainTurn extends Turns {
                 activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
                         .get(countryName).getNumberOfUnits() + numberToAdd);
                 numberOfReinforcements = numberOfReinforcements - numberToAdd;
+                
                 window.updateMap();
                 window.clearText();
 
@@ -176,12 +177,13 @@ public class MainTurn extends Turns {
         }
     }
 
-    /* public helper method, allow the user to move units from one country to other
+    /* Method for the stage fortify, which allows the user to move units once from one country to another connected country. 
      *
      * @param activePlayer: to call the custom array list of countries that the player owns and change the units
      */
     public void fortify(ActivePlayer activePlayer) {
-        String countryOrigin = "";
+        //initialise the variables used.
+    	String countryOrigin = "";
         String countryDestination = "";
         int unitsToMove = -1;
 
@@ -190,6 +192,7 @@ public class MainTurn extends Turns {
                 + "Simply enter 'skip' to progress to the next stage");
         window.getTextDisplay("Please, do not enter spaces between country names e.g. enter N Europe as Neurope");
         String inputStr = window.getCommand().toLowerCase();
+        //allow the user to skip the fortify phase if they so desire
         if (!inputStr.equals("skip")) {
             String[] input = inputStr.split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
 
@@ -212,7 +215,8 @@ public class MainTurn extends Turns {
                     countryDestination = TextParser.parse(input[1].trim());
                     unitsToMove = Integer.parseInt(input[2].trim());
                 }
-
+                
+                //Now that the input has been validated, decrement the units in the origin country and increment the units in the destination country
                 int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
                 unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
 
@@ -222,13 +226,13 @@ public class MainTurn extends Turns {
                 activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
             }
         }
-//    	System.out.println(countryOrigin + " " +  countryDestination); 
-//    	System.out.println(isConnected(countryOrigin, countryDestination) + " to move " + unitsToMove);
+        
         window.updateMap();
         window.clearText();
     }
 
-    /* public helper method, that checks if the origin country is connect by the adjacents that are owned by the same player
+    /* public helper method, that checks if the origin country is connected to the destination country. Note: a country is connected to another if 
+     * there is a path of adjacent countries controlled by the same player in between them. Units cannot be moved between enemy territories.
      *
      * @param countryOrigin, countryDestination: name of the origin and destination countries
      */
@@ -236,18 +240,18 @@ public class MainTurn extends Turns {
         CustomArrayList<Country> countries = risk.getMap().getCountries();
         Queue<Country> queue = new LinkedList<Country>();
         String newOrigin = "";
-
+        //add the origin country to the queue 
         queue.add(countries.get(countryOrigin));
 
         while (queue.size() >= 1) {
-
+        	//for each element removed from the queue, check whether it is the destination country
             newOrigin = queue.remove().getName();
 
-            //for each element removed from the queue, check whether it is the destination country
             if (newOrigin.equals(countryDestination)) {
                 return true;
             }
-
+            
+            //find the countries adjacent to the new origin and, if they are controlled by the same player, add them to the queue 
             ArrayList<Integer> adjIndexes = countries.get(newOrigin).getAdjCountriesIndexes();
 
             for (Integer i : adjIndexes) {
@@ -260,29 +264,16 @@ public class MainTurn extends Turns {
                 }
             }
         }
-
+        
+        //if we reach this point, the queue is empty and the two countries are not connected.
         return false;
     }
 
-    /* public helper method, that checks if the given country is connected to the other given country
-     *
-     * @param countryA, countryB: check if they are adjacents
-     */
-    public boolean isAdjacent(String countryA, String countryB) {
-        CustomArrayList<Country> countries = risk.getMap().getCountries();
-        boolean isAdjacent = false;
-
-        if (countries.get(countryA).getAdjCountriesIndexes().contains(Country.getIndex(countryB))) {
-            isAdjacent = true;
-        }
-        return isAdjacent;
-    }
-
-    /* public helper method, that checks if the given country is controlled by the same player of the other given country
+    /* private helper method, that checks if the given countryA is controlled by the same player as countryB
      *
      * @param countryA, countryB: check if both countries given are controlled by the same player
      */
-    public boolean controlledBySamePlayer(String countryA, String countryB) {
+    private boolean controlledBySamePlayer(String countryA, String countryB) {
         boolean controlledBySamePlayer = false;
         try {
 	        if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {

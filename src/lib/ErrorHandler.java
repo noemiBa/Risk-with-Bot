@@ -174,11 +174,10 @@ public class ErrorHandler {
             }
             catch(NullPointerException e)
             {
-                window.sendErrorMessage("Sorry, it looks like " + attackChoice + " does not belong to " + player.getName()
+                window.sendErrorMessage("Sorry, it looks like " + attackChoice[0] + " does not belong to " + player.getName()
                         + ". Enter a country belonging to " + player.getName() + " with at least 2 units");
             }
         }
-        System.out.println(attackChoice[0] + " " + attackChoice[1]);
         return attackChoice;
     }
 
