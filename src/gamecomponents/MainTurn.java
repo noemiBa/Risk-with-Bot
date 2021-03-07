@@ -116,12 +116,12 @@ public class MainTurn extends Turns {
 
         while (!countryAttacking.equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with or enter 'skip' to progress to the next stage");
-            countryAttacking = e.validateCountry(countryAttacking, activePlayer);
+            //countryAttacking = e.validateControlledBy(countryAttacking, activePlayer);
             if (!countryAttacking.equals("skip")) {
-                countryAttacking = e.validateNumberOfUnitsAttacking(countryAttacking, activePlayer);
+                //countryAttacking = e.validateCountryAttacking(countryAttacking, activePlayer);
                 window.clearText();
                 window.getTextDisplay(countryAttacking + " selected.");
-                countryDefending = e.validateAttack(activePlayer, activePlayer.getCountry(countryAttacking), countryDefending);
+                //countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(countryAttacking), countryDefending);
 
                 window.clearText();
 
@@ -130,8 +130,8 @@ public class MainTurn extends Turns {
 
                 int numberOfAttacks, numberOfDefences;
 
-                numberOfAttacks = e.validateDicesAttack(activePlayer, countryAttacking);
-                numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
+                //numberOfAttacks = e.validateDicesAttack(activePlayer, countryAttacking);
+                //numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
 
                 for (int i = 1; i <= numberOfAttacks; i++)
                     activePlayerRolls.add(activePlayer.throwDice());

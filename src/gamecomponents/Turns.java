@@ -169,7 +169,7 @@ public class Turns {
             window.getTextDisplay("To allocate troops for " + p.getName() +
                     " who's colour is " + getColorName(p) + " please enter their country name: ");
             String countryName = "";
-            countryName = e.validateCountry(countryName, p);
+            countryName = e.validateControlledBy(countryName, p);
             p.getCountriesControlled().get(countryName).setNumberOfUnits(p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
             window.updateMap();
         }

@@ -25,8 +25,11 @@ public class CustomArrayList<E> extends ArrayList<E>
 
     public E get(String identifier)
     {
-        return keySets.get(identifier);
+        E e = keySets.get(identifier);
+        if(e == null)
+        {
+            throw new NullPointerException();
+        }
+        return e;
     }
-    
-    
 }
