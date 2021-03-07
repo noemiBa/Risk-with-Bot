@@ -161,7 +161,10 @@ public class ErrorHandler {
                     window.sendErrorMessage("Sorry, you can only attack with at most " +
                             (player.getCountry(attackChoice[0]).getNumberOfUnits() - 1) + " units");
                 }
-                isValidChoice = true;
+                else
+                {
+                    isValidChoice = true;
+                }
             }
             catch(IllegalArgumentException e)
             {
