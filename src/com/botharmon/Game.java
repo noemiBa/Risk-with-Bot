@@ -1,21 +1,13 @@
 
 package com.botharmon;
 
-import player.*;
-import ui.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.awt.Color;
-import java.util.ArrayList;
-
-import org.junit.jupiter.api.Test;
-
-import gamecomponents.Country;
 import gamecomponents.Deck;
-import gamecomponents.Dice;
 import gamecomponents.Turns;
+import player.ActivePlayer;
+import player.PassivePlayer;
+import player.Player;
+import ui.Map;
+import ui.Window;
 
 /*
  * @Author: BotHarmon (Jess Dempsey, Rebeca Buarque, Noemi Banal)
@@ -28,10 +20,11 @@ public class Game
     private Deck deck;
     private Window window;
     private Turns turns;
+    private static Game risk;
 
     public static void main(String[] args)
     {
-        Game risk = new Game();
+        risk = new Game();
         risk.map = new Map();
         risk.activePlayers = ActivePlayer.initialiseActivePlayers();
         risk.passivePlayers = PassivePlayer.initialisePassivePlayers();

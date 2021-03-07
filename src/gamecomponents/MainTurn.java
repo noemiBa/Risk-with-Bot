@@ -44,6 +44,10 @@ public class MainTurn extends Turns {
         window.clearText();
     }
 
+    /* reinforcements method, give troops to each passive player in their rounds
+     *
+     * @param activePlayer: to call the custom array list of countries that the player owns
+     */
     public void reinforcementsAllocation(ActivePlayer activePlayer) {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
         while (numberOfReinforcements != 0) {
@@ -76,7 +80,10 @@ public class MainTurn extends Turns {
         }
     }
 
-
+    /* public helper method, return the number of troops for reinforcements
+     *
+     * @param activePlayer: to call the custom array list of countries that the player owns
+     */
     public int numberOfReinforcements(ActivePlayer activePlayer) {
         //3 is the minimum by the rules
         if (activePlayer.getCountriesControlled().size() < 9) return 3 + continentReinforcement(activePlayer);
@@ -104,6 +111,9 @@ public class MainTurn extends Turns {
     public void attack(ActivePlayer activePlayer) {
         String countryAttacking = "";
         String countryDefending = "";
+        int numberOfDicesAttack = 0;
+        int numberOfDicesDefence = 0;
+
         while (!countryAttacking.equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with or enter 'skip' to progress to the next stage");
             countryAttacking = e.validateCountry(countryAttacking, activePlayer);
@@ -112,20 +122,16 @@ public class MainTurn extends Turns {
                 window.clearText();
                 window.getTextDisplay(countryAttacking + " selected.");
                 countryDefending = e.validateAttack(activePlayer, activePlayer.getCountry(countryAttacking), countryDefending);
+
                 window.clearText();
 
                 ArrayList<Integer> activePlayerRolls = new ArrayList<Integer>();
                 ArrayList<Integer> otherPlayerRolls = new ArrayList<Integer>();
 
                 int numberOfAttacks, numberOfDefences;
-                if (activePlayer.getCountry(countryAttacking).getNumberOfUnits() >= 4)
-                    numberOfAttacks = 3;
-                else
-                    numberOfAttacks = activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1;
-                if (risk.getMap().getCountry(countryDefending).getNumberOfUnits() >= 2)
-                    numberOfDefences = 2;
-                else
-                    numberOfDefences = 1;
+
+                numberOfAttacks = e.validateDicesAttack(activePlayer, countryAttacking);
+                numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
 
                 for (int i = 1; i <= numberOfAttacks; i++)
                     activePlayerRolls.add(activePlayer.throwDice());
@@ -175,54 +181,62 @@ public class MainTurn extends Turns {
         }
     }
 
+    /* public helper method, allow the user to move units from one country to other
+     *
+     * @param activePlayer: to call the custom array list of countries that the player owns and change the units
+     */
     public void fortify(ActivePlayer activePlayer) {
-    	String countryOrigin = "";
-    	String countryDestination = "";
-    	int unitsToMove = -1;
+        String countryOrigin = "";
+        String countryDestination = "";
+        int unitsToMove = -1;
 
-    	window.clearText();
-    	window.getTextDisplay(activePlayer.getName() + ", enter the country to move units from, the destination country and the number of units to move, separated by a space. \n\n"
-    			+ "Simply enter 'skip' to progress to the next stage");
-    	window.getTextDisplay("Please, do not enter spaces between country names e.g. enter N Europe as Neurope");
-    	String inputStr = window.getCommand().toLowerCase();
-    	if (!inputStr.equals("skip")) {
-    		String[] input = inputStr.split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
+        window.clearText();
+        window.getTextDisplay(activePlayer.getName() + ", enter the country to move units from, the destination country and the number of units to move, separated by a space. \n\n"
+                + "Simply enter 'skip' to progress to the next stage");
+        window.getTextDisplay("Please, do not enter spaces between country names e.g. enter N Europe as Neurope");
+        String inputStr = window.getCommand().toLowerCase();
+        if (!inputStr.equals("skip")) {
+            String[] input = inputStr.split("\"(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)\"|\\s+"); //splits the string between spaces
 
-    		input = e.validateCountriesAndUnitsEnteredFortify(input);
+            input = e.validateCountriesAndUnitsEnteredFortify(input);
 
-    		if (!input[0].equals("skip")) {
-    			try {
-    				countryOrigin = TextParser.parse(input[0].trim());
-    				countryDestination = TextParser.parse(input[1].trim());
-    				unitsToMove = Integer.parseInt(input[2].trim());
+            if (!input[0].equals("skip")) {
+                try {
+                    countryOrigin = TextParser.parse(input[0].trim());
+                    countryDestination = TextParser.parse(input[1].trim());
+                    unitsToMove = Integer.parseInt(input[2].trim());
 
-    				if (isConnected(countryOrigin, countryDestination) == false) {
-    					throw new IllegalArgumentException("The two countries are not connected");
-    				}
-    			}
-    			//if the textParser cannot parse the country name, if the countries are not connected or if an integer was not entered, the input will be re-taken
-    			catch (IllegalArgumentException ex) {
-    				input = e.validateCountriesConnected(this, false);
-    				countryOrigin = TextParser.parse(input[0].trim());
-    				countryDestination = TextParser.parse(input[1].trim());
-    				unitsToMove = Integer.parseInt(input[2].trim());
-    			}
+                    if (isConnected(countryOrigin, countryDestination) == false) {
+                        throw new IllegalArgumentException("The two countries are not connected");
+                    }
+                }
+                //if the textParser cannot parse the country name, if the countries are not connected or if an integer was not entered, the input will be re-taken
+                catch (IllegalArgumentException ex) {
+                    input = e.validateCountriesConnected(this, false);
+                    countryOrigin = TextParser.parse(input[0].trim());
+                    countryDestination = TextParser.parse(input[1].trim());
+                    unitsToMove = Integer.parseInt(input[2].trim());
+                }
 
-    			int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
-    			unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
+                int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
+                unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
 
-    			activePlayer.getCountriesControlled().get(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
+                activePlayer.getCountriesControlled().get(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
 
-    			int unitsInCountryDestination = activePlayer.getCountriesControlled().get(countryDestination).getNumberOfUnits();
-    			activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
-    		}
-    	}
+                int unitsInCountryDestination = activePlayer.getCountriesControlled().get(countryDestination).getNumberOfUnits();
+                activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
+            }
+        }
 //    	System.out.println(countryOrigin + " " +  countryDestination); 
 //    	System.out.println(isConnected(countryOrigin, countryDestination) + " to move " + unitsToMove);
         window.updateMap();
         window.clearText();
     }
 
+    /* public helper method, that checks if the origin country is connect by the adjacents that are owned by the same player
+     *
+     * @param countryOrigin, countryDestination: name of the origin and destination countries
+     */
     public boolean isConnected(String countryOrigin, String countryDestination) {
         CustomArrayList<Country> countries = risk.getMap().getCountries();
         Queue<Country> queue = new LinkedList<Country>();
@@ -255,6 +269,10 @@ public class MainTurn extends Turns {
         return false;
     }
 
+    /* public helper method, that checks if the given country is connected to the other given country
+     *
+     * @param countryA, countryB: check if they are adjacents
+     */
     public boolean isAdjacent(String countryA, String countryB) {
         CustomArrayList<Country> countries = risk.getMap().getCountries();
         boolean isAdjacent = false;
@@ -265,6 +283,10 @@ public class MainTurn extends Turns {
         return isAdjacent;
     }
 
+    /* public helper method, that checks if the given country is controlled by the same player of the other given country
+     *
+     * @param countryA, countryB: check if both countries given are controlled by the same player
+     */
     public boolean controlledBySamePlayer(String countryA, String countryB) {
         boolean controlledBySamePlayer = false;
         if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
@@ -274,7 +296,10 @@ public class MainTurn extends Turns {
         return controlledBySamePlayer;
     }
 
-    // checkWinner can be called after each active player attack, this is the only time, the number of countries each player controls will change
+    /* public helper method, that check if any of the players has 0 troops, what means the other won
+     *
+     * @param activePlayers: array of active players to get the countries controlled by
+     */
     public void checkWinner(ActivePlayer[] activePlayers) {
         for (int i = 0; i < activePlayers.length; i++) {
             if (activePlayers[i].getCountriesControlled().size() == 0) {
