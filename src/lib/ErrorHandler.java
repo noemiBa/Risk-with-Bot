@@ -84,26 +84,26 @@ public class ErrorHandler {
      * @param countryName: the input entered by the user
      * @return the valid countryName
      */
-    public String validateControlledBy(String countryName, Player player) {
-        Country country = player.getCountriesControlled().get(countryName);
-
-        while (countryName.trim().isEmpty()) {
-            try {
-                countryName = window.getCommand().trim();
+    public String validateControlledBy(String countryName, Player player)
+    {
+        boolean isValidChoice = false;
+        while (!isValidChoice)
+        {
+            try
+            {
+                countryName = window.getCommand().replaceAll("\\s+","");
                 countryName = TextParser.parse(countryName);
-                country = player.getCountriesControlled().get(countryName);
-
-                while (country == null) {
-                    window.sendErrorMessage("Sorry, it looks like " + player.getName() + " doesn't own this country");
-                    countryName = window.getCommand().trim();
-                    countryName = TextParser.parse(countryName);
-                    country = player.getCountriesControlled().get(countryName);
-                }
-
-            } catch (IllegalArgumentException | NullPointerException e) {
-                countryName = "";
-                window.sendErrorMessage("Sorry, it looks like " + player.getName() + " you typed the name wrong."
-                        + "\nEnter a country of " + player.getName() + "'s colour (and mind your spelling this time)");
+                player.getCountry(countryName);
+                isValidChoice = true;
+            }
+            catch(IllegalArgumentException e)
+            {
+                window.sendErrorMessage("Sorry, it looks like you typed " + player.getName() + "'s country incorrectly " +
+                        "Try typing it again.");
+            }
+            catch(NullPointerException e)
+            {
+                window.sendErrorMessage("Sorry " + player.getName() + " does not own this country. Try typing a country belonging to " + player.getName());
             }
         }
         return countryName;
@@ -130,23 +130,38 @@ public class ErrorHandler {
     /*
      ***** ATTACK STAGE - ERROR HANDLING
      * */
-    public String validateCountryAttacking(String countryName, Player player)
+    public String[] validateCountryAttacking(String[] attackChoice, Player player)
     {
         boolean isValidChoice = false;
+        int numberOfAttacks;
+        String userInput;
         while(!isValidChoice)
         {
-            countryName = window.getCommand().replaceAll("\\s+","");
-            if(countryName.equals("skip"))
-                return countryName;
+            userInput = window.getCommand();
+            if(userInput.equals("skip"))
+            {
+                attackChoice[0] = "skip";
+                return attackChoice;
+            }
+            attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            attackChoice[0] = attackChoice[0].trim();
+            attackChoice[1] = attackChoice[1].trim();
+            attackChoice = validateCountryAndUnitsEntered(attackChoice);
             try
             {
-                countryName = TextParser.parse(countryName);
-                player.getCountry(countryName);
-                if(player.getCountry(countryName).getNumberOfUnits() == 1)
-                    window.sendErrorMessage("Sorry, it looks like " + countryName + " has insufficient units." +
+                attackChoice[0] = TextParser.parse(attackChoice[0]);
+                player.getCountry(attackChoice[0]);
+                numberOfAttacks = isInteger(attackChoice[1]);
+                if(player.getCountry(attackChoice[0]).getNumberOfUnits() == 1)
+                    window.sendErrorMessage("Sorry, it looks like " + attackChoice + " has insufficient units." +
                             " Enter a country of " + player.getName() + "'s colour with at least 2 units");
-                else
-                    isValidChoice = true;
+                else if(numberOfAttacks >= player.getCountry(attackChoice[0]).getNumberOfUnits() || numberOfAttacks > 3
+                || numberOfAttacks < 1)
+                {
+                    window.sendErrorMessage("Sorry, you can only attack with at most " +
+                            (player.getCountry(attackChoice[0]).getNumberOfUnits() - 1) + " units");
+                }
+                isValidChoice = true;
             }
             catch(IllegalArgumentException e)
             {
@@ -155,11 +170,12 @@ public class ErrorHandler {
             }
             catch(NullPointerException e)
             {
-                window.sendErrorMessage("Sorry, it looks like " + countryName + " does not belong to " + player.getName()
+                window.sendErrorMessage("Sorry, it looks like " + attackChoice + " does not belong to " + player.getName()
                         + ". Enter a country belonging to " + player.getName() + " with at least 2 units");
             }
         }
-        return countryName;
+        System.out.println(attackChoice[0] + " " + attackChoice[1]);
+        return attackChoice;
     }
 
     public String validateAttackChoice(ActivePlayer activePlayer, Country countryAttacking, String countryDefending)
@@ -194,10 +210,6 @@ public class ErrorHandler {
         return countryDefending;
     }
 
-    /*
-     ******* FORTIFY STAGE - ERROR HANDLING
-     * */
-
     public int validateDicesDefend(Player player, String countryDefending) {
         int numberOfUnit = player.getCountriesControlled().get(countryDefending).getNumberOfUnits();
         int diceDefend = 0;
@@ -210,9 +222,9 @@ public class ErrorHandler {
         } else {
             window.getTextDisplay("You have " + numberOfUnit + " the number of dices to defend with: ");
             if (numberOfUnit >= 2) {
-                window.getTextDisplay("You can defend with 1 or 2 dices, please enter the number you want to deffend: ");
+                window.getTextDisplay("You can defend with 1 or 2 dices, please enter the number you want to defend with: ");
                 diceDefend = isInteger(window.getCommand());
-                while (diceDefend != 1 || diceDefend != 2) {
+                while (diceDefend != 1 && diceDefend != 2) {
                     diceDefend = isInteger(window.getCommand());
                 }
                 return diceDefend;
@@ -222,27 +234,9 @@ public class ErrorHandler {
         }
     }
 
-    public int validateDicesAttack(ActivePlayer activePlayer, String countryAttacking){
-        int numberOfUnit = activePlayer.getCountriesControlled().get(countryAttacking).getNumberOfUnits();
-        int diceAttack = 0;
-        if (numberOfUnit == 2){
-            return 1;
-        } else if (numberOfUnit == 3){
-            window.getTextDisplay("You can defend with 1 or 2 dices, please enter the number you want to defend: ");
-            diceAttack = isInteger(window.getCommand());
-            while (diceAttack != 1 || diceAttack != 2) {
-                diceAttack = isInteger(window.getCommand());
-            }
-            return diceAttack;
-        } else {
-            window.getTextDisplay("You can defend with 1 or 2 dices, please enter the number you want to defend: ");
-            diceAttack = isInteger(window.getCommand());
-            while (diceAttack != 1 || diceAttack != 2 || diceAttack != 3) {
-                diceAttack = isInteger(window.getCommand());
-            }
-            return diceAttack;
-        }
-    }
+    /*
+     ******* FORTIFY STAGE - ERROR HANDLING
+     * */
 
     public String[] validateCountriesAndUnitsEnteredFortify(String[] input) {
         while (input.length != 3) {

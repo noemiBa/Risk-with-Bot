@@ -109,29 +109,25 @@ public class MainTurn extends Turns {
     }
 
     public void attack(ActivePlayer activePlayer) {
-        String countryAttacking = "";
+        String[] attackChoice = {"", ""};
         String countryDefending = "";
-        int numberOfDicesAttack = 0;
-        int numberOfDicesDefence = 0;
+        int numberOfAttacks, numberOfDefences;
 
-        while (!countryAttacking.equals("skip")) {
-            window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with or enter 'skip' to progress to the next stage");
-            //countryAttacking = e.validateControlledBy(countryAttacking, activePlayer);
-            if (!countryAttacking.equals("skip")) {
-                //countryAttacking = e.validateCountryAttacking(countryAttacking, activePlayer);
+        while (!attackChoice[0].equals("skip")) {
+            window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with and the number of units you want to attack with " +
+             "or enter 'skip' to progress " + "to the next stage");
+            attackChoice = e.validateCountryAttacking(attackChoice, activePlayer);
+            if (!attackChoice[0].equals("skip")) {
+                numberOfAttacks = Integer.parseInt(attackChoice[1]);
                 window.clearText();
-                window.getTextDisplay(countryAttacking + " selected.");
-                //countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(countryAttacking), countryDefending);
-
+                window.getTextDisplay(attackChoice[0] + " selected.");
+                countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(attackChoice[0]), countryDefending);
                 window.clearText();
 
                 ArrayList<Integer> activePlayerRolls = new ArrayList<Integer>();
                 ArrayList<Integer> otherPlayerRolls = new ArrayList<Integer>();
 
-                int numberOfAttacks, numberOfDefences;
-
-                //numberOfAttacks = e.validateDicesAttack(activePlayer, countryAttacking);
-                //numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
+                numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
 
                 for (int i = 1; i <= numberOfAttacks; i++)
                     activePlayerRolls.add(activePlayer.throwDice());
@@ -158,15 +154,14 @@ public class MainTurn extends Turns {
                             activePlayer.getCountriesControlled().add(risk.getMap().getCountry
                                     (countryDefending).getName(), risk.getMap().getCountry(countryDefending));
                             risk.getMap().getCountry(countryDefending).setControlledBy(activePlayer);
-                            activePlayer.getCountry(countryDefending).setNumberOfUnits(activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1);
-                            activePlayer.getCountry(countryAttacking).setNumberOfUnits(1);
+                            activePlayer.getCountry(countryDefending).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - 1);
+                            activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(1);
                             break;
                         }
                     } else {
                         successfulDefends++;
-                        activePlayer.getCountry(countryAttacking).setNumberOfUnits(activePlayer.getCountry(countryAttacking).getNumberOfUnits() - 1);
+                        activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - 1);
                     }
-
                 }
                 risk.getWindow().updateMap();
                 risk.getWindow().getTextDisplay
