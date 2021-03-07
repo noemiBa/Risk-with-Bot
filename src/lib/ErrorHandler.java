@@ -157,15 +157,14 @@ public class ErrorHandler {
                 attackChoice[0] = "skip";
                 return attackChoice;
             }
+             try{ 
             //split between string characters and digits.
-            attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            attackChoice = userInput.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");                      
             //ensure that both a country name and the number of units to attack with were entered.
-            attackChoice = validateCountryAndUnitsEntered(attackChoice);
-            attackChoice[0] = attackChoice[0].trim();
-            attackChoice[1] = attackChoice[1].trim();
+                attackChoice = validateCountryAndUnitsEntered(attackChoice);
+                attackChoice[0] = attackChoice[0].trim();
+                attackChoice[1] = attackChoice[1].trim();
            
-            try
-            {
                 attackChoice[0] = TextParser.parse(attackChoice[0]);
                 player.getCountry(attackChoice[0]);
                 numberOfAttacks = isInteger(attackChoice[1]);
@@ -182,15 +181,14 @@ public class ErrorHandler {
                     isValidChoice = true;
                 }
             }
-            catch(IllegalArgumentException e)
-            {
+           } catch (IllegalArgumentException e) {
                 window.sendErrorMessage("Sorry, it looks like what you entered isn't a country. Enter a country belonging to "
                         + player.getName() + " with at least 2 units");
-            }
-            catch(NullPointerException e)
-            {
-                window.sendErrorMessage("Sorry, it looks like " + attackChoice[0] + " does not belong to " + player.getName()
+            } catch (NullPointerException e) {
+                window.sendErrorMessage("Sorry, it looks like " + TextParser.parse(attackChoice[0]) + " does not belong to " + player.getName()
                         + ". Enter a country belonging to " + player.getName() + " with at least 2 units");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                window.sendErrorMessage("Sorry, you need to enter a country and the number of dices");
             }
         }
         return attackChoice;
