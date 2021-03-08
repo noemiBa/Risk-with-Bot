@@ -17,6 +17,8 @@ import lib.TextParser;
 import player.ActivePlayer;
 import ui.Window;
 
+import javax.swing.*;
+
 public class MainTurn extends Turns {
     private Game risk;
     private Window window;
@@ -36,20 +38,20 @@ public class MainTurn extends Turns {
         //mainTurn sequence
         reinforcementsAllocation(activePlayer);
         attack(activePlayer);
-        if(risk.getTurns().getGameStage() != stage.END)
+        if (risk.getTurns().getGameStage() != stage.END)
             fortify(activePlayer);
         window.clearText();
     }
 
     /* Method for the reinforcement stage of the game. It gives a minimum of three units to the user to allocate between countries controlled by them.
      * The number of units given to the user is number of countries owned divided by 3 (ignoring the decimal part)
-     * If an user controls an entire continent, bonus units will be given. 
+     * If an user controls an entire continent, bonus units will be given.
      *
      * @param activePlayer: to call the custom array list of countries that the player owns
      */
     public void reinforcementsAllocation(ActivePlayer activePlayer) {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
-        
+
         //while the user still has reinforcements to allocate...
         while (numberOfReinforcements != 0 && risk.getTurns().getGameStage() != stage.END) {
             window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
@@ -59,7 +61,7 @@ public class MainTurn extends Turns {
             int numberToAdd = -1;
 
             String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-            
+
             //ensure that both a country name and the number of units to be allocated to that country are entered.
             input = e.validateCountryAndUnitsEntered(input);
 
@@ -67,13 +69,13 @@ public class MainTurn extends Turns {
                 countryName = TextParser.parse(input[0].trim());
                 activePlayer.getCountriesControlled().get(countryName);
                 numberToAdd = Integer.parseInt(input[1]);
-                
+
                 //ensure that the number of units entered by the user to be allocate is valid
                 numberToAdd = e.validateNoUnitsReinforcement(numberToAdd, numberOfReinforcements);
                 activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
                         .get(countryName).getNumberOfUnits() + numberToAdd);
                 numberOfReinforcements = numberOfReinforcements - numberToAdd;
-                
+
                 window.updateMap();
                 window.clearText();
 
@@ -84,16 +86,16 @@ public class MainTurn extends Turns {
         }
     }
 
-    /* private helper method, return the number of troops for reinforcements to be given to the user. 
+    /* private helper method, return the number of troops for reinforcements to be given to the user.
      *
      * @param activePlayer: to call the custom array list of countries that the player owns
      */
     private int numberOfReinforcements(ActivePlayer activePlayer) {
         //3 is the minimum number of reinforcements according to the rules
-        if (activePlayer.getCountriesControlled().size() < 9) 
-        	return 3 + continentReinforcement(activePlayer);
-        else 
-        	return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
+        if (activePlayer.getCountriesControlled().size() < 9)
+            return 3 + continentReinforcement(activePlayer);
+        else
+            return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
     }
 
     /* private helper method, return the extra troops if a player own a continent
@@ -113,40 +115,40 @@ public class MainTurn extends Turns {
 
         return 0;
     }
-    
+
     /* Method for the attack stage of the game. It allows the user to attack and try to dominate an adjacent country - the user can keep attacking until he
-     * still has units to attack with. The user cannot attack with a country containing a single unit. 
-     * 
-     * @param activePlayer: the player whose turn this is. 
+     * still has units to attack with. The user cannot attack with a country containing a single unit.
+     *
+     * @param activePlayer: the player whose turn this is.
      */
     public void attack(ActivePlayer activePlayer) {
         //initialise the variables
-    	String[] attackChoice = {"", ""};
+        String[] attackChoice = {"", ""};
         String countryDefending = "";
         int numberOfAttacks, numberOfDefences;
-        
+
         //while the user decides not to skip to the next stage...
         while (!attackChoice[0].equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with followed by a space and the number of units you wish to attack " +
-             "with or enter 'skip' to progress " + "to the next phase of your turn");
-            
+                    "with or enter 'skip' to progress " + "to the next phase of your turn");
+
             //ensure that the user entered a valid country to attack with and a valid number of units.
             attackChoice = e.validateCountryAttacking(attackChoice, activePlayer);
             if (!attackChoice[0].equals("skip")) {
                 numberOfAttacks = Integer.parseInt(attackChoice[1]);
                 window.clearText();
                 window.getTextDisplay(attackChoice[0] + " selected.");
-                
+
                 //ensure that the user has entered an adjacent country to attack 
                 countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(attackChoice[0]), countryDefending);
                 window.clearText();
-                
+
                 ArrayList<Integer> activePlayerRolls = new ArrayList<Integer>();
                 ArrayList<Integer> otherPlayerRolls = new ArrayList<Integer>();
-                
+
                 //if the country being attacked belongs to an active player, ask them how many dices to defend with.
                 numberOfDefences = e.validateDicesDefend(risk.getMap().getCountries().get(countryDefending).getControlledBy(), countryDefending);
-                
+
                 //roll the dices for both users.
                 for (int i = 1; i <= numberOfAttacks; i++)
                     activePlayerRolls.add(activePlayer.throwDice());
@@ -157,7 +159,7 @@ public class MainTurn extends Turns {
                 activePlayerRolls.sort(Collections.reverseOrder()); // sort the dice rolls in descending order
                 otherPlayerRolls.sort(Collections.reverseOrder());
                 String otherPlayerName = risk.getMap().getCountry(countryDefending).getControlledBy().getName();
-                
+
                 //compare the highest roll with the highest roll and the second highest roll with the second highest roll...
                 window.getTextDisplay(activePlayer.getName() + (activePlayerRolls.size() == 1 ? " rolled a " + activePlayerRolls.get(0) : "'s rolls were " + activePlayerRolls));
                 window.getTextDisplay(risk.getMap().getCountry(countryDefending).getControlledBy().getName() +
@@ -186,7 +188,7 @@ public class MainTurn extends Turns {
                 }
                 risk.getWindow().updateMap();
                 risk.getWindow().getTextDisplay
-                        (	    //inform the users of the outcome of the attack
+                        (        //inform the users of the outcome of the attack
                                 activePlayer.getName() + " loses " + successfulDefends + (successfulDefends == 1 ? " unit" : " units") + " and " +
                                         otherPlayerName + " loses " + successfulAttacks + (successfulAttacks == 1 ? " unit" : " units")
                         );
@@ -198,13 +200,13 @@ public class MainTurn extends Turns {
         }
     }
 
-    /* Method for the stage fortify, which allows the user to move units once from one country to another connected country. 
+    /* Method for the stage fortify, which allows the user to move units once from one country to another connected country.
      *
      * @param activePlayer: to call the custom array list of countries that the player owns and change the units
      */
     public void fortify(ActivePlayer activePlayer) {
         //initialise the variables used.
-    	String countryOrigin = "";
+        String countryOrigin = "";
         String countryDestination = "";
         int unitsToMove = -1;
 
@@ -236,7 +238,7 @@ public class MainTurn extends Turns {
                     countryDestination = TextParser.parse(input[1].trim());
                     unitsToMove = Integer.parseInt(input[2].trim());
                 }
-                
+
                 //Now that the input has been validated, decrement the units in the origin country and increment the units in the destination country
                 int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
                 unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
@@ -247,12 +249,12 @@ public class MainTurn extends Turns {
                 activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
             }
         }
-        
+
         window.updateMap();
         window.clearText();
     }
 
-    /* public helper method, that checks if the origin country is connected to the destination country. Note: a country is connected to another if 
+    /* public helper method, that checks if the origin country is connected to the destination country. Note: a country is connected to another if
      * there is a path of adjacent countries controlled by the same player in between them. Units cannot be moved between enemy territories.
      *
      * @param countryOrigin, countryDestination: name of the origin and destination countries
@@ -265,13 +267,13 @@ public class MainTurn extends Turns {
         queue.add(countries.get(countryOrigin));
 
         while (queue.size() >= 1) {
-        	//for each element removed from the queue, check whether it is the destination country
+            //for each element removed from the queue, check whether it is the destination country
             newOrigin = queue.remove().getName();
 
             if (newOrigin.equals(countryDestination)) {
                 return true;
             }
-            
+
             //find the countries adjacent to the new origin and, if they are controlled by the same player, add them to the queue 
             ArrayList<Integer> adjIndexes = countries.get(newOrigin).getAdjCountriesIndexes();
 
@@ -285,7 +287,7 @@ public class MainTurn extends Turns {
                 }
             }
         }
-        
+
         //if we reach this point, the queue is empty and the two countries are not connected.
         return false;
     }
@@ -297,13 +299,13 @@ public class MainTurn extends Turns {
     private boolean controlledBySamePlayer(String countryA, String countryB) {
         boolean controlledBySamePlayer = false;
         try {
-	        if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
-	            controlledBySamePlayer = true;
-	        }
+            if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
+                controlledBySamePlayer = true;
+            }
+        } catch (NullPointerException ex) {
+            return controlledBySamePlayer = false;
         }
-        catch (NullPointerException ex) {
-        	return controlledBySamePlayer = false;
-        }; 
+        ;
 
         return controlledBySamePlayer;
     }
@@ -315,17 +317,37 @@ public class MainTurn extends Turns {
     public void checkWinner(ActivePlayer[] activePlayers) {
         for (int i = 0; i < activePlayers.length; i++) {
             if (activePlayers[i].getCountriesControlled().size() == 0) {
-                if (i == 0) window.getTextDisplay("Congratulations " + activePlayers[1].getName() + " you are the winner of this game!");
-                else window.getTextDisplay("Congratulations " + activePlayers[0].getName() + " you are the winner of this game!");
+                risk.getTurns().setGameStage(stage.END);
+                if (i == 0) {
+                    int input = JOptionPane.showOptionDialog(null, "Congratulations " + activePlayers[1].getName() + " you are the winner!\nHit OK for you reward or CANCEL to exit the game!", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                    if (input == JOptionPane.OK_OPTION) {
+                        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            try {
+                                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=KXw8CRapg7k&ab_channel=QueenVEVO"));
+                            } catch (IOException | URISyntaxException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                    }
+                    if (input == JOptionPane.OK_CANCEL_OPTION) {
+                        System.exit(0);
+                    }
+                } else {
+                    int input = JOptionPane.showOptionDialog(null, "Congratulations " + activePlayers[0].getName() + " you are the winner!\nHit OK for your reward or CANCEL to exit the game!", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 
-                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                    try {
-                        Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=KXw8CRapg7k&ab_channel=QueenVEVO"));
-                    } catch (IOException | URISyntaxException ioException) {
-                        ioException.printStackTrace();
+                    if (input == JOptionPane.OK_OPTION) {
+                        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            try {
+                                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=KXw8CRapg7k&ab_channel=QueenVEVO"));
+                            } catch (IOException | URISyntaxException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                    }
+                    if (input == JOptionPane.OK_CANCEL_OPTION) {
+                        System.exit(0);
                     }
                 }
-                risk.getTurns().setGameStage(stage.END);
             }
         }
     }
