@@ -248,6 +248,7 @@ public class ErrorHandler {
                 window.getTextDisplay("You can defend with 1 or 2 dice, please enter the number you want to defend with: ");
                 diceDefend = isInteger(window.getCommand());
                 while (diceDefend != 1 && diceDefend != 2) {
+                	window.sendErrorMessage("That does not sound right. You can defend with one or two dices. Enter an integer: ");
                     diceDefend = isInteger(window.getCommand());
                 }
                 return diceDefend;

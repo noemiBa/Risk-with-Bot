@@ -46,7 +46,6 @@ public class Turns {
 
     // Game ends when gameStage is set to stage.END
     public void nextTurns(Game risk) {
-        int currentPlayer = 0;
         while (gameStage != stage.END) {
             makeTurns(risk);
             // for testing purposes
