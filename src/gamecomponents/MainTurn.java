@@ -36,8 +36,8 @@ public class MainTurn extends Turns {
         //mainTurn sequence
         reinforcementsAllocation(activePlayer);
         attack(activePlayer);
-        fortify(activePlayer);
-
+        if(risk.getTurns().getGameStage() != stage.END)
+            fortify(activePlayer);
         window.clearText();
     }
 
@@ -51,7 +51,7 @@ public class MainTurn extends Turns {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
         
         //while the user still has reinforcements to allocate...
-        while (numberOfReinforcements != 0) { 
+        while (numberOfReinforcements != 0 && risk.getTurns().getGameStage() != stage.END) {
             window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
                     + "to place. Please enter a country name belonging to you or a shortened version and the number of troops you want to allocate separated by a space, " +
                     "then press enter");
@@ -127,8 +127,8 @@ public class MainTurn extends Turns {
         
         //while the user decides not to skip to the next stage...
         while (!attackChoice[0].equals("skip")) {
-            window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with and the number of units you want to attack with " +
-             "or enter 'skip' to progress " + "to the next stage");
+            window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with followed by a space and the number of units you wish to attack " +
+             "with or enter 'skip' to progress " + "to the next phase of your turn");
             
             //ensure that the user entered a valid country to attack with and a valid number of units.
             attackChoice = e.validateCountryAttacking(attackChoice, activePlayer);
@@ -175,8 +175,8 @@ public class MainTurn extends Turns {
                             activePlayer.getCountriesControlled().add(risk.getMap().getCountry
                                     (countryDefending).getName(), risk.getMap().getCountry(countryDefending));
                             risk.getMap().getCountry(countryDefending).setControlledBy(activePlayer);
-                            activePlayer.getCountry(countryDefending).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - 1);
-                            activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(1);
+                            activePlayer.getCountry(countryDefending).setNumberOfUnits(numberOfAttacks);
+                            activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - numberOfAttacks);
                             break;
                         }
                     } else {
@@ -193,7 +193,7 @@ public class MainTurn extends Turns {
                 if (risk.getMap().getCountry(countryDefending).getControlledBy().equals(activePlayer))
                     risk.getWindow().getTextDisplay(activePlayer.getName() + " has conquered " + risk.getMap().getCountry(countryDefending).getName());
             }
-            //check whether one of the players has won the game after each attack.
+            // check whether one of the players has won the game after each attack.
             checkWinner(risk.getActivePlayers());
         }
     }
@@ -325,7 +325,7 @@ public class MainTurn extends Turns {
                         ioException.printStackTrace();
                     }
                 }
-                setGameStage(stage.END);
+                risk.getTurns().setGameStage(stage.END);
             }
         }
     }

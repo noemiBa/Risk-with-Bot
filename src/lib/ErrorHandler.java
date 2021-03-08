@@ -143,7 +143,7 @@ public class ErrorHandler {
      * @param player: the player who is currently attacking
      * @return the array attackChoice now containing valid choices.
      */
-   public String[] validateCountryAttacking(String[] attackChoice, Player player) {50-u76t7yuj 5
+   public String[] validateCountryAttacking(String[] attackChoice, Player player) {
         boolean isValidChoice = false;
         int numberOfAttacks;
         String userInput;
@@ -181,7 +181,7 @@ public class ErrorHandler {
                 window.sendErrorMessage("Sorry, it looks like " + TextParser.parse(attackChoice[0]) + " does not belong to " + player.getName()
                         + ". Enter a country belonging to " + player.getName() + " with at least 2 units");
             } catch (ArrayIndexOutOfBoundsException e) {
-                window.sendErrorMessage("Sorry, you need to enter a country and the number of dices");
+                window.sendErrorMessage("Sorry, you need to enter a country and the number of dice");
             }
         }
         return attackChoice;
@@ -243,9 +243,9 @@ public class ErrorHandler {
                 return 1;
             }
         } else {
-            window.getTextDisplay("You have " + numberOfUnit + " the number of dices to defend with: ");
+            window.getTextDisplay("You have " + numberOfUnit + " the number of dice to defend with: ");
             if (numberOfUnit >= 2) {
-                window.getTextDisplay("You can defend with 1 or 2 dices, please enter the number you want to defend with: ");
+                window.getTextDisplay("You can defend with 1 or 2 dice, please enter the number you want to defend with: ");
                 diceDefend = isInteger(window.getCommand());
                 while (diceDefend != 1 && diceDefend != 2) {
                     diceDefend = isInteger(window.getCommand());
