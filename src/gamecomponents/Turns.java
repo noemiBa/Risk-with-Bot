@@ -138,7 +138,7 @@ public class Turns {
         int count;
 
         //Nine rounds for each player to complete allocation
-        for (count = 1; count <= 18; count++) {
+        for (count = 1; count <= 1; count++) {
             if (count % 2 == 1) {
                 allocateUnitsActivePlayers(activePlayers[firstToPlay]);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[firstToPlay]);

@@ -4,10 +4,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
+import java.util.stream.Stream;
 
 import com.botharmon.Game;
 
@@ -25,6 +23,7 @@ public class MainTurn extends Turns {
     private ErrorHandler e;
     private ActivePlayer activePlayer;
     private ActivePlayer[] players;
+    private boolean isConquered = false;
 
     // methods for each turn are called here
     public MainTurn(ActivePlayer activePlayer, Game risk) {
@@ -38,9 +37,31 @@ public class MainTurn extends Turns {
         //mainTurn sequence
         reinforcementsAllocation(activePlayer);
         attack(activePlayer);
-        if (risk.getTurns().getGameStage() != stage.END)
+        if (risk.getTurns().getGameStage() != stage.END) {
             fortify(activePlayer);
+            //    activePlayer.draw(1, risk.getDeck());
+        }
         window.clearText();
+    }
+
+    public int exchangeCards(ActivePlayer activePlayer) {
+        if (activePlayer.getCards().size() > 2) {
+            window.getTextDisplay(activePlayer.getName() + " you have the following cards: ");
+            for (Card c : activePlayer.getCards()) {
+                window.getTextDisplay(c.toString());
+            }
+            window.getTextDisplay("Enter the initials of the cards that you want exchange or enter Skip"); //validation
+            String input = window.getCommand().trim().toUpperCase();
+            int numberUnits = validateCards(input);
+
+            while(activePlayer.getCards().size() == 5 && numberUnits == 0){
+                window.getTextDisplay("You must exchange cards, you cannot have more than 5, please enter a new set");
+                input = window.getCommand().trim().toUpperCase();
+                numberUnits = validateCards(input);
+            }
+            return numberUnits;
+        }
+        return 0;
     }
 
     /* Method for the reinforcement stage of the game. It gives a minimum of three units to the user to allocate between countries controlled by them.
@@ -93,9 +114,9 @@ public class MainTurn extends Turns {
     private int numberOfReinforcements(ActivePlayer activePlayer) {
         //3 is the minimum number of reinforcements according to the rules
         if (activePlayer.getCountriesControlled().size() < 9)
-            return 3 + continentReinforcement(activePlayer);
+            return 3 + continentReinforcement(activePlayer) + exchangeCards(activePlayer);
         else
-            return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer);
+            return activePlayer.getCountriesControlled().size() / 3 + continentReinforcement(activePlayer) + exchangeCards(activePlayer);
     }
 
     /* private helper method, return the extra troops if a player own a continent
@@ -186,6 +207,11 @@ public class MainTurn extends Turns {
                         activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - 1);
                     }
                 }
+
+                if (successfulAttacks > 0) {
+                    isConquered = true;
+                }
+
                 risk.getWindow().updateMap();
                 risk.getWindow().getTextDisplay
                         (        //inform the users of the outcome of the attack
@@ -254,6 +280,12 @@ public class MainTurn extends Turns {
         window.clearText();
     }
 
+    public void drawCard(ActivePlayer activePlayer) {
+        if (isConquered) {
+            activePlayer.draw(1, risk.getDeck());
+        }
+    }
+
     /* public helper method, that checks if the origin country is connected to the destination country. Note: a country is connected to another if
      * there is a path of adjacent countries controlled by the same player in between them. Units cannot be moved between enemy territories.
      *
@@ -292,6 +324,7 @@ public class MainTurn extends Turns {
         return false;
     }
 
+
     /* private helper method, that checks if the given countryA is controlled by the same player as countryB
      *
      * @param countryA, countryB: check if both countries given are controlled by the same player
@@ -308,6 +341,36 @@ public class MainTurn extends Turns {
         ;
 
         return controlledBySamePlayer;
+    }
+
+    private int validateCards(String input) {
+        if (input.equals("skip")) {
+            return 0;
+        }
+
+        String[] setOfCards = new String[]{"III", "CCC", "AAA", "ICA", "IAC", "ACI", "AIC", "CIA", "CAI"};
+        String isValid = "";
+        for (int i = 0; i < setOfCards.length; i++) {
+            if (setOfCards[i].equals(input)) {
+                isValid = setOfCards[i];
+                break;
+            }
+        }
+
+        switch (isValid) {
+            case "III":
+                return 4;
+            case "CCC":
+                return 6;
+            case "AAA":
+                return 8;
+            case "":
+                window.sendErrorMessage("Sorry, this is invalid, please enter a new set or enter skip");
+                String newInput = window.getCommand();
+                return (0 + validateCards(newInput.trim().toUpperCase()));
+            default:
+                return 10;
+        }
     }
 
     /* Method checks if any of the players has 0 troops, what means the other won

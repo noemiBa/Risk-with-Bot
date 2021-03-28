@@ -6,12 +6,11 @@
  * */
 public class Card
 {
-
-	public static enum type{INFANTRY, CAVALRY, ARTILLERY};
+	public static char[] unitTypes= {'I','C','A'};
     private String countryName;
-    private type unitType;
+    private char unitType;
 
-    public Card(String countryName, type unitType) {
+    public Card(String countryName, char unitType) {
         this.countryName = countryName;
         this.unitType = unitType;
     };
@@ -21,12 +20,12 @@ public class Card
         return countryName;
     }
     
-    public type getUnitType() {
+    public char getUnitType() {
         return unitType;
     }
     
     /*Mutator Methods*/
-    public void setUnitType(type unitType) {
+    public void setUnitType(char unitType) {
         this.unitType = unitType;
     }
     
