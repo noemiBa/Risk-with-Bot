@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.botharmon.Game;
@@ -344,17 +346,25 @@ public class MainTurn extends Turns {
     }
 
     private int validateCards(String input) {
-        if (input.equals("skip")) {
+        if (input.equals("SKIP")) {
             return 0;
         }
 
         String[] setOfCards = new String[]{"III", "CCC", "AAA", "ICA", "IAC", "ACI", "AIC", "CIA", "CAI"};
         String isValid = "";
+        //iii ACI
+
         for (int i = 0; i < setOfCards.length; i++) {
             if (setOfCards[i].equals(input)) {
                 isValid = setOfCards[i];
                 break;
             }
+        }
+
+        boolean containsCard = validateSet(activePlayer.getCards(), isValid);
+
+        if (containsCard == false ){
+            isValid = "";
         }
 
         switch (isValid) {
@@ -372,6 +382,16 @@ public class MainTurn extends Turns {
                 return 10;
         }
     }
+
+    public boolean validateSet(ArrayList<Card> cards, String set){
+        if (set == "") return false;
+
+        List<Character> chars = set.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
+        ArrayList<Character> typeUnit = (ArrayList<Character>) cards.stream().map(u -> u.getUnitType()).collect(Collectors.toList());
+
+        return typeUnit.containsAll(chars);
+    }
+
 
     /* Method checks if any of the players has 0 troops, what means the other won
      *
