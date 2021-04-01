@@ -27,7 +27,7 @@ public class Deck {
         Random r = new Random();
         for (int i = 0; i < 42; i++) {
             int index = r.nextInt(3);
-            cards.add(new Card(GameData.COUNTRY_NAMES[i], Card.unitTypes[index]));
+            cards.add(new Card(GameData.COUNTRY_NAMES[i], index));
         }
     }
 

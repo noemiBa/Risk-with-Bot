@@ -1,4 +1,4 @@
-	package gamecomponents;
+package gamecomponents;
 
 /** Creates a new Card object with the card's countryName and unitType
  * The Deck class uses this card object by creating a deck as an ArrayList of 42 Card objects
@@ -6,13 +6,16 @@
  * */
 public class Card
 {
-	public static char[] unitTypes= {'I','C','A'};
-    private String countryName;
     private char unitType;
+    private String unitName;
+    private String countryName;
 
-    public Card(String countryName, char unitType) {
+    public Card(String countryName, int index) {
+        char[] unitTypes= {'I','C','A'};
+        String[] unitNames= {"Infantry","Cavalry","Artillery"};
         this.countryName = countryName;
-        this.unitType = unitType;
+        this.unitType = unitTypes[index];
+        this.unitName = unitNames[index];
     };
     
     /*Accessor Methods*/
@@ -36,7 +39,7 @@ public class Card
 
 	@Override
    	public String toString() {
-   		return "[countryName=" + countryName + ", unitType=" + unitType + "]";
+   		return "[" + unitName + " " + countryName + "]";
    	}
 	
 	 private void validateCard(String name) {
@@ -44,6 +47,4 @@ public class Card
 	    	throw new IllegalArgumentException("Country name should not be empty");
 	    }
 	}
-    
-    
 }

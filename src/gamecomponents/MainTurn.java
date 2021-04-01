@@ -25,7 +25,6 @@ public class MainTurn extends Turns {
     private ErrorHandler e;
     private ActivePlayer activePlayer;
     private ActivePlayer[] players;
-    private boolean isConquered = false;
 
     // methods for each turn are called here
     public MainTurn(ActivePlayer activePlayer, Game risk) {
@@ -41,7 +40,6 @@ public class MainTurn extends Turns {
         attack(activePlayer);
         if (risk.getTurns().getGameStage() != stage.END) {
             fortify(activePlayer);
-            //    activePlayer.draw(1, risk.getDeck());
         }
         window.clearText();
     }
@@ -74,7 +72,7 @@ public class MainTurn extends Turns {
      */
     public void reinforcementsAllocation(ActivePlayer activePlayer) {
         int numberOfReinforcements = numberOfReinforcements(activePlayer);
-
+        window.clearText();
         //while the user still has reinforcements to allocate...
         while (numberOfReinforcements != 0 && risk.getTurns().getGameStage() != stage.END) {
             window.getTextDisplay(activePlayer.getName() + ", you have " + numberOfReinforcements + (numberOfReinforcements == 1 ? " reinforcement." : " reinforcements ")
@@ -149,7 +147,7 @@ public class MainTurn extends Turns {
         String[] attackChoice = {"", ""};
         String countryDefending = "";
         int numberOfAttacks, numberOfDefences;
-
+        boolean isFirstConquer = true;
         //while the user decides not to skip to the next stage...
         while (!attackChoice[0].equals("skip")) {
             window.getTextDisplay(activePlayer.getName() + ", enter the country you wish to attack with followed by a space and the number of units you wish to attack " +
@@ -202,16 +200,15 @@ public class MainTurn extends Turns {
                             risk.getMap().getCountry(countryDefending).setControlledBy(activePlayer);
                             activePlayer.getCountry(countryDefending).setNumberOfUnits(numberOfAttacks);
                             activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - numberOfAttacks);
+                            if(isFirstConquer)
+                                activePlayer.draw(1, risk.getDeck());
+                            isFirstConquer = false;
                             break;
                         }
                     } else {
                         successfulDefends++;
                         activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - 1);
                     }
-                }
-
-                if (successfulAttacks > 0) {
-                    isConquered = true;
                 }
 
                 risk.getWindow().updateMap();
@@ -255,7 +252,7 @@ public class MainTurn extends Turns {
                     countryDestination = TextParser.parse(input[1].trim());
                     unitsToMove = Integer.parseInt(input[2].trim());
 
-                    if (isConnected(countryOrigin, countryDestination) == false) {
+                    if (!isConnected(countryOrigin, countryDestination)) {
                         throw new IllegalArgumentException("The two countries are not connected");
                     }
                 }
@@ -280,12 +277,6 @@ public class MainTurn extends Turns {
 
         window.updateMap();
         window.clearText();
-    }
-
-    public void drawCard(ActivePlayer activePlayer) {
-        if (isConquered) {
-            activePlayer.draw(1, risk.getDeck());
-        }
     }
 
     /* public helper method, that checks if the origin country is connected to the destination country. Note: a country is connected to another if
@@ -340,7 +331,6 @@ public class MainTurn extends Turns {
         } catch (NullPointerException ex) {
             return controlledBySamePlayer = false;
         }
-        ;
 
         return controlledBySamePlayer;
     }
@@ -354,16 +344,16 @@ public class MainTurn extends Turns {
         String isValid = "";
         //iii ACI
 
-        for (int i = 0; i < setOfCards.length; i++) {
-            if (setOfCards[i].equals(input)) {
-                isValid = setOfCards[i];
+        for (String setOfCard : setOfCards) {
+            if (setOfCard.equals(input)) {
+                isValid = setOfCard;
                 break;
             }
         }
 
         boolean containsCard = validateSet(activePlayer.getCards(), isValid);
 
-        if (containsCard == false ){
+        if (!containsCard){
             isValid = "";
         }
 
@@ -384,7 +374,7 @@ public class MainTurn extends Turns {
     }
 
     public boolean validateSet(ArrayList<Card> cards, String set){
-        if (set == "") return false;
+        if (set.equals("")) return false;
 
         List<Character> chars = set.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
         ArrayList<Character> typeUnit = (ArrayList<Character>) cards.stream().map(u -> u.getUnitType()).collect(Collectors.toList());
