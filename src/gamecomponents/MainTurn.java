@@ -43,7 +43,13 @@ public class MainTurn extends Turns {
         }
         window.clearText();
     }
-
+    
+    /* This method allows the player to exchange their territory cards for additional units if the player has a valid set.
+     * The player will have to exchange their cards if they currently have 5 territory cards.
+     * 
+     * @param activePlayer: the player whose turn this is.
+     * @return: the number of additional units received by the activePlayer.
+     */
     public int exchangeCards(ActivePlayer activePlayer) {
         if (activePlayer.getCards().size() > 2) {
             window.getTextDisplay(activePlayer.getName() + " you have the following cards: ");
@@ -200,8 +206,10 @@ public class MainTurn extends Turns {
                             risk.getMap().getCountry(countryDefending).setControlledBy(activePlayer);
                             activePlayer.getCountry(countryDefending).setNumberOfUnits(numberOfAttacks);
                             activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - numberOfAttacks);
-                            if(isFirstConquer)
-                                activePlayer.draw(1, risk.getDeck());
+                            if(isFirstConquer) {
+                                Card drawn = activePlayer.draw(1, risk.getDeck());
+                                window.getTextDisplay(activePlayer + ", you drew the card: " + drawn);        
+                            }
                             isFirstConquer = false;
                             break;
                         }
@@ -334,15 +342,20 @@ public class MainTurn extends Turns {
 
         return controlledBySamePlayer;
     }
-
+    
+    /* Private helper method that checks whether the set entered by the user to be exchange is a valid set. If the set is a valid set,
+     * the method returns the number of units to be given to the player in exchange for the cards.
+     * 
+     * @param input: the set of cards entered by the user. 
+     * @return: the number of units received
+     */
     private int validateCards(String input) {
         if (input.equals("SKIP")) {
             return 0;
         }
 
-        String[] setOfCards = new String[]{"III", "CCC", "AAA", "ICA", "IAC", "ACI", "AIC", "CIA", "CAI"};
+        String[] setOfCards = new String[]{"III", "CCC", "AAA", "ICA", "IAC", "ACI", "AIC", "CIA", "CAI"}; //the valid sets
         String isValid = "";
-        //iii ACI
 
         for (String setOfCard : setOfCards) {
             if (setOfCard.equals(input)) {
@@ -352,9 +365,12 @@ public class MainTurn extends Turns {
         }
 
         boolean containsCard = validateSet(activePlayer.getCards(), isValid);
-
-        if (!containsCard){
+        
+        if (!containsCard){ //if the player does not own the cards they are trying to exchange, set isValid to be an empty string again
             isValid = "";
+        }
+        else {
+        	removeCards(activePlayer.getCards(), isValid); 
         }
 
         switch (isValid) {
@@ -368,12 +384,30 @@ public class MainTurn extends Turns {
                 window.sendErrorMessage("Sorry, this is invalid, please enter a new set or enter skip");
                 String newInput = window.getCommand();
                 return (0 + validateCards(newInput.trim().toUpperCase()));
-            default:
+            default: //default handles the case when all the three unit types are different.
                 return 10;
         }
     }
+    
+    /* Method removes cards from the array of cards if the player has decided to exchange them.
+     * 
+     * input cards: the array of cards owned by the player, set: the set of cards the user is looking to exchange
+     */
+    private void removeCards(ArrayList<Card> cards, String set) {
+    	cards.removeIf(x -> (x.getUnitType() == set.charAt(0))); 
+    	
+    	if (set.charAt(0) != set.charAt(1)) { //check whether the set consists of different characters
+    		cards.removeIf(x -> (x.getUnitType() == set.charAt(1))); 
+    		cards.removeIf(x -> (x.getUnitType() == set.charAt(2))); 
+    	}
+	}
 
-    public boolean validateSet(ArrayList<Card> cards, String set){
+	/* private helper method validateSet checks whether the player actually owns the cards they are trying to exchange.
+     * 
+     * @input cards: the array of cards owned by the player, set: the set of cards the user is looking to exchange
+     * @return true if the user owns the cards the cards they are trying to exchange, false otherwise.
+     */
+    private boolean validateSet(ArrayList<Card> cards, String set){
         if (set.equals("")) return false;
 
         List<Character> chars = set.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
