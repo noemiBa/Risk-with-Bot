@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.botharmon.Game;
 
@@ -43,10 +42,10 @@ public class MainTurn extends Turns {
         }
         window.clearText();
     }
-    
+
     /* This method allows the player to exchange their territory cards for additional units if the player has a valid set.
      * The player will have to exchange their cards if they currently have 5 territory cards.
-     * 
+     *
      * @param activePlayer: the player whose turn this is.
      * @return: the number of additional units received by the activePlayer.
      */
@@ -94,20 +93,19 @@ public class MainTurn extends Turns {
 
             try {
                 countryName = TextParser.parse(input[0].trim());
-                activePlayer.getCountriesControlled().get(countryName);
+                activePlayer.getCountry(countryName);
                 numberToAdd = Integer.parseInt(input[1]);
 
                 //ensure that the number of units entered by the user to be allocate is valid
                 numberToAdd = e.validateNoUnitsReinforcement(numberToAdd, numberOfReinforcements);
-                activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-                        .get(countryName).getNumberOfUnits() + numberToAdd);
+                activePlayer.getCountry(countryName).setNumberOfUnits(activePlayer.getCountry(countryName).getNumberOfUnits() + numberToAdd);
                 numberOfReinforcements = numberOfReinforcements - numberToAdd;
 
                 window.updateMap();
                 window.clearText();
 
             } catch (IllegalArgumentException | NullPointerException e) {
-                window.sendErrorMessage("You entered the number or country name incorrectly");
+                window.sendErrorMessage("You entered the number of units to allocate or country name incorrectly");
             }
             System.out.println(numberOfReinforcements);
         }
@@ -166,7 +164,7 @@ public class MainTurn extends Turns {
                 window.clearText();
                 window.getTextDisplay(attackChoice[0] + " selected.");
 
-                //ensure that the user has entered an adjacent country to attack 
+                //ensure that the user has entered an adjacent country to attack
                 countryDefending = e.validateAttackChoice(activePlayer, activePlayer.getCountry(attackChoice[0]), countryDefending);
                 window.clearText();
 
@@ -208,7 +206,7 @@ public class MainTurn extends Turns {
                             activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - numberOfAttacks);
                             if(isFirstConquer) {
                                 Card drawn = activePlayer.draw(1, risk.getDeck());
-                                window.getTextDisplay(activePlayer.getName() + ", you drew the card: " + drawn);        
+                                window.getTextDisplay(activePlayer.getName() + ", you drew the card: " + drawn);
                             }
                             isFirstConquer = false;
                             break;
@@ -220,11 +218,11 @@ public class MainTurn extends Turns {
                 }
 
                 risk.getWindow().updateMap();
-                risk.getWindow().getTextDisplay
-                        (        //inform the users of the outcome of the attack
-                                activePlayer.getName() + " loses " + successfulDefends + (successfulDefends == 1 ? " unit" : " units") + " and " +
-                                        otherPlayerName + " loses " + successfulAttacks + (successfulAttacks == 1 ? " unit" : " units")
-                        );
+                // inform the users of the outcome of the attack
+                risk.getWindow().getTextDisplay (
+                        activePlayer.getName() + " loses " + successfulDefends + (successfulDefends == 1 ? " unit" : " units") + " and " +
+                                otherPlayerName + " loses " + successfulAttacks + (successfulAttacks == 1 ? " unit" : " units")
+                );
                 if (risk.getMap().getCountry(countryDefending).getControlledBy().equals(activePlayer))
                     risk.getWindow().getTextDisplay(activePlayer.getName() + " has conquered " + risk.getMap().getCountry(countryDefending).getName());
             }
@@ -273,13 +271,13 @@ public class MainTurn extends Turns {
                 }
 
                 //Now that the input has been validated, decrement the units in the origin country and increment the units in the destination country
-                int unitsInCountryOrigin = activePlayer.getCountriesControlled().get(countryOrigin).getNumberOfUnits();
+                int unitsInCountryOrigin = activePlayer.getCountry(countryOrigin).getNumberOfUnits();
                 unitsToMove = e.validateNoUnitsFortify(unitsToMove, unitsInCountryOrigin);
 
-                activePlayer.getCountriesControlled().get(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
+                activePlayer.getCountry(countryOrigin).setNumberOfUnits(unitsInCountryOrigin - unitsToMove);
 
-                int unitsInCountryDestination = activePlayer.getCountriesControlled().get(countryDestination).getNumberOfUnits();
-                activePlayer.getCountriesControlled().get(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
+                int unitsInCountryDestination = activePlayer.getCountry(countryDestination).getNumberOfUnits();
+                activePlayer.getCountry(countryDestination).setNumberOfUnits(unitsInCountryDestination + unitsToMove);
             }
         }
 
@@ -296,7 +294,7 @@ public class MainTurn extends Turns {
         CustomArrayList<Country> countries = risk.getMap().getCountries();
         Queue<Country> queue = new LinkedList<Country>();
         String newOrigin = "";
-        //add the origin country to the queue 
+        //add the origin country to the queue
         queue.add(countries.get(countryOrigin));
 
         while (queue.size() >= 1) {
@@ -307,7 +305,7 @@ public class MainTurn extends Turns {
                 return true;
             }
 
-            //find the countries adjacent to the new origin and, if they are controlled by the same player, add them to the queue 
+            //find the countries adjacent to the new origin and, if they are controlled by the same player, add them to the queue
             ArrayList<Integer> adjIndexes = countries.get(newOrigin).getAdjCountriesIndexes();
 
             for (Integer i : adjIndexes) {
@@ -333,7 +331,7 @@ public class MainTurn extends Turns {
     private boolean controlledBySamePlayer(String countryA, String countryB) {
         boolean controlledBySamePlayer = false;
         try {
-            if (activePlayer.getCountriesControlled().get(countryA) != null && activePlayer.getCountriesControlled().get(countryB) != null) {
+            if (activePlayer.getCountry(countryA) != null && activePlayer.getCountry(countryB) != null) {
                 controlledBySamePlayer = true;
             }
         } catch (NullPointerException ex) {
@@ -342,11 +340,11 @@ public class MainTurn extends Turns {
 
         return controlledBySamePlayer;
     }
-    
+
     /* Private helper method that checks whether the set entered by the user to be exchange is a valid set. If the set is a valid set,
      * the method returns the number of units to be given to the player in exchange for the cards.
-     * 
-     * @param input: the set of cards entered by the user. 
+     *
+     * @param input: the set of cards entered by the user.
      * @return: the number of units received
      */
     private int validateCards(String input) {
@@ -365,12 +363,12 @@ public class MainTurn extends Turns {
         }
 
         boolean containsCard = validateSet(activePlayer.getCards(), isValid);
-        
+
         if (!containsCard){ //if the player does not own the cards they are trying to exchange, set isValid to be an empty string again
             isValid = "";
         }
         else {
-        	removeCards(activePlayer.getCards(), isValid); 
+            removeCards(activePlayer.getCards(), isValid);
         }
 
         switch (isValid) {
@@ -388,22 +386,22 @@ public class MainTurn extends Turns {
                 return 10;
         }
     }
-    
+
     /* Method removes cards from the array of cards if the player has decided to exchange them.
-     * 
+     *
      * input cards: the array of cards owned by the player, set: the set of cards the user is looking to exchange
      */
     private void removeCards(ArrayList<Card> cards, String set) {
-    	cards.removeIf(x -> (x.getUnitType() == set.charAt(0))); 
-    	
-    	if (set.charAt(0) != set.charAt(1)) { //check whether the set consists of different characters
-    		cards.removeIf(x -> (x.getUnitType() == set.charAt(1))); 
-    		cards.removeIf(x -> (x.getUnitType() == set.charAt(2))); 
-    	}
-	}
+        cards.removeIf(x -> (x.getUnitType() == set.charAt(0)));
 
-	/* private helper method validateSet checks whether the player actually owns the cards they are trying to exchange.
-     * 
+        if (set.charAt(0) != set.charAt(1)) { //check whether the set consists of different characters
+            cards.removeIf(x -> (x.getUnitType() == set.charAt(1)));
+            cards.removeIf(x -> (x.getUnitType() == set.charAt(2)));
+        }
+    }
+
+    /* private helper method validateSet checks whether the player actually owns the cards they are trying to exchange.
+     *
      * @input cards: the array of cards owned by the player, set: the set of cards the user is looking to exchange
      * @return true if the user owns the cards the cards they are trying to exchange, false otherwise.
      */

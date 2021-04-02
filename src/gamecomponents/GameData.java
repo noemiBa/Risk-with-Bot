@@ -1,11 +1,5 @@
 package gamecomponents;
 
-import java.awt.Color;
-
-import player.ActivePlayer;
-import player.PassivePlayer;
-import player.Player;
-
 public class GameData {
 	public static final int NUM_PLAYERS = 2;
 	public static final int NUM_NEUTRALS = 4;

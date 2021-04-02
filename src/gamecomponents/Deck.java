@@ -1,10 +1,7 @@
 package gamecomponents;
 
-import ui.Map;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -33,15 +30,15 @@ public class Deck {
 
     // collections method reorders the list randomly
     public void shuffle() {
-        Collections.shuffle((List<Card>) cards);
+        Collections.shuffle(cards);
     }
 
     //Accessor method for the instance variable cards
     public ArrayList<Card> getCards() {
         return cards;
     }
-    
+
     public int size() {
-    	return cards.size(); 
+        return cards.size();
     }
 }

@@ -2,12 +2,7 @@ package gamecomponents;
 
 import lib.CustomArrayList;
 import player.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
-import ui.*;
-
-import javax.swing.*;
 
 public class Country {
     //declaration of instance variables

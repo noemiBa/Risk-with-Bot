@@ -1,10 +1,7 @@
 package lib;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import gamecomponents.Country;
 
 public class CustomArrayList<E> extends ArrayList<E>
 {

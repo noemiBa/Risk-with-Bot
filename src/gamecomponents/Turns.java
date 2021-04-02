@@ -13,7 +13,7 @@ public class Turns {
     private Window window;
     private static int currentPlayer = 0;
     private ErrorHandler e;
-    
+
     public enum stage {
         ENTER_NAMES,
         ASSIGN_COUNTRIES,
@@ -21,10 +21,10 @@ public class Turns {
         MAIN_TURN,
         END
     }
-    
-    //set the initial stage as enter names. 
+
+    //set the initial stage as enter names.
     private stage gameStage = stage.ENTER_NAMES;
-    
+
     /*ACCESSOR METHODS*/
     public stage getGameStage() {
         return gameStage;
@@ -34,7 +34,7 @@ public class Turns {
     {
         return e;
     }
-    
+
     /*MUTATOR METHODS*/
     public void setWindow(Window window) {
         this.window = window;
@@ -54,13 +54,13 @@ public class Turns {
     }
 
     /* Method calls the methods necessary for each of the game stages, then proceeds to set the game stage to the next game stage.
-     * 
+     *
      * @param risk, the game of risk currently being played.
      */
     public void makeTurns(Game risk) {
         setWindow(risk.getWindow());
         e = new ErrorHandler(risk.getWindow());
-        
+
         switch (gameStage) {
             case ENTER_NAMES:
                 enterPlayerNames(risk);
@@ -74,11 +74,10 @@ public class Turns {
             case ROLL_TO_PLACE_TERRITORIES:
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
-               
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
                 window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
-                "! Each turn consists of placing reinforcements, attacking, drawing a card and reallocating units");
+                        "! Each turn consists of placing reinforcements, attacking, drawing a card and reallocating units");
                 setGameStage(stage.MAIN_TURN);
                 break;
             case MAIN_TURN:
@@ -89,9 +88,9 @@ public class Turns {
                 break;
         }
     }
-    
-    /* Method takes the player names entered by the users to initialise the game. 
-     * 
+
+    /* Method takes the player names entered by the users to initialise the game.
+     *
      * @param risk, the game of risk currently being played.
      */
     public void enterPlayerNames(Game risk) {
@@ -106,12 +105,12 @@ public class Turns {
             e.validateDifferentName(risk.getActivePlayers(), playerName, risk);
             window.clearText();
         }
-       
+
         window.clearText();
     }
-    
+
     /* Method displays the countries randomly drawn by the active players, then proceeds to reshuffle the deck of cards.
-     * 
+     *
      * @param risk, the game of risk currently being played.
      */
     public void assignCountries(Game risk) {
@@ -120,10 +119,10 @@ public class Turns {
         window.getTextDisplay(risk.getActivePlayers()[1].getName() + ", you drew the Countries: " + risk.getActivePlayers()[1].printCountries());
         risk.getDeck().shuffle();
     }
-    
-    /* Method allocates the units for active and passive players before the beginning of the main turn. (36 units for each active player and 24 units for 
+
+    /* Method allocates the units for active and passive players before the beginning of the main turn. (36 units for each active player and 24 units for
      * each passive player)
-     * 
+     *
      * @param risk, the game of risk currently being played.
      * @param firstToPlay: the player who won the first dice roll to begin the first game
      * @param activePlayers: the array of activePlayers
@@ -150,49 +149,48 @@ public class Turns {
             }
         }
     }
-    
-    /* Method allocates the units for active players before the beginning of the main turn. (36 units for 
+
+    /* Method allocates the units for active players before the beginning of the main turn. (36 units for
      * each active player)
-     * 
+     *
      * @param risk, the game of risk currently being played.
      * @param activePlayers: the array of passivePlayers
      */
     public void allocateUnitsActivePlayers(ActivePlayer activePlayer) {
-    	int troops = 3;
-    	while (troops != 0) {
-    		window.getTextDisplay(activePlayer.getName() + ", please enter a country name belonging to you or a shortened version " +
-    				"and the number of troops you want to allocate separated by a space, then press enter");
-    		window.getTextDisplay("You have " + troops + (troops == 1 ? " troop" : " troops") + " to allocate");
-    		String countryName = "";
-    		int numberToAdd = -1;
+        int troops = 3;
+        while (troops != 0) {
+            window.getTextDisplay(activePlayer.getName() + ", please enter a country name belonging to you or a shortened version " +
+                    "and the number of troops you want to allocate separated by a space, then press enter");
+            window.getTextDisplay("You have " + troops + (troops == 1 ? " troop" : " troops") + " to allocate");
+            String countryName = "";
+            int numberToAdd = -1;
 
-    		String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
-    		
-    		//ensure that the players have entered both the country name and the number of units to be allocated
-    		input = e.validateCountryAndUnitsEntered(input);
-    		try {
-    			countryName = TextParser.parse(input[0].trim());
-    			activePlayer.getCountriesControlled().get(countryName);
-    			numberToAdd = Integer.parseInt(input[1]);
-    			
-    			//ensure that the number of units entered by the user is valid
-    			numberToAdd = e.validateNoUnitsAllocation(numberToAdd, troops); 
-    			activePlayer.getCountriesControlled().get(countryName).setNumberOfUnits(activePlayer.getCountriesControlled()
-    					.get(countryName).getNumberOfUnits() + numberToAdd);
-    			troops -= numberToAdd;
-    			window.updateMap();
-    			window.clearText();
+            String[] input = window.getCommand().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //splits the string between letters and digits
 
-    		} catch (IllegalArgumentException | NullPointerException e) {
-    			window.sendErrorMessage("You entered the number or country name incorrectly");
-    		}
-    	}
+            // ensure that the players have entered both the country name and the number of units to be allocated
+            input = e.validateCountryAndUnitsEntered(input);
+            try {
+                countryName = TextParser.parse(input[0].trim());
+                activePlayer.getCountry(countryName);
+                numberToAdd = Integer.parseInt(input[1]);
+
+                // ensure that the number of units entered by the user is valid
+                numberToAdd = e.validateNoUnitsAllocation(numberToAdd, troops);
+                activePlayer.getCountry(countryName).setNumberOfUnits(activePlayer.getCountry(countryName).getNumberOfUnits() + numberToAdd);
+                troops -= numberToAdd;
+                window.updateMap();
+                window.clearText();
+
+            } catch (IllegalArgumentException | NullPointerException e) {
+                window.sendErrorMessage("You entered the number of units to allocate or country name incorrectly");
+            }
+        }
     }
-    
-    
-    /* Method allocates the units for passive players before the beginning of the main turn. (24 units for 
+
+
+    /* Method allocates the units for passive players before the beginning of the main turn. (24 units for
      * each passive player)
-     * 
+     *
      * @param risk, the game of risk currently being played.
      * @param activePlayers: the array of passivePlayers
      */
@@ -204,16 +202,16 @@ public class Turns {
         for (PassivePlayer p : passivePlayers) {
             window.clearText();
             window.getTextDisplay("To allocate troops for " + p.getName() +
-                    " who's colour is " + getColorName(p) + " please enter their country name: ");
+                    " whose colour is " + getColorName(p) + " please enter their country name: ");
             String countryName = "";
             countryName = e.validateControlledBy(countryName, p);
-            p.getCountriesControlled().get(countryName).setNumberOfUnits(p.getCountriesControlled().get(countryName).getNumberOfUnits() + 1);
+            p.getCountry(countryName).setNumberOfUnits(p.getCountry(countryName).getNumberOfUnits() + 1);
             window.updateMap();
         }
         window.clearText();
     }
 
-  
+
     /* private helper method, displays the what number the players have rolled
      *
      * @param activePlayers: an array containing information regarding the two main players
@@ -223,15 +221,15 @@ public class Turns {
         window.getTextDisplay(activePlayers[0].getName() + " rolled a " + diceOne + "\n"
                 + activePlayers[1].getName() + " rolled a " + diceTwo);
     }
-    
+
     /*helper method, rolls the dices for the active players to determine who will start the game. If it is a tie, the dices are rolled again.
-    *
-    * @param activePlayers: an array containing information regarding the two main players
-    */
+     *
+     * @param activePlayers: an array containing information regarding the two main players
+     */
     public int whoStarts(ActivePlayer[] activePlayers) {
         int diceFirstPlayer = activePlayers[0].throwDice();
         int diceSecondPlayer = activePlayers[1].throwDice();
-       
+
         //inform the user
         displayDiceRoll(activePlayers, diceFirstPlayer, diceSecondPlayer);
 
@@ -248,11 +246,11 @@ public class Turns {
         else
             return 1;
     }
-    
+
     /* private helper method, returns the index of the player whose turn is next.
-    *
-    * @return index of the next player
-    */
+     *
+     * @return index of the next player
+     */
     private int switchTurn()
     {
         if (currentPlayer == 0)
@@ -260,12 +258,12 @@ public class Turns {
         else
             return 0;
     }
-    
+
     /* private helper method, returns a string describing the colour assigned to the passive players
-    *
-    * @param playersPlayers: an array containing information regarding the four passive neutral players
-    * @return the string description of the colour
-    */
+     *
+     * @param playersPlayers: an array containing information regarding the four passive neutral players
+     * @return the string description of the colour
+     */
     private String getColorName(PassivePlayer passivePlayer) {
         if (passivePlayer.getPlayerColor().equals(new Color(177, 212, 174))) {
             return "Pale Green";

@@ -2,12 +2,10 @@ package player;
 
 import gamecomponents.Card;
 import gamecomponents.Country;
-import gamecomponents.Deck;
 import gamecomponents.GameData;
 import ui.Map;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import lib.CustomArrayList;
