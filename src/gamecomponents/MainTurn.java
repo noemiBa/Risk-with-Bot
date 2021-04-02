@@ -208,7 +208,7 @@ public class MainTurn extends Turns {
                             activePlayer.getCountry(attackChoice[0]).setNumberOfUnits(activePlayer.getCountry(attackChoice[0]).getNumberOfUnits() - numberOfAttacks);
                             if(isFirstConquer) {
                                 Card drawn = activePlayer.draw(1, risk.getDeck());
-                                window.getTextDisplay(activePlayer + ", you drew the card: " + drawn);        
+                                window.getTextDisplay(activePlayer.getName() + ", you drew the card: " + drawn);        
                             }
                             isFirstConquer = false;
                             break;

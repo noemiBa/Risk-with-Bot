@@ -74,6 +74,7 @@ public class Turns {
             case ROLL_TO_PLACE_TERRITORIES:
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 allocateUnits(risk.getActivePlayers(), currentPlayer, risk);
+               
                 currentPlayer = whoStarts(risk.getActivePlayers());
                 // welcome message is printed here as you don't want it to be printed on each turn, can be moved to separate method if needs be
                 window.getTextDisplay("You start " + risk.getActivePlayers()[currentPlayer].getName() +
@@ -138,7 +139,7 @@ public class Turns {
         int count;
 
         //Nine rounds for each player to complete allocation
-        for (count = 1; count <= 1; count++) {
+        for (count = 1; count <= 18; count++) {
             if (count % 2 == 1) {
                 allocateUnitsActivePlayers(activePlayers[firstToPlay]);
                 allocateUnitsPassivePlayers(risk.getPassivePlayers(), activePlayers[firstToPlay]);
