@@ -406,12 +406,22 @@ public class MainTurn extends Turns {
      * @return true if the user owns the cards the cards they are trying to exchange, false otherwise.
      */
     private boolean validateSet(ArrayList<Card> cards, String set){
-        if (set.equals("")) return false;
+        if (set.equals("")) return false; //return false if the input is not in the valid array
 
-        List<Character> chars = set.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
-        ArrayList<Character> typeUnit = (ArrayList<Character>) cards.stream().map(u -> u.getUnitType()).collect(Collectors.toList());
+        List<Character> chars = set.chars().mapToObj(e -> (char) e).collect(Collectors.toList()); //transform the string in a lost of char
+        ArrayList<Character> typeUnit = (ArrayList<Character>) cards.stream().map(u -> u.getUnitType()).collect(Collectors.toList()); //transform the unitType of each card the player has in a list of char
 
-        return typeUnit.containsAll(chars);
+        //If the player has the characters on the set, remove from the player list and increment count
+        int count = 0;
+        for (Character c : chars) {
+            if (typeUnit.contains(c)) {
+                typeUnit.remove(c);
+                count++;
+            }
+        }
+
+        if (count == 3) return true; //when player has all distinct cards
+        else return false;
     }
 
 
