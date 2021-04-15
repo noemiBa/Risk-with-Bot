@@ -53,7 +53,7 @@ public class BotHarmon implements Bot {
 	public String getCardExchange () {
 		if(player.getCards().size() < 3)
 			return "skip";
-		int exchangeSet[] = new int[3];
+		int[] exchangeSet = new int[3];
 		char[] insignias = {'i', 'c', 'a'};
 		for(int i = 0; i < Deck.SETS.length; i++) {
 			if(player.isCardsAvailable(Deck.SETS[i])) {
