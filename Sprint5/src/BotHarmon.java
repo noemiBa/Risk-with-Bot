@@ -51,12 +51,17 @@ public class BotHarmon implements Bot {
 	}
 	
 	public String getCardExchange () {
-		String command = "";
-		// put your code here
-		// find out best possible combination using cards 
-		// the bot currently possesses
-		command = "skip";
-		return(command);
+		if(player.getCards().size() < 3)
+			return "skip";
+		int exchangeSet[] = new int[3];
+		char[] insignias = {'i', 'c', 'a'};
+		for(int i = 0; i < Deck.SETS.length; i++) {
+			if(player.isCardsAvailable(Deck.SETS[i])) {
+				exchangeSet = Deck.SETS[i];
+				break;
+			}
+		}
+		return "" + insignias[exchangeSet[0]] + insignias[exchangeSet[1]] + insignias[exchangeSet[2]];
 	}
 
 	public String getBattle () {
