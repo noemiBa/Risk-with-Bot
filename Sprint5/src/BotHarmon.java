@@ -29,21 +29,45 @@ public class BotHarmon implements Bot {
     }
 
     public String getReinforcement() {
-        String command = "";
-        /* Step 1. find all of your territories
-         * for each territory : territories owned
-         * 1. check adjectent territories to see how many
+        /* for each territory owned
+         * 1. check adjacent territories to see how many
          *    units they have.
          * 2. check if country is beside activePlayer country
          *    (+ 1 for each activePlayer country).
-         * 3. sum no. units of adjecent countries --> choose 		*    the ones w/ less (easier to attack).
-         * 4. (if you can split the reineforcement --> 30% of
+         * 3. sum no. units of adjacent countries --> choose 		*    the ones w/ less (easier to attack).
+         * 4. (if you can split the reinforcement --> 30% of
          *    reinforcements units on the frontline).
          */
-        command = GameData.COUNTRY_NAMES[(int) (Math.random() * GameData.NUM_COUNTRIES)];
-        command = command.replaceAll("\\s", "");
-        command += " 1";
-        return (command);
+
+        ArrayList<Integer> countriesControlledByBot = new ArrayList<Integer>();
+        ArrayList<Integer> countriesNotControlledByBot = new ArrayList<Integer>();
+        for (int id : GameData.CONTINENT_IDS) {
+            if (board.getOccupier(id) == botId)
+                countriesControlledByBot.add(id);
+            else
+                countriesNotControlledByBot.add(id);
+        }
+
+        ArrayList<int[]> countryScores = new ArrayList<>(countriesControlledByBot.size());
+
+        for(Integer botCountryID: countriesControlledByBot) {
+            int numberOfSurroundingUnits = 0;
+            int activePlayerOccupied = 0;
+            for(Integer otherID: countriesNotControlledByBot) {
+                if(board.isAdjacent(botCountryID, otherID)) {
+                    numberOfSurroundingUnits++;
+                    if(board.getOccupier(otherID) == otherPlayerId)
+                        activePlayerOccupied++;
+                }
+            }
+            int[] countryIDAndScore = {botCountryID, numberOfSurroundingUnits - activePlayerOccupied};
+            countryScores.add(countryIDAndScore);
+        }
+
+        countryScores.sort(Comparator.comparingInt(a -> a[1]));
+
+        // needs fixing, is there a helper method for number of units assigned for the turn?
+        return getCountryName(countryScores.get(0)[0]) + " 1";
     }
 
     public String getPlacement(int forPlayer) {
