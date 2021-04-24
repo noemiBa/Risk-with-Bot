@@ -100,11 +100,21 @@ public class BotHarmon implements Bot {
 
     // allocating countries passive players at the start of the game
     public String getPlacement(int forPlayer) {
-        String command = "";
-        // put your code here
-        command = GameData.COUNTRY_NAMES[(int) (Math.random() * GameData.NUM_COUNTRIES)];
-        command = command.replaceAll("\\s", "");
-        return (command);
+        ArrayList<int []> forPlayerCountries = new ArrayList<>();
+        for(int i = 0; i < GameData.NUM_COUNTRIES; i++) {
+            if(board.getOccupier(i) == forPlayer) {
+                forPlayerCountries.add(new int[] {i, board.getNumUnits(i)});
+            }
+        }
+        forPlayerCountries.sort(Comparator.comparingInt(a -> a[1]));
+//        int[] countryWithLowestUnits = {0, board.getNumUnits(0)};
+//        for(int i = 1; i < forPlayerCountries.size(); i++) {
+//            if(board.getNumUnits(i) < countryWithLowestUnits[1]) {
+//                countryWithLowestUnits[0] = i;
+//                countryWithLowestUnits[1] = board.getNumUnits(i);
+//            }
+//        }
+        return getCountryName(forPlayerCountries.get(0)[0]);
     }
 
     public String getCardExchange() {
