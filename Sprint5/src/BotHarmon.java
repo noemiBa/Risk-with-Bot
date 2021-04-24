@@ -96,7 +96,6 @@ public class BotHarmon implements Bot {
 
         // return the first country weight in the list
         return getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits();
-        // not sure how to handle 30% of reinforcements units on the front line
     }
 
     // allocating countries passive players at the start of the game
