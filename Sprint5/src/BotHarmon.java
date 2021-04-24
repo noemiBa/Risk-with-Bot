@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
@@ -91,10 +92,21 @@ public class BotHarmon implements Bot {
                 }
             }
         }
+       
         // 8. sort the weights in ascending order
-        countryWeights.sort(Comparator.comparingInt(a -> a[1]));
-
+        Collections.sort(countryWeights, new Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return Integer.compare(a[1], b[1]);
+            }
+        });
+        
+        //countryWeights.sort(Comparator.comparingInt(a -> a[1]));
+        for (int i = 0; i< countryWeights.size(); i++) {
+        	System.out.println(Arrays.toString(countryWeights.get(i))); 
+        }
+        
         // return the first country weight in the list
+        System.out.println(getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits()); 
         return getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits();
     }
 
@@ -107,6 +119,8 @@ public class BotHarmon implements Bot {
             }
         }
         forPlayerCountries.sort(Comparator.comparingInt(a -> a[1]));
+        
+        System.out.println(getCountryName(forPlayerCountries.get(0)[0])); 
         return getCountryName(forPlayerCountries.get(0)[0]);
     }
 
@@ -207,8 +221,16 @@ public class BotHarmon implements Bot {
                 possibleAttacks.get(i)[2]++;
             }
         }
-
-        //Step 6. Check if the bot won at least more than 3 countries
+        
+        //step 6. if a certain country attacking has more than 4 units, add weight to it.
+        for (int i = 0; i < possibleAttacks.size(); i++) {
+        	if (board.getNumUnits(possibleAttacks.get(i)[0]) > 3) {
+        		//CHANGE WEIGHT LATER - TO TEST
+                possibleAttacks.get(i)[2] = possibleAttacks.get(i)[2] + 100;
+        	}
+        }
+        
+        //Step 7. Check if the bot won at least more than 3 countries
         if (countriesInvaded > 3){
             countriesInvaded = 0;
             return command = "skip";
@@ -222,8 +244,14 @@ public class BotHarmon implements Bot {
                 return Integer.compare(a[2], b[2]);
             }
         });
-
-        command = translateToStringBattle(possibleAttacks.get(0));
+        
+        //test
+        for (int i = 0; i< possibleAttacks.size(); i++) {
+        	System.out.println(Arrays.toString(possibleAttacks.get(i))); 
+        } 
+        
+        command = translateToStringBattle(possibleAttacks.get(possibleAttacks.size()-1));
+        System.out.println(command); 
         return (command);
     }
 
@@ -355,7 +383,7 @@ public class BotHarmon implements Bot {
             }
         });
 
-        command = translateToStringFortify(possibleMovements.get(0));
+        command = translateToStringFortify(possibleMovements.get(possibleMovements.size()-1));
         return (command);
     }
 
@@ -363,9 +391,9 @@ public class BotHarmon implements Bot {
      */
     private ArrayList<Integer> findCountriesWithMoreThanOneUnit() {
         ArrayList<Integer> countriesControlledMoreThanUnit = new ArrayList<Integer>();
-        for (int id : GameData.CONTINENT_IDS) {
-            if ((board.getOccupier(id) == botId) && (board.getNumUnits(id) > 1)) {
-                countriesControlledMoreThanUnit.add(id);
+        for (int i = 0; i < GameData.COUNTRY_NAMES.length; i++) {
+            if ((board.getOccupier(i) == botId) && (board.getNumUnits(i) > 1)) {
+                countriesControlledMoreThanUnit.add(i);
             }
         }
         return countriesControlledMoreThanUnit;
