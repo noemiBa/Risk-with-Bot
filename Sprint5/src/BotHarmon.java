@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,48 +29,77 @@ public class BotHarmon implements Bot {
         return (command);
     }
 
+    // used for allocation at the beginning of the game and at the start of each turn
     public String getReinforcement() {
-        /* for each territory owned
-         * 1. check adjacent territories to see how many
-         *    units they have.
-         * 2. check if country is beside activePlayer country
-         *    (+ 1 for each activePlayer country).
-         * 3. sum no. units of adjacent countries --> choose 		*    the ones w/ less (easier to attack).
-         * 4. (if you can split the reinforcement --> 30% of
-         *    reinforcements units on the frontline).
-         */
+        // 1. find countries controlled by bot and countries controlled by other players
+        ArrayList<Integer> botCountryIDs = new ArrayList<Integer>();
+        ArrayList<Integer> otherPlayersCountryIDs = new ArrayList<Integer>();
 
-        ArrayList<Integer> countriesControlledByBot = new ArrayList<Integer>();
-        ArrayList<Integer> countriesNotControlledByBot = new ArrayList<Integer>();
-        for (int id : GameData.CONTINENT_IDS) {
-            if (board.getOccupier(id) == botId)
-                countriesControlledByBot.add(id);
+        for (int i = 0; i < GameData.NUM_COUNTRIES; i++) {
+            if (board.getOccupier(i) == botId)
+                botCountryIDs.add(i);
             else
-                countriesNotControlledByBot.add(id);
+                otherPlayersCountryIDs.add(i);
         }
 
-        ArrayList<int[]> countryScores = new ArrayList<>(countriesControlledByBot.size());
+        /* 2. Create a list of weights for each country, the first element being its id, the second being its weight
+         * 3. Add the number of surrounding units to the weight
+         * 4. Add the number of activePlayers occupying
+         */
+        ArrayList<int[]> countryWeights = new ArrayList<>(botCountryIDs.size());
 
-        for(Integer botCountryID: countriesControlledByBot) {
+        for (Integer botCountryID: botCountryIDs) { // iterate through each botCountryID's adjacent country
             int numberOfSurroundingUnits = 0;
-            int activePlayerOccupied = 0;
-            for(Integer otherID: countriesNotControlledByBot) {
-                if(board.isAdjacent(botCountryID, otherID)) {
+            int activePlayersOccupied = 0;
+            for (Integer otherPlayersCountryID: otherPlayersCountryIDs) {
+                if(board.isAdjacent(botCountryID, otherPlayersCountryID)) {
                     numberOfSurroundingUnits++;
-                    if(board.getOccupier(otherID) == otherPlayerId)
-                        activePlayerOccupied++;
+                    if(board.getOccupier(otherPlayersCountryID) == otherPlayerId)
+                        activePlayersOccupied++;
                 }
             }
-            int[] countryIDAndScore = {botCountryID, numberOfSurroundingUnits - activePlayerOccupied};
-            countryScores.add(countryIDAndScore);
+            int[] countryIDAndWeight = {botCountryID, numberOfSurroundingUnits + activePlayersOccupied};
+            countryWeights.add(countryIDAndWeight);
+        }
+        /* 5. create a list of continents owned by a bot
+         */
+        ArrayList<Integer> botContinents = new ArrayList<>();
+
+        for (int i = 0; i < GameData.NUM_CONTINENTS; i++) {
+            int [] countryIdsContinent = GameData.CONTINENT_COUNTRIES[i];
+            boolean allOccupied = true;
+            for (int j = 0; (j < countryIdsContinent.length) && (allOccupied); j++) {
+                if (board.getOccupier(countryIdsContinent[j]) != botId) {
+                    allOccupied = false;
+                }
+            }
+            if(allOccupied)
+                botContinents.add(i);
         }
 
-        countryScores.sort(Comparator.comparingInt(a -> a[1]));
+        /* 6. use this botContinents list to check if each country is part of a front line you need to defend
+         * 7. Subtract 1 if the country is part of part of the front line (subtracting means the country will
+         * have a more favourable weight)
+         */
+        for (Integer continent: botContinents) {
+            for(Integer countryFrontLine: findContinentBorder(continent)) {
+                for(int[] weight: countryWeights) {
+                    if(weight[0] == countryFrontLine) {
+                        weight[1]--;
+                        break;
+                    }
+                }
+            }
+        }
+        // 8. sort the weights in ascending order
+        countryWeights.sort(Comparator.comparingInt(a -> a[1]));
 
-        // needs fixing, is there a helper method for number of units assigned for the turn?
-        return getCountryName(countryScores.get(0)[0]) + " 1";
+        // return the first country weight in the list
+        return getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits();
+        // not sure how to handle 30% of reinforcements units on the front line
     }
 
+    // allocating countries passive players at the start of the game
     public String getPlacement(int forPlayer) {
         String command = "";
         // put your code here
@@ -508,12 +538,12 @@ public class BotHarmon implements Bot {
      */
     private int continentOwned(int id) {
         boolean allOccupied;
-        int[] countryIdsContienent;
+        int[] countryIdsContinent;
         for (int i = 0; i < GameData.NUM_CONTINENTS; i++) {
-            countryIdsContienent = GameData.CONTINENT_COUNTRIES[i];
+            countryIdsContinent = GameData.CONTINENT_COUNTRIES[i];
             allOccupied = true;
-            for (int j = 0; (j < countryIdsContienent.length) && (allOccupied); j++) {
-                if (board.getOccupier(countryIdsContienent[j]) != id) {
+            for (int j = 0; (j < countryIdsContinent.length) && (allOccupied); j++) {
+                if (board.getOccupier(countryIdsContinent[j]) != id) {
                     allOccupied = false;
                 }
             }
