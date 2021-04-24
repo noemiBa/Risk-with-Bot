@@ -107,13 +107,6 @@ public class BotHarmon implements Bot {
             }
         }
         forPlayerCountries.sort(Comparator.comparingInt(a -> a[1]));
-//        int[] countryWithLowestUnits = {0, board.getNumUnits(0)};
-//        for(int i = 1; i < forPlayerCountries.size(); i++) {
-//            if(board.getNumUnits(i) < countryWithLowestUnits[1]) {
-//                countryWithLowestUnits[0] = i;
-//                countryWithLowestUnits[1] = board.getNumUnits(i);
-//            }
-//        }
         return getCountryName(forPlayerCountries.get(0)[0]);
     }
 
