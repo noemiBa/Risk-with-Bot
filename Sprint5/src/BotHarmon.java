@@ -50,16 +50,21 @@ public class BotHarmon implements Bot {
         ArrayList<int[]> countryWeights = new ArrayList<>(botCountryIDs.size());
 
         for (Integer botCountryID: botCountryIDs) { // iterate through each botCountryID's adjacent country
-            int numberOfSurroundingUnits = 0;
+            int numberOfSurroundingCountriesOneUnit = 0;
             int activePlayersOccupied = 0;
             for (Integer otherPlayersCountryID: otherPlayersCountryIDs) {
-                if(board.isAdjacent(botCountryID, otherPlayersCountryID)) {
-                    numberOfSurroundingUnits++;
-                    if(board.getOccupier(otherPlayersCountryID) == otherPlayerId)
-                        activePlayersOccupied++;
+                if(board.isAdjacent(botCountryID, otherPlayersCountryID) && board.getOccupier(otherPlayersCountryID) != botId) {
+                	
+                	if (board.getNumUnits(otherPlayersCountryID) == 1)
+                	numberOfSurroundingCountriesOneUnit++; 	
+                	//numberOfSurroundingUnits += board.getNumUnits(otherPlayersCountryID);
+                	
+                	
+                	if (board.getOccupier(otherPlayersCountryID) != otherPlayersCountryID)
+                    activePlayersOccupied += 2;
                 }
             }
-            int[] countryIDAndWeight = {botCountryID, numberOfSurroundingUnits + activePlayersOccupied};
+            int[] countryIDAndWeight = {botCountryID, numberOfSurroundingCountriesOneUnit + activePlayersOccupied};
             countryWeights.add(countryIDAndWeight);
         }
         /* 5. create a list of continents owned by a bot
@@ -86,7 +91,7 @@ public class BotHarmon implements Bot {
             for(Integer countryFrontLine: findContinentBorder(continent)) {
                 for(int[] weight: countryWeights) {
                     if(weight[0] == countryFrontLine) {
-                        weight[1]--;
+                        weight[1]++;
                         break;
                     }
                 }
@@ -106,8 +111,8 @@ public class BotHarmon implements Bot {
         }
         
         // return the first country weight in the list
-        System.out.println(getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits()); 
-        return getCountryName(countryWeights.get(0)[0]) + " " + player.getNumUnits();
+        System.out.println(getCountryName(countryWeights.get(countryWeights.size()-1)[0]) + " " + player.getNumUnits()); 
+        return getCountryName(countryWeights.get(countryWeights.size()-1)[0]).trim() + " " + player.getNumUnits();
     }
 
     // allocating countries passive players at the start of the game
@@ -127,14 +132,16 @@ public class BotHarmon implements Bot {
     public String getCardExchange() {
         if (player.getCards().size() < 3)
             return "skip";
-        int[] exchangeSet = new int[3];
-        char[] insignias = {'i', 'c', 'a'};
+        int[] exchangeSet = new int[4];
+        char[] insignias = {'i', 'c', 'a', 'w'};
         for (int i = 0; i < Deck.SETS.length; i++) {
             if (player.isCardsAvailable(Deck.SETS[i])) {
                 exchangeSet = Deck.SETS[i];
+                System.out.println(Arrays.toString(exchangeSet));
                 break;
             }
         }
+        System.out.println("" + insignias[exchangeSet[0]] + insignias[exchangeSet[1]] + insignias[exchangeSet[2]]); 
         return "" + insignias[exchangeSet[0]] + insignias[exchangeSet[1]] + insignias[exchangeSet[2]];
     }
 
@@ -199,14 +206,14 @@ public class BotHarmon implements Bot {
         }
 
         //Step 4. Determine if any of the countries adjacent to the countryTo belong to the other player and if these countries
-        //   only have one unit (easy to defeat). For each of the adjacent enemy countries with one unit, add +1 weight.
+        //   only have one unit (easy to defeat). For each of the adjacent enemy countries with one unit, add +3 weight.
         for (int i = 0; i < possibleAttacks.size(); i++) {
             ArrayList<Integer> enemyCountriesAdjacentOneUnit = findEnemyCountriesAdjacentOneUnit(possibleAttacks.get(i)[1]);
 
             if (enemyCountriesAdjacentOneUnit.size() > 0) {
                 int numberOfAdjacentEnemyCountriesOneUnit = enemyCountriesAdjacentOneUnit.size();
                 //add one to the weight of the possible movement for each of the adjacent enemy countries w/ one unit
-                possibleAttacks.get(i)[2] = possibleAttacks.get(i)[2] + numberOfAdjacentEnemyCountriesOneUnit;
+                possibleAttacks.get(i)[2] = possibleAttacks.get(i)[2] + (numberOfAdjacentEnemyCountriesOneUnit*3);
             }
         }
 
@@ -218,15 +225,14 @@ public class BotHarmon implements Bot {
             if (enemyCountriesAdjacentOneUnit.size() > 0) {
                 int numberOfAdjacentEnemyCountriesOneUnit = enemyCountriesAdjacentOneUnit.size();
                 //add one to the weight of the possible movement for each of the adjacent enemy countries w/ one unit
-                possibleAttacks.get(i)[2]++;
+                possibleAttacks.get(i)[2] += numberOfAdjacentEnemyCountriesOneUnit;
             }
         }
         
         //step 6. if a certain country attacking has more than 4 units, add weight to it.
         for (int i = 0; i < possibleAttacks.size(); i++) {
         	if (board.getNumUnits(possibleAttacks.get(i)[0]) > 3) {
-        		//CHANGE WEIGHT LATER - TO TEST
-                possibleAttacks.get(i)[2] = possibleAttacks.get(i)[2] + 100;
+                possibleAttacks.get(i)[2] = possibleAttacks.get(i)[2] + 2;
         	}
         }
         
@@ -346,14 +352,14 @@ public class BotHarmon implements Bot {
         }
 
         //2. Determine if any of the countries adjacent to the countryTo belong to the other player and if these countries
-        //   only have one unit (easy to defeat). For each of the adjacent enemy countries with one unit, add +1 weight.
+        //   only have one unit (easy to defeat). For each of the adjacent enemy countries with one unit, add +3 weight.
         for (int i = 0; i < possibleMovements.size(); i++) {
             ArrayList<Integer> enemyCountriesAdjacentOneUnit = findEnemyCountriesAdjacentOneUnit(possibleMovements.get(i)[1]);
 
             if (enemyCountriesAdjacentOneUnit.size() > 0) {
                 int numberOfAdjacentEnemyCountriesOneUnit = enemyCountriesAdjacentOneUnit.size();
                 //add one to the weight of the possible movement for each of the adjacent enemy countries w/ one unit
-                possibleMovements.get(i)[2] = possibleMovements.get(i)[2] + numberOfAdjacentEnemyCountriesOneUnit;
+                possibleMovements.get(i)[2] = possibleMovements.get(i)[2] + (numberOfAdjacentEnemyCountriesOneUnit*3);
             }
         }
 
@@ -411,8 +417,8 @@ public class BotHarmon implements Bot {
             return command = "skip";
         }
 
-        String countryFrom = getCountryName(choice[0]);
-        String countryTo = getCountryName(choice[1]);
+        String countryFrom = getCountryName(choice[0]).trim();
+        String countryTo = getCountryName(choice[1]).trim();
         int numberOfUnitsToMove = board.getNumUnits(choice[0]) - 1;
 
         command = countryFrom + " " + countryTo + " " + numberOfUnitsToMove;
@@ -450,7 +456,7 @@ public class BotHarmon implements Bot {
      * @param name: the index of the Country
      */
     public String getCountryName(int countryID) {
-        return GameData.COUNTRY_NAMES[countryID];
+    	return GameData.COUNTRY_NAMES[countryID].replaceAll("\\s+", ""); 
     }
 
     /* Private helper method that takes a country id and returns the adjacent countries controlled by the enemy
