@@ -30,7 +30,6 @@ public class BotHarmon implements Bot {
         return (command);
     }
 
-    // used for allocation at the beginning of the game and at the start of each turn
     public String getReinforcement() {
         // 1. find countries controlled by bot and countries controlled by other players
         ArrayList<Integer> botCountryIDs = new ArrayList<Integer>();
@@ -43,9 +42,9 @@ public class BotHarmon implements Bot {
                 otherPlayersCountryIDs.add(i);
         }
 
-        /* 2. Create a list of weights for each country, the first element being its id, the second being its weight
-         * 3. Add the number of surrounding units to the weight
-         * 4. Add the number of activePlayers occupying
+        /* 2. Create a list of arrays for each country, the first element being the country's id, the second being its weight
+         * 3. Add 1 to each country's weight for each adjacent country with one unit
+         * 4. Add 2 to each country's weight for each adjacent country that has an active player
          */
         ArrayList<int[]> countryWeights = new ArrayList<>(botCountryIDs.size());
 
@@ -56,12 +55,10 @@ public class BotHarmon implements Bot {
                 if(board.isAdjacent(botCountryID, otherPlayersCountryID) && board.getOccupier(otherPlayersCountryID) != botId) {
                 	
                 	if (board.getNumUnits(otherPlayersCountryID) == 1)
-                	numberOfSurroundingCountriesOneUnit++; 	
-                	//numberOfSurroundingUnits += board.getNumUnits(otherPlayersCountryID);
+                	    numberOfSurroundingCountriesOneUnit++;
                 	
-                	
-                	if (board.getOccupier(otherPlayersCountryID) != otherPlayersCountryID)
-                    activePlayersOccupied += 2;
+                	if (board.getOccupier(otherPlayersCountryID) == otherPlayerId)
+                        activePlayersOccupied += 2;
                 }
             }
             int[] countryIDAndWeight = {botCountryID, numberOfSurroundingCountriesOneUnit + activePlayersOccupied};
@@ -84,8 +81,7 @@ public class BotHarmon implements Bot {
         }
 
         /* 6. use this botContinents list to check if each country is part of a front line you need to defend
-         * 7. Subtract 1 if the country is part of part of the front line (subtracting means the country will
-         * have a more favourable weight)
+         * 7. Add 1 if the country is part of the front line
          */
         for (Integer continent: botContinents) {
             for(Integer countryFrontLine: findContinentBorder(continent)) {
@@ -105,43 +101,42 @@ public class BotHarmon implements Bot {
             }
         });
         
-        //countryWeights.sort(Comparator.comparingInt(a -> a[1]));
-        for (int i = 0; i< countryWeights.size(); i++) {
-        	System.out.println(Arrays.toString(countryWeights.get(i))); 
-        }
-        
-        // return the first country weight in the list
-        System.out.println(getCountryName(countryWeights.get(countryWeights.size()-1)[0]) + " " + player.getNumUnits()); 
+        // 9. return the last country weight in the list i.e. the largest weight
         return getCountryName(countryWeights.get(countryWeights.size()-1)[0]).trim() + " " + player.getNumUnits();
     }
 
-    // allocating countries passive players at the start of the game
     public String getPlacement(int forPlayer) {
+    // 1. create a list of all the forPlayer (neutral's) countries
         ArrayList<int []> forPlayerCountries = new ArrayList<>();
         for(int i = 0; i < GameData.NUM_COUNTRIES; i++) {
             if(board.getOccupier(i) == forPlayer) {
                 forPlayerCountries.add(new int[] {i, board.getNumUnits(i)});
             }
         }
-        forPlayerCountries.sort(Comparator.comparingInt(a -> a[1]));
-        
-        System.out.println(getCountryName(forPlayerCountries.get(0)[0])); 
+        // 2. sort the list by number of units in each country in ascending order
+        Collections.sort(forPlayerCountries, new Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return Integer.compare(a[1], b[1]);
+            }
+        });
+        // 3. add units to the country with the least amount of units
         return getCountryName(forPlayerCountries.get(0)[0]);
     }
 
     public String getCardExchange() {
+        // 1. enter skip if the bot does not have enough cards to exchange
         if (player.getCards().size() < 3)
             return "skip";
+        // 2. Check if bot has a valid set of cards to exchange
         int[] exchangeSet = new int[4];
         char[] insignias = {'i', 'c', 'a', 'w'};
         for (int i = 0; i < Deck.SETS.length; i++) {
             if (player.isCardsAvailable(Deck.SETS[i])) {
                 exchangeSet = Deck.SETS[i];
-                System.out.println(Arrays.toString(exchangeSet));
                 break;
             }
         }
-        System.out.println("" + insignias[exchangeSet[0]] + insignias[exchangeSet[1]] + insignias[exchangeSet[2]]); 
+        // 3. return a valid set of cards
         return "" + insignias[exchangeSet[0]] + insignias[exchangeSet[1]] + insignias[exchangeSet[2]];
     }
 
@@ -251,13 +246,7 @@ public class BotHarmon implements Bot {
             }
         });
         
-        //test
-        for (int i = 0; i< possibleAttacks.size(); i++) {
-        	System.out.println(Arrays.toString(possibleAttacks.get(i))); 
-        } 
-        
         command = translateToStringBattle(possibleAttacks.get(possibleAttacks.size()-1));
-        System.out.println(command); 
         return (command);
     }
 
