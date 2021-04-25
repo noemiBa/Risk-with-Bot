@@ -142,16 +142,7 @@ public class BotHarmon implements Bot {
 
     public String getBattle() {
         String command = "";
-        /* 1. find all possible territories to attack []
-         * for each of those territories, assign points 			* according to:
-         * 1. can I break up a continent?
-         * 2. can I attack the the activePlayer?
-         * 3. Did I get a card already?
-         * --> choose to attack territory w/ highest points
-         * check tot number of troops you vs your opponent to
-         * to determine whether to attack.
-         */
-
+        
         if (board.isInvasionSuccess()) {
             countriesInvaded++;
         }
@@ -164,7 +155,7 @@ public class BotHarmon implements Bot {
             return command = "skip";
         }
 
-        //Step 2. Find all the countries that are connected to those in step 1 and create a collection of all the possible attacks
+        //Step 2. Find all the countries that are adjacent to those in step 1 (and not controlled by the bot) and create a collection of all the possible attacks
         ArrayList<int[]> possibleAttacks = new ArrayList<int[]>();
         for (int controlled : countriesControlledMoreThanUnit) {
             for (int i = 0; i < GameData.COUNTRY_NAMES.length; i++) {
@@ -177,11 +168,7 @@ public class BotHarmon implements Bot {
                 }
             }
         }
-
-        //* 2. can I attack the the activePlayer?
-
-
-
+        
         //if no attacks are possible, cannot attack - return skip
         if (possibleAttacks.size() == 0) {
             return command = "skip";
@@ -278,24 +265,7 @@ public class BotHarmon implements Bot {
 
     public String getFortify() {
         String command = "";
-        /* Step 1. find all of the countries u control w/ 		* more than 1 unit.
-         * if no countrys > 1 troop --> return "skip"
-         * Step 2. find all the connected countries.
-         * --> [] possible movements
-         * for each possible movement, assign points 			* according to:
-         * 1) Do I own a continent? (fortify border)
-         *    AND not own countries adjectent to the border
-         *    FIND THE FRONT-LINE.
-         * 2) is the to-country close to an enemy's  			*    country ?
-         * 3) is the to-country close to an activePlayer's
-         *    country w/ 1 troop? (DESTROY IT!)
-         * 4) is the to-country close to an activePlayer's
-         *    where the difference between units is high -
-         *        check difference compared to units I'm
-         *        moving (< 2 -> do it)
-         * Add up all the points, choose movement w/ highest 		* points.
-         */
-
+        
         //Step 1. find all the countries the bot controls with more than one unit
         ArrayList<Integer> countriesControlledMoreThanUnit = findCountriesWithMoreThanOneUnit();
 
